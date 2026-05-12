@@ -77,10 +77,10 @@
 
                 <div class="flex items-center gap-4">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all">Dashboard</a>
+                        <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">Log in</a>
-                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all">Join Marketplace</a>
+                        <a href="{{ route('filament.admin.auth.login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">Log in</a>
+                        <a href="{{ route('filament.admin.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all">Join Marketplace</a>
                     @endauth
                 </div>
             </div>
