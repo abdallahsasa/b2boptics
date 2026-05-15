@@ -88,9 +88,11 @@
                     </a>
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $product->factory->country->name }}</span>
-                            <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                            <a href="{{ route('factories.show', $product->factory) }}" class="text-xs font-medium text-primary-600 hover:underline">{{ $product->factory->official_name }}</a>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $product->factory->country->name ?? 'Global' }}</span>
+                            @if($product->factory)
+                                <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                <a href="{{ route('factories.show', $product->factory) }}" class="text-xs font-medium text-primary-600 hover:underline">{{ $product->factory->official_name }}</a>
+                            @endif
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 mb-1 group-hover:text-primary-600 transition-colors">
                             <a href="{{ route('marketplace.product.show', $product) }}">{{ $product->getTranslation('name', 'en') }}</a>

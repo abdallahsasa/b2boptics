@@ -31,12 +31,13 @@
                     <span class="px-4 py-1.5 bg-primary-50 text-primary-700 text-xs font-bold rounded-full uppercase tracking-wider">{{ $product->category->name['en'] }}</span>
                     <span class="flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        {{ $product->factory->country->name }}
+                        {{ $product->factory->country->name ?? 'Global' }}
                     </span>
                 </div>
 
                 <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">{{ $product->getTranslation('name', 'en') }}</h1>
                 
+                @if($product->factory)
                 <div class="flex items-center gap-4 mb-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <div class="w-14 h-14 bg-slate-100 rounded-2xl overflow-hidden flex-shrink-0">
                          <img src="{{ $product->factory->getFirstMediaUrl('logos') ?: 'https://ui-avatars.com/api/?name=' . urlencode($product->factory->official_name) }}" class="w-full h-full object-cover">
@@ -52,6 +53,7 @@
                          </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="mb-10">
                     <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2">Pricing</p>
@@ -72,7 +74,7 @@
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Origin</p>
-                        <p class="font-bold text-slate-900">{{ $product->factory->country->name }}</p>
+                        <p class="font-bold text-slate-900">{{ $product->factory->country->name ?? 'Global' }}</p>
                     </div>
                 </div>
 
