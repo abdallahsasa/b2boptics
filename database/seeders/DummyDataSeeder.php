@@ -72,6 +72,7 @@ class DummyDataSeeder extends Seeder
         $factory = Factory::create([
             'user_id' => $factoryOwner->id,
             'official_name' => 'Optic Pro Manufacturing Ltd',
+            'slug' => Str::slug('Optic Pro Manufacturing Ltd'),
             'email' => 'info@opticpro.com',
             'phone' => '+90 555 123 4567',
             'country_id' => $turkey->id,

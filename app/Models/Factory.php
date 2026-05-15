@@ -15,7 +15,7 @@ class Factory extends Model implements HasMedia
     use HasTranslations, InteractsWithMedia;
 
     protected $fillable = [
-        'user_id', 'official_name', 'tax_number', 'contact_person_first_name',
+        'user_id', 'official_name', 'slug', 'tax_number', 'contact_person_first_name',
         'contact_person_last_name', 'phone', 'email', 'country_id', 'language',
         'logo', 'banner', 'description', 'category_id', 'status', 'is_verified',
         'approved_at', 'approved_by'
