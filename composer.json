@@ -11,6 +11,7 @@
         "filament/spatie-laravel-media-library-plugin": "^5.6",
         "lara-zeus/spatie-translatable": "^2.0",
         "laravel/framework": "^11.0",
+        "laravel/socialite": "*",
         "laravel/tinker": "^3.0",
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-medialibrary": "^11.22",
