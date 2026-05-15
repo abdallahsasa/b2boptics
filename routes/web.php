@@ -49,10 +49,21 @@ Route::group([
     });
 });
 
-// Language Switcher - Handles switching and redirects to the prefixed URL
+// Language Switcher - Handles switching and redirects to the same page with new prefix
 Route::get('/lang/{locale}', function ($locale) {
-    if (in_array($locale, ['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'])) {
+    $locales = ['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'];
+    if (in_array($locale, $locales)) {
         session(['locale' => $locale]);
+        
+        $previousUrl = url()->previous();
+        $path = parse_url($previousUrl, PHP_URL_PATH);
+        $segments = explode('/', trim($path, '/'));
+        
+        if (count($segments) > 0 && in_array($segments[0], $locales)) {
+            $segments[0] = $locale;
+            return redirect('/' . implode('/', $segments));
+        }
+        
         return redirect('/' . $locale);
     }
     return redirect()->back();
