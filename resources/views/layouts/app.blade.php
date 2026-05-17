@@ -73,17 +73,19 @@
 
                 <div class="flex items-center gap-4">
                     <!-- Language Switcher -->
-                    <div class="relative group">
+                    <div class="relative group h-full flex items-center">
                         <button class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
                             {{ app()->getLocale() }}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </button>
-                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                            @foreach(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'] as $lang)
-                                <a href="{{ route('lang.switch', $lang) }}" class="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary-600 uppercase {{ app()->getLocale() == $lang ? 'text-primary-600' : '' }}">
-                                    {{ $lang }}
-                                </a>
-                            @endforeach
+                        <div class="absolute right-0 top-full pt-2 w-32 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 py-2">
+                                @foreach(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'] as $lang)
+                                    <a href="{{ route('lang.switch', ['locale' => $lang]) }}" class="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary-600 uppercase {{ app()->getLocale() == $lang ? 'text-primary-600' : '' }}">
+                                        {{ $lang }}
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
 
