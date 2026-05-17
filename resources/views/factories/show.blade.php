@@ -39,7 +39,7 @@
             <div class="sticky top-24">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">About Factory</h2>
                 <div class="prose prose-slate prose-sm text-slate-600 leading-relaxed mb-8">
-                    {{ strip_tags($factory->getTranslation('description', 'en')) }}
+                    {!! nl2br(e($factory->getTranslation('description', app()->getLocale()))) !!}
                 </div>
 
                 <div class="space-y-4 mb-10">
@@ -84,9 +84,9 @@
                          <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=400&auto=format&fit=crop' }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     </a>
                     <div class="p-6 flex flex-col justify-center">
-                        <p class="text-[10px] font-bold text-primary-600 uppercase tracking-widest mb-1">{{ $product->category->name['en'] }}</p>
+                        <p class="text-[10px] font-bold text-primary-600 uppercase tracking-widest mb-1">{{ $product->category->getTranslation('name', app()->getLocale()) }}</p>
                         <h3 class="font-bold text-slate-900 group-hover:text-primary-600 transition-colors mb-2">
-                            <a href="{{ route('marketplace.product.show', $product) }}">{{ $product->getTranslation('name', 'en') }}</a>
+                            <a href="{{ route('marketplace.product.show', $product) }}">{{ $product->getTranslation('name', app()->getLocale()) }}</a>
                         </h3>
                         <p class="text-sm font-bold text-slate-900">{{ $product->currency }} {{ number_format($product->starting_price, 2) }}</p>
                     </div>

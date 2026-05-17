@@ -29,7 +29,7 @@
                         @foreach($categories as $category)
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="radio" name="category" value="{{ $category->slug }}" {{ request('category') == $category->slug ? 'checked' : '' }} onchange="this.form.submit()" class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
-                            <span class="text-sm text-slate-600 group-hover:text-primary-600">{{ $category->name['en'] ?? $category->name }}</span>
+                            <span class="text-sm text-slate-600 group-hover:text-primary-600">{{ $category->getTranslation('name', app()->getLocale()) }}</span>
                         </label>
                         @endforeach
                     </div>
