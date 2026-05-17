@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class FactoryController extends Controller
 {
-    public function show(Factory $factory)
+    public function show($locale, Factory $factory)
     {
         if ($factory->status !== 'approved') {
             abort(404);

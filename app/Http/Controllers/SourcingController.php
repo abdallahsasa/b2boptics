@@ -48,7 +48,7 @@ class SourcingController extends Controller
             ->with('success', 'Your sourcing request has been submitted and is awaiting approval.');
     }
 
-    public function show(BuyerRequest $buyerRequest)
+    public function show($locale, BuyerRequest $buyerRequest)
     {
         $buyerRequest->load(['category', 'subcategory', 'offers.factory.country']);
         

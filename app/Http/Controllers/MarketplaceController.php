@@ -65,7 +65,7 @@ class MarketplaceController extends Controller
         return view('marketplace.index', compact('products', 'categories', 'countries'));
     }
 
-    public function show(Product $product)
+    public function show($locale, Product $product)
     {
         if ($product->status !== 'approved') {
             abort(404);
