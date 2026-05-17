@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->getTranslation('name', 'en'))
+@section('title', $product->getTranslation('name', app()->getLocale()))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -10,7 +10,7 @@
         <span>/</span>
         <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">Marketplace</a>
         <span>/</span>
-        <span class="text-slate-900 font-medium">{{ $product->getTranslation('name', 'en') }}</span>
+        <span class="text-slate-900 font-medium">{{ $product->getTranslation('name', app()->getLocale()) }}</span>
     </nav>
 
     <div class="flex flex-col lg:flex-row gap-12">
@@ -19,7 +19,7 @@
             <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm p-4">
                 <div class="aspect-square bg-slate-50 rounded-[1.5rem] overflow-hidden">
                     <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200&auto=format&fit=crop' }}" 
-                        alt="{{ $product->name['en'] ?? $product->name }}" class="w-full h-full object-cover">
+                        alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -28,14 +28,14 @@
         <div class="lg:w-1/2">
             <div class="sticky top-24">
                 <div class="flex items-center gap-3 mb-6">
-                    <span class="px-4 py-1.5 bg-primary-50 text-primary-700 text-xs font-bold rounded-full uppercase tracking-wider">{{ $product->category->name['en'] }}</span>
+                    <span class="px-4 py-1.5 bg-primary-50 text-primary-700 text-xs font-bold rounded-full uppercase tracking-wider">{{ $product->category->getTranslation('name', app()->getLocale()) }}</span>
                     <span class="flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         {{ $product->factory->country->name ?? 'Global' }}
                     </span>
                 </div>
 
-                <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">{{ $product->getTranslation('name', 'en') }}</h1>
+                <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">{{ $product->getTranslation('name', app()->getLocale()) }}</h1>
                 
                 @if($product->factory)
                 <div class="flex items-center gap-4 mb-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
@@ -64,13 +64,13 @@
                 </div>
 
                 <div class="prose prose-slate prose-sm mb-12">
-                    <p class="text-slate-600 leading-relaxed text-lg">{{ strip_tags($product->getTranslation('description', 'en')) }}</p>
+                    <p class="text-slate-600 leading-relaxed">{!! nl2br(e($product->getTranslation('description', app()->getLocale()))) !!}</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-10">
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Subcategory</p>
-                        <p class="font-bold text-slate-900">{{ $product->subcategory->name['en'] ?? 'N/A' }}</p>
+                        <p class="font-bold text-slate-900">{{ $product->subcategory->getTranslation('name', app()->getLocale()) ?? 'N/A' }}</p>
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Origin</p>

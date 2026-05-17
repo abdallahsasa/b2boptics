@@ -81,9 +81,9 @@
                 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden card-hover group">
                     <a href="{{ route('marketplace.product.show', $product) }}" class="block aspect-square overflow-hidden relative bg-slate-100">
                         <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=600&auto=format&fit=crop' }}" 
-                            alt="{{ $product->name['en'] ?? $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-4 left-4">
-                            <span class="px-3 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-primary-900 rounded-full uppercase tracking-wider shadow-sm">{{ $product->category->name['en'] ?? 'Optics' }}</span>
+                            <span class="px-3 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-primary-900 rounded-full uppercase tracking-wider shadow-sm">{{ $product->category->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                         </div>
                     </a>
                     <div class="p-6">
@@ -95,9 +95,9 @@
                             @endif
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 mb-1 group-hover:text-primary-600 transition-colors">
-                            <a href="{{ route('marketplace.product.show', $product) }}">{{ $product->getTranslation('name', 'en') }}</a>
+                            <a href="{{ route('marketplace.product.show', $product) }}">{{ $product->getTranslation('name', app()->getLocale()) }}</a>
                         </h3>
-                        <p class="text-slate-500 text-sm line-clamp-1 mb-4">{{ strip_tags($product->getTranslation('description', 'en')) }}</p>
+                        <p class="text-slate-500 text-sm line-clamp-1 mb-4">{{ strip_tags($product->getTranslation('description', app()->getLocale())) }}</p>
                         
                         <div class="flex items-center justify-between pt-4 border-t border-slate-50">
                             <div>
