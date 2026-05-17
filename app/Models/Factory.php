@@ -62,4 +62,13 @@ class Factory extends Model implements HasMedia
     {
         return $this->hasMany(Rating::class);
     }
+
+    protected static function booted()
+    {
+        static::saving(function ($factory) {
+            if (empty($factory->slug) && !empty($factory->official_name)) {
+                $factory->slug = \Illuminate\Support\Str::slug($factory->official_name);
+            }
+        });
+    }
 }
