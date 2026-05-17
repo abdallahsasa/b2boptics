@@ -313,7 +313,7 @@
                                         <p class="text-sm font-bold text-slate-900">{{ $offer->moq }}</p>
                                     </div>
                                 </div>
-                                <a href="mailto:{{ $offer->factory->email }}" class="block w-full py-2.5 bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-lg text-center hover:bg-black transition-colors">
+                                <a href="{{ route('stock-offers.show', $offer) }}" class="block w-full py-2.5 bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-lg text-center hover:bg-black transition-colors">
                                     {{ __('Grab Deal') }}
                                 </a>
                             </div>

@@ -28,8 +28,11 @@ Route::group([
     Route::get('/factories/{factory:slug}', [FactoryController::class, 'show'])->name('factories.show');
 
     // Stock Deals
-    Route::get('/stock-deals', [StockOfferController::class, 'index'])->name('stock-offers.index');
-
+    Route::group(['prefix' => 'stock-deals', 'as' => 'stock-offers.'], function () {
+        Route::get('/', [StockOfferController::class, 'index'])->name('index');
+        Route::get('/{stockOffer}', [StockOfferController::class, 'show'])->name('show');
+        Route::post('/{stockOffer}/request', [StockOfferController::class, 'request'])->name('request');
+    });
     // Sourcing Requests ("Find Your Best Deal")
     Route::group(['prefix' => 'find-deal', 'as' => 'sourcing.'], function () {
         Route::get('/', [SourcingController::class, 'index'])->name('index');
