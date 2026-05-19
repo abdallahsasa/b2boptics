@@ -37,7 +37,7 @@
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">{{ __('Deal Price') }}</p>
                         <p class="text-3xl font-bold text-primary-900">{{ $offer->currency }} {{ number_format($offer->price, 2) }} <span class="text-sm font-medium text-slate-400">/{{ __('unit') }}</span></p>
                     </div>
-                    <button class="px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20">{{ __('Grab Deal') }}</button>
+                    <a href="{{ route('stock-offers.show', $offer) }}" class="inline-block px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 text-center">{{ __('Grab Deal') }}</a>
                 </div>
             </div>
         </div>
