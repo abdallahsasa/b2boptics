@@ -6,6 +6,11 @@ use App\Http\Controllers\SourcingController;
 use App\Http\Controllers\StockOfferController;
 use Illuminate\Support\Facades\Route;
 
+// Fallback login route for the auth middleware
+Route::get('/login', function () {
+    return redirect()->route('filament.admin.auth.login');
+})->name('login');
+
 // Localization Group
 Route::group([
     'prefix' => '{locale}',
