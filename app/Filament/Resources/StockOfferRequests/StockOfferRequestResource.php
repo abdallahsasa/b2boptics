@@ -36,11 +36,11 @@ class StockOfferRequestResource extends Resource
                         Select::make('stock_offer_id')
                             ->relationship('stockOffer', 'title')
                             ->required()
-                            ->disabled(),
+                            ->disabled(fn (string $context): bool => $context === 'edit'),
                         Select::make('user_id')
                             ->relationship('user', 'name')
                             ->label('Registered Buyer')
-                            ->disabled(),
+                            ->disabled(fn (string $context): bool => $context === 'edit'),
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
