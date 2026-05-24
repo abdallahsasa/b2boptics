@@ -14,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -29,8 +30,8 @@ class StockOfferRequestResource extends Resource
     public static function form(Schema $form): Schema
     {
         return $form
-            ->schema([
-                Forms\Components\Section::make('Request Details')
+            ->components([
+                Section::make('Request Details')
                     ->schema([
                         Select::make('stock_offer_id')
                             ->relationship('stockOffer', 'title')
