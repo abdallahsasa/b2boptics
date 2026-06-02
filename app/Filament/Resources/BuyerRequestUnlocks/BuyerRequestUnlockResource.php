@@ -21,7 +21,7 @@ class BuyerRequestUnlockResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockOpen;
     protected static string|UnitEnum|null $navigationGroup = "Tenders";
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
     
     protected static ?string $modelLabel = 'Unlocked Tender';
     protected static ?string $pluralModelLabel = 'Unlocked Tenders';

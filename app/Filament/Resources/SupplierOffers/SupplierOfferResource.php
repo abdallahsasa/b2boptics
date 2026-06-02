@@ -20,7 +20,7 @@ class SupplierOfferResource extends Resource
     protected static ?string $model = SupplierOffer::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
-    protected static string|UnitEnum|null $navigationGroup = "Marketplace";
+    protected static string|UnitEnum|null $navigationGroup = "Tenders";
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'id';
