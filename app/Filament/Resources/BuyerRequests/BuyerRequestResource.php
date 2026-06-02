@@ -20,8 +20,12 @@ class BuyerRequestResource extends Resource
     protected static ?string $model = BuyerRequest::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxArrowDown;
-    protected static string|UnitEnum|null $navigationGroup = "Marketplace";
+    protected static string|UnitEnum|null $navigationGroup = "Tenders";
     protected static ?int $navigationSort = 1;
+    
+    protected static ?string $modelLabel = 'Tender';
+    protected static ?string $pluralModelLabel = 'Tenders';
+    protected static ?string $navigationLabel = 'All Tenders';
 
     protected static ?string $recordTitleAttribute = 'title';
 
