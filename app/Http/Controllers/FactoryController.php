@@ -7,6 +7,16 @@ use Illuminate\Http\Request;
 
 class FactoryController extends Controller
 {
+    public function index($locale)
+    {
+        $factories = Factory::where('status', 'approved')
+            ->with(['country', 'category'])
+            ->latest()
+            ->paginate(12);
+
+        return view('factories.index', compact('factories'));
+    }
+
     public function show($locale, Factory $factory)
     {
         if ($factory->status !== 'approved') {

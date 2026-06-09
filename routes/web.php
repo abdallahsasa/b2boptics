@@ -30,7 +30,10 @@ Route::group([
     });
 
     // Factories
-    Route::get('/factories/{factory:slug}', [FactoryController::class, 'show'])->name('factories.show');
+    Route::group(['prefix' => 'factories', 'as' => 'factories.'], function () {
+        Route::get('/', [FactoryController::class, 'index'])->name('index');
+        Route::get('/{factory:slug}', [FactoryController::class, 'show'])->name('show');
+    });
 
     // Stock Deals
     Route::group(['prefix' => 'stock-deals', 'as' => 'stock-offers.'], function () {
