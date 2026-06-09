@@ -69,6 +69,7 @@
                     <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Marketplace') }}</a>
                     <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
                     <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
+                    <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
                 </div>
 
                 <div class="flex items-center gap-4">
