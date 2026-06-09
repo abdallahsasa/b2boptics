@@ -90,10 +90,14 @@
                     </div>
 
                     @auth
-                        <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Dashboard') }}</a>
+                        @if(auth()->user()->hasRole(['super_admin', 'admin']))
+                            <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                        @else
+                            <a href="{{ url('/factory') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                        @endif
                     @else
-                        <a href="{{ route('filament.admin.auth.login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
-                        <a href="{{ route('filament.admin.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-sm">{{ __('Join Now') }}</a>
+                        <a href="{{ url('/factory/login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
+                        <a href="{{ route('filament.factory.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
                     @endauth
                 </div>
             </div>
