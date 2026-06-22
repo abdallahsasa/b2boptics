@@ -48,11 +48,14 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-secondary text-slate-900 antialiased font-sans">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-nav">
+    <nav class="fixed top-0 w-full z-50 glass-nav" x-data="{ open: false }" x-effect="document.body.style.overflow = open ? 'hidden' : ''">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
@@ -72,7 +75,7 @@
                     <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 sm:gap-4">
                     <!-- Language Switcher -->
                     <div class="relative group h-full flex items-center">
                         <button class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
@@ -90,17 +93,79 @@
                         </div>
                     </div>
 
-                    @auth
-                        @if(auth()->user()->hasRole(['super_admin', 'admin']))
-                            <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                    <!-- Desktop Auth Buttons -->
+                    <div class="hidden lg:flex items-center gap-4">
+                        @auth
+                            @if(auth()->user()->hasRole(['super_admin', 'admin']))
+                                <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                            @else
+                                <a href="{{ url('/factory') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                            @endif
                         @else
-                            <a href="{{ url('/factory') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
-                        @endif
-                    @else
-                        <a href="{{ url('/factory/login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
-                        <a href="{{ route('filament.factory.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
-                    @endauth
+                            <a href="{{ url('/factory/login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
+                            <a href="{{ route('filament.factory.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
+                        @endauth
+                    </div>
+
+                    <!-- Hamburger Button -->
+                    <button @click="open = !open" class="lg:hidden p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all focus:outline-none" aria-label="Toggle Menu">
+                        <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg x-show="open" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer Backdrop -->
+        <div x-show="open" 
+             x-cloak
+             x-transition:opacity
+             class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
+             @click="open = false">
+        </div>
+
+        <!-- Mobile Menu Drawer Panel -->
+        <div x-show="open" 
+             x-cloak 
+             x-transition:enter="transform transition ease-in-out duration-300"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transform transition ease-in-out duration-300"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-2xl border-l border-slate-100 p-6 flex flex-col justify-between lg:hidden"
+             @click.away="open = false">
+            
+            <div>
+                <!-- Top Section -->
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                    <span class="text-xl font-bold tracking-tight text-primary-900">Optic<span class="text-primary-600">B2B</span></span>
+                    <button @click="open = false" class="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="flex flex-col space-y-4">
+                    <a href="{{ route('marketplace.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Marketplace') }}</a>
+                    <a href="{{ route('sourcing.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
+                    <a href="{{ route('stock-offers.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
+                    <a href="{{ route('factories.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
+                </div>
+            </div>
+
+            <!-- Bottom Auth Section -->
+            <div class="pt-6 border-t border-slate-100 flex flex-col gap-3">
+                @auth
+                    @if(auth()->user()->hasRole(['super_admin', 'admin']))
+                        <a href="{{ url('/admin') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                    @else
+                        <a href="{{ url('/factory') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                    @endif
+                @else
+                    <a href="{{ url('/factory/login') }}" class="w-full text-center py-3 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all text-sm">{{ __('Log in') }}</a>
+                    <a href="{{ route('filament.factory.auth.register') }}" class="w-full text-center py-3 bg-primary-900 text-white rounded-xl font-bold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
+                @endauth
             </div>
         </div>
     </nav>
