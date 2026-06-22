@@ -40,7 +40,6 @@ class FactoryPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Factory/Widgets'), for: 'App\Filament\Factory\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
