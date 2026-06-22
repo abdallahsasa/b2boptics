@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Find Your Best Deal')
+@section('title', __('Find Your Best Deal'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -51,7 +51,7 @@
         </div>
         @empty
         <div class="py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm">
-             <p class="text-slate-500">No active sourcing requests at the moment.</p>
+             <p class="text-slate-500">{{ __('No active sourcing requests at the moment.') }}</p>
         </div>
         @endforelse
     </div>

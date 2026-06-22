@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'OpticB2B') - Global Optics Marketplace</title>
+    <title>@yield('title', 'OpticB2B') - {{ __('Global Optics Marketplace') }}</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,28 +120,28 @@
                         </div>
                         <span class="text-xl font-bold tracking-tight text-primary-900">Optic<span class="text-primary-600">B2B</span></span>
                     </div>
-                    <p class="text-slate-500">Global marketplace for optical industry professionals.</p>
+                    <p class="text-slate-500">{{ __('Global marketplace for optical industry professionals.') }}</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-6">Marketplace</h4>
+                    <h4 class="font-bold mb-6">{{ __('Marketplace') }}</h4>
                     <ul class="space-y-4 text-slate-500 text-sm">
-                        <li><a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">All Products</a></li>
-                        <li><a href="{{ route('sourcing.index') }}" class="hover:text-primary-600">Buyer Requests</a></li>
-                        <li><a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600">Stock Offers</a></li>
+                        <li><a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">{{ __('All Products') }}</a></li>
+                        <li><a href="{{ route('sourcing.index') }}" class="hover:text-primary-600">{{ __('Buyer Requests') }}</a></li>
+                        <li><a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600">{{ __('Stock Deals') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-6">Support</h4>
+                    <h4 class="font-bold mb-6">{{ __('Support') }}</h4>
                     <ul class="space-y-4 text-slate-500 text-sm">
-                        <li><a href="#" class="hover:text-primary-600">How it Works</a></li>
-                        <li><a href="#" class="hover:text-primary-600">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-primary-600">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary-600">{{ __('How it Works') }}</a></li>
+                        <li><a href="#" class="hover:text-primary-600">{{ __('Contact Us') }}</a></li>
+                        <li><a href="#" class="hover:text-primary-600">{{ __('Privacy Policy') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-6">Newsletter</h4>
+                    <h4 class="font-bold mb-6">{{ __('Newsletter') }}</h4>
                     <div class="flex gap-2">
-                        <input type="email" placeholder="Email address" class="bg-slate-100 border-none rounded-xl px-4 py-2 text-sm w-full focus:ring-2 focus:ring-primary-600">
+                        <input type="email" placeholder="{{ __('Email address') }}" class="bg-slate-100 border-none rounded-xl px-4 py-2 text-sm w-full focus:ring-2 focus:ring-primary-600">
                         <button class="bg-primary-600 text-white p-2 rounded-xl hover:bg-primary-700">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                         </button>
@@ -149,7 +149,7 @@
                 </div>
             </div>
             <div class="border-t border-slate-100 pt-8 text-center text-slate-400 text-xs">
-                <p>&copy; {{ date('Y') }} OpticB2B Marketplace.</p>
+                <p>&copy; {{ date('Y') }} {{ __('OpticB2B Marketplace.') }}</p>
             </div>
         </div>
     </footer>

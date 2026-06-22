@@ -6,9 +6,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Breadcrumbs -->
     <nav class="flex text-sm text-slate-400 mb-8 gap-2">
-        <a href="{{ route('home') }}" class="hover:text-primary-600">Home</a>
+        <a href="{{ route('home') }}" class="hover:text-primary-600">{{ __('Home') }}</a>
         <span>/</span>
-        <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">Marketplace</a>
+        <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">{{ __('Marketplace') }}</a>
         <span>/</span>
         <span class="text-slate-900 font-medium">{{ $product->getTranslation('name', app()->getLocale()) }}</span>
     </nav>
@@ -43,7 +43,7 @@
                          <img src="{{ $product->factory->getFirstMediaUrl('logos') ?: 'https://ui-avatars.com/api/?name=' . urlencode($product->factory->official_name) }}" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-0.5">Manufactured by</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-0.5">{{ __('Manufactured by') }}</p>
                         <a href="{{ route('factories.show', $product->factory) }}" class="text-lg font-bold text-slate-900 hover:text-primary-600 transition-colors">{{ $product->factory->official_name }}</a>
                     </div>
                     <div class="ml-auto">
@@ -56,10 +56,10 @@
                 @endif
 
                 <div class="mb-10">
-                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2">Pricing</p>
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2">{{ __('Pricing') }}</p>
                     <div class="flex items-baseline gap-2">
                         <span class="text-4xl font-bold text-slate-900">{{ $product->currency }} {{ number_format($product->starting_price, 2) }}</span>
-                        <span class="text-slate-400 font-medium">starting price</span>
+                        <span class="text-slate-400 font-medium">{{ __('starting price') }}</span>
                     </div>
                 </div>
 
@@ -69,27 +69,26 @@
 
                 <div class="grid grid-cols-2 gap-4 mb-10">
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Subcategory</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">{{ __('Subcategory') }}</p>
                         <p class="font-bold text-slate-900">{{ $product->subcategory->getTranslation('name', app()->getLocale()) ?? 'N/A' }}</p>
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Origin</p>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">{{ __('Origin') }}</p>
                         <p class="font-bold text-slate-900">{{ $product->factory->country->name ?? 'Global' }}</p>
                     </div>
                 </div>
 
                 <button class="w-full py-5 bg-primary-600 text-white rounded-3xl font-bold text-lg shadow-xl shadow-primary-600/30 hover:bg-primary-700 hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                    Request a Quote
+                    {{ __('Request a Quote') }}
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Similar Products -->
-    @if($similarProducts->count())
     <div class="mt-32">
-        <h2 class="text-3xl font-bold text-slate-900 mb-10">Similar Products</h2>
+        <h2 class="text-3xl font-bold text-slate-900 mb-10">{{ __('Similar Products') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             @foreach($similarProducts as $similar)
             <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden card-hover group">
@@ -97,7 +96,7 @@
                     <img src="{{ $similar->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=600&auto=format&fit=crop' }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 </a>
                 <div class="p-6">
-                    <h3 class="font-bold text-slate-900 truncate"><a href="{{ route('marketplace.product.show', $similar) }}">{{ $similar->getTranslation('name', 'en') }}</a></h3>
+                    <h3 class="font-bold text-slate-900 truncate"><a href="{{ route('marketplace.product.show', $similar) }}">{{ $similar->getTranslation('name', app()->getLocale()) }}</a></h3>
                     <p class="text-primary-600 font-bold mt-1">{{ $similar->currency }} {{ number_format($similar->starting_price, 2) }}</p>
                 </div>
             </div>

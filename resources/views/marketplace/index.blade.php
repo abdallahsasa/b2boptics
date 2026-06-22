@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Marketplace')
+@section('title', __('Marketplace'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -10,9 +10,9 @@
             <form action="{{ route('marketplace.index') }}" method="GET" class="space-y-8 sticky top-24">
                 <!-- Search -->
                 <div>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Search</h3>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">{{ __('Search') }}</h3>
                     <div class="relative">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Lenses, frames..." 
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search lenses, frames, machines...') }}" 
                             class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-600 focus:border-transparent text-sm">
                         <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
@@ -20,11 +20,11 @@
 
                 <!-- Categories -->
                 <div>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Categories</h3>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">{{ __('Categories') }}</h3>
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="radio" name="category" value="" {{ !request('category') ? 'checked' : '' }} onchange="this.form.submit()" class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
-                            <span class="text-sm text-slate-600 group-hover:text-primary-600">All Categories</span>
+                            <span class="text-sm text-slate-600 group-hover:text-primary-600">{{ __('All Categories') }}</span>
                         </label>
                         @foreach($categories as $category)
                         <label class="flex items-center gap-3 cursor-pointer group">
@@ -37,9 +37,9 @@
 
                 <!-- Origin -->
                 <div>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Country of Origin</h3>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">{{ __('Country of Origin') }}</h3>
                     <select name="country" onchange="this.form.submit()" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-600">
-                        <option value="">Any Country</option>
+                        <option value="">{{ __('Any Country') }}</option>
                         @foreach($countries as $country)
                         <option value="{{ $country->code }}" {{ request('country') == $country->code ? 'selected' : '' }}>{{ $country->name }}</option>
                         @endforeach
@@ -48,13 +48,13 @@
 
                 <!-- Price Range -->
                 <div>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Price Range</h3>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">{{ __('Price Range') }}</h3>
                     <div class="flex items-center gap-2">
-                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm">
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('Min') }}" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm">
                         <span class="text-slate-400">-</span>
-                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm">
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('Max') }}" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm">
                     </div>
-                    <button type="submit" class="w-full mt-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all">Apply Price</button>
+                    <button type="submit" class="w-full mt-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all">{{ __('Apply Price') }}</button>
                 </div>
             </form>
         </aside>
@@ -63,14 +63,14 @@
         <div class="flex-1">
             <!-- Top Bar -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-                <p class="text-sm text-slate-500">Showing <span class="font-bold text-slate-900">{{ $products->firstItem() ?? 0 }}</span> - <span class="font-bold text-slate-900">{{ $products->lastItem() ?? 0 }}</span> of <span class="font-bold text-slate-900">{{ $products->total() }}</span> products</p>
+                <p class="text-sm text-slate-500">{!! __('Showing :first - :last of :total products', ['first' => '<span class="font-bold text-slate-900">' . ($products->firstItem() ?? 0) . '</span>', 'last' => '<span class="font-bold text-slate-900">' . ($products->lastItem() ?? 0) . '</span>', 'total' => '<span class="font-bold text-slate-900">' . $products->total() . '</span>']) !!}</p>
                 
                 <div class="flex items-center gap-4">
-                    <label class="text-sm text-slate-500">Sort by:</label>
+                    <label class="text-sm text-slate-500">{{ __('Sort by:') }}</label>
                     <select name="sort" onchange="window.location.href = '{{ request()->fullUrlWithQuery(['sort' => '']) }}'.replace('sort=', 'sort=' + this.value)" class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-600">
-                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
-                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Newest') }}</option>
+                        <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>{{ __('Price: Low to High') }}</option>
+                        <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>{{ __('Price: High to Low') }}</option>
                     </select>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                         
                         <div class="flex items-center justify-between pt-4 border-t border-slate-50">
                             <div>
-                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Starting at</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{{ __('Starting at') }}</p>
                                 <p class="text-lg font-bold text-slate-900">{{ $product->currency }} {{ number_format($product->starting_price, 2) }}</p>
                             </div>
                             <a href="{{ route('marketplace.product.show', $product) }}" class="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all">
@@ -115,8 +115,8 @@
                     <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900">No products found</h3>
-                    <p class="text-slate-500 mt-2">Try adjusting your filters or search keywords.</p>
+                    <h3 class="text-xl font-bold text-slate-900">{{ __('No products found') }}</h3>
+                    <p class="text-slate-500 mt-2">{{ __('Try adjusting your filters or search keywords.') }}</p>
                 </div>
                 @endforelse
             </div>

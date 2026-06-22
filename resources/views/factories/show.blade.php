@@ -25,7 +25,7 @@
                     @if($factory->is_verified)
                     <span class="flex items-center gap-1.5 px-3 py-1 bg-green-500 text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                        Verified Factory
+                        {{ __('Verified Factory') }}
                     </span>
                     @endif
                 </div>
@@ -37,7 +37,7 @@
         <!-- Factory Bio -->
         <div class="lg:w-1/3">
             <div class="sticky top-24">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6">About Factory</h2>
+                <h2 class="text-2xl font-bold text-slate-900 mb-6">{{ __('About Factory') }}</h2>
                 <div class="prose prose-slate prose-sm text-slate-600 leading-relaxed mb-8">
                     {!! nl2br(e($factory->getTranslation('description', app()->getLocale()))) !!}
                 </div>
@@ -48,7 +48,7 @@
                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                         </div>
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Official Email</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">{{ __('Official Email') }}</p>
                             <p class="text-sm font-bold text-slate-900">{{ $factory->email }}</p>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                         </div>
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Phone</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">{{ __('Phone') }}</p>
                             <p class="text-sm font-bold text-slate-900">{{ $factory->phone }}</p>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
 
                 <button class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition-all flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                    Contact Factory
+                    {{ __('Contact Factory') }}
                 </button>
             </div>
         </div>
@@ -73,8 +73,8 @@
         <!-- Factory Products -->
         <div class="flex-1">
             <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-bold text-slate-900">Products Catalog</h2>
-                <span class="text-sm text-slate-500 font-medium">{{ $factory->products->count() }} Products</span>
+                <h2 class="text-2xl font-bold text-slate-900">{{ __('Products Catalog') }}</h2>
+                <span class="text-sm text-slate-500 font-medium">{{ __(':count Products', ['count' => $factory->products->count()]) }}</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

@@ -17,8 +17,8 @@ class FactoryStatsOverview extends StatsOverviewWidget
 
         if (!$factory) {
             return [
-                Stat::make('Status', 'No Factory Profile')
-                    ->description('Complete your factory registration')
+                Stat::make(__('Status'), __('No Factory Profile'))
+                    ->description(__('Complete your factory registration'))
                     ->color('danger')
                     ->icon('heroicon-o-exclamation-triangle'),
             ];
@@ -33,23 +33,23 @@ class FactoryStatsOverview extends StatsOverviewWidget
         $activeTenders = BuyerRequest::where('status', 'approved')->count();
 
         return [
-            Stat::make('Total Products', $totalProducts)
-                ->description($approvedProducts . ' approved, ' . $pendingProducts . ' pending')
+            Stat::make(__('Total Products'), $totalProducts)
+                ->description(__('approved: :approved, pending: :pending', ['approved' => $approvedProducts, 'pending' => $pendingProducts]))
                 ->color('primary')
                 ->icon('heroicon-o-shopping-bag'),
 
-            Stat::make('Stock Deals', $totalStockOffers)
-                ->description($activeStockOffers . ' currently active')
+            Stat::make(__('Stock Deals'), $totalStockOffers)
+                ->description(__('currently active: :active', ['active' => $activeStockOffers]))
                 ->color('success')
                 ->icon('heroicon-o-tag'),
 
-            Stat::make('Offers Submitted', $totalSupplierOffers)
-                ->description('Your bids on buyer tenders')
+            Stat::make(__('Offers Submitted'), $totalSupplierOffers)
+                ->description(__('Your bids on buyer tenders'))
                 ->color('warning')
                 ->icon('heroicon-o-chat-bubble-left-right'),
 
-            Stat::make('Open Tenders', $activeTenders)
-                ->description('Available opportunities')
+            Stat::make(__('Open Tenders'), $activeTenders)
+                ->description(__('Available opportunities'))
                 ->color('info')
                 ->icon('heroicon-o-inbox-arrow-down'),
         ];

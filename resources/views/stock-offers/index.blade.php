@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Stock Deals')
+@section('title', __('Stock Deals'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -43,7 +43,7 @@
         </div>
         @empty
         <div class="col-span-full py-20 text-center bg-white rounded-[3rem] border border-slate-100">
-             <p class="text-slate-500">No active clearance deals at the moment.</p>
+             <p class="text-slate-500">{{ __('No active clearance deals at the moment.') }}</p>
         </div>
         @endforelse
     </div>
