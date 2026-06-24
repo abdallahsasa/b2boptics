@@ -39,7 +39,27 @@ class FactoryController extends Controller
             });
         }
 
-        $factories = $query->latest()->paginate(12)->withQueryString();
+        // Sorting
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'popular':
+                $query->withCount('ratings')->orderBy('ratings_count', 'desc');
+                break;
+            case 'most_deals':
+                $query->withCount('stockOffers')->orderBy('stock_offers_count', 'desc');
+                break;
+            case 'rating':
+                $query->withAvg('ratings', 'rating')->orderBy('ratings_avg_rating', 'desc');
+                break;
+            case 'az':
+                $query->orderBy('official_name->' . app()->getLocale(), 'asc');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $factories = $query->paginate(12)->withQueryString();
         $categories = Category::where('type', 'product')->get();
         $countries = Country::where('status', 'active')->get();
 

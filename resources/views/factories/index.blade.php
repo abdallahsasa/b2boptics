@@ -63,6 +63,17 @@
                 <!-- Top Info Bar -->
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
                     <p class="text-sm text-slate-500">{!! __('Showing :first - :last of :total factories', ['first' => '<span class="font-bold text-slate-900">' . ($factories->firstItem() ?? 0) . '</span>', 'last' => '<span class="font-bold text-slate-900">' . ($factories->lastItem() ?? 0) . '</span>', 'total' => '<span class="font-bold text-slate-900">' . $factories->total() . '</span>']) !!}</p>
+                    
+                    <div class="flex items-center gap-4 w-full sm:w-auto">
+                        <label class="text-sm text-slate-500 whitespace-nowrap">{{ __('Sort by:') }}</label>
+                        <select name="sort" onchange="window.location.href = '{{ request()->fullUrlWithQuery(['sort' => '']) }}'.replace('sort=', 'sort=' + this.value)" class="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-600 w-full sm:w-auto">
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Newest') }}</option>
+                            <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>{{ __('Popular') }}</option>
+                            <option value="most_deals" {{ request('sort') == 'most_deals' ? 'selected' : '' }}>{{ __('Most Deals') }}</option>
+                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>{{ __('Rating') }}</option>
+                            <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>{{ __('A to Z') }}</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Factory Grid -->
