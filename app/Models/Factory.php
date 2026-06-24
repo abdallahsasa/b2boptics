@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Facades\Storage;
 
 class Factory extends Model implements HasMedia
 {
@@ -21,7 +22,7 @@ class Factory extends Model implements HasMedia
         'approved_at', 'approved_by'
     ];
 
-    public $translatable = ['description'];
+    public $translatable = ['official_name', 'description'];
 
     public function owner(): BelongsTo
     {
@@ -70,5 +71,33 @@ class Factory extends Model implements HasMedia
                 $factory->slug = \Illuminate\Support\Str::slug($factory->official_name);
             }
         });
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if ($this->hasMedia('logos')) {
+            return $this->getFirstMediaUrl('logos');
+        }
+        if ($this->hasMedia('factory_logos')) {
+            return $this->getFirstMediaUrl('factory_logos');
+        }
+        if ($this->logo) {
+            return Storage::url($this->logo);
+        }
+        return null;
+    }
+
+    public function getBannerUrlAttribute(): ?string
+    {
+        if ($this->hasMedia('banners')) {
+            return $this->getFirstMediaUrl('banners');
+        }
+        if ($this->hasMedia('factory_banners')) {
+            return $this->getFirstMediaUrl('factory_banners');
+        }
+        if ($this->banner) {
+            return Storage::url($this->banner);
+        }
+        return null;
     }
 }

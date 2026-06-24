@@ -86,7 +86,7 @@
                     <div class="absolute -inset-4 bg-gradient-to-r from-primary-100 to-slate-100 rounded-[2rem] transform rotate-3"></div>
                     <div class="relative bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden p-4">
                         <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ __('Live Marketplace') }}</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ __('Live Products') }}</span>
                             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                         </div>
                         <div class="space-y-4">
@@ -180,7 +180,7 @@
             <div class="flex items-center justify-between mb-10">
                 <h2 class="text-2xl font-bold text-slate-900">{{ __('Latest Products') }}</h2>
                 <a href="{{ route('marketplace.index') }}" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-2">
-                    {{ __('View Marketplace') }}
+                    {{ __('View Products') }}
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 </a>
             </div>

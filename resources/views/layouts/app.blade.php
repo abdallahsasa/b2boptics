@@ -72,7 +72,7 @@
                 </a>
                 
                 <div class="hidden lg:flex items-center space-x-8 text-sm font-medium text-slate-600">
-                    <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Marketplace') }}</a>
+                    <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
                     <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
                     <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
                     <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
@@ -150,7 +150,7 @@
 
                 <!-- Navigation Links -->
                 <div class="flex flex-col space-y-4">
-                    <a href="{{ route('marketplace.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Marketplace') }}</a>
+                    <a href="{{ route('marketplace.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
                     <a href="{{ route('sourcing.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
                     <a href="{{ route('stock-offers.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
                     <a href="{{ route('factories.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
@@ -191,7 +191,7 @@
                     <p class="text-slate-500">{{ __('Global marketplace for optical industry professionals.') }}</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-6">{{ __('Marketplace') }}</h4>
+                    <h4 class="font-bold mb-6">{{ __('Products') }}</h4>
                     <ul class="space-y-4 text-slate-500 text-sm">
                         <li><a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">{{ __('All Products') }}</a></li>
                         <li><a href="{{ route('sourcing.index') }}" class="hover:text-primary-600">{{ __('Buyer Requests') }}</a></li>

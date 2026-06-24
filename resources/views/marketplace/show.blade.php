@@ -8,7 +8,7 @@
     <nav class="flex text-sm text-slate-400 mb-8 gap-2">
         <a href="{{ route('home') }}" class="hover:text-primary-600">{{ __('Home') }}</a>
         <span>/</span>
-        <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">{{ __('Marketplace') }}</a>
+        <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600">{{ __('Products') }}</a>
         <span>/</span>
         <span class="text-slate-900 font-medium">{{ $product->getTranslation('name', app()->getLocale()) }}</span>
     </nav>
@@ -40,7 +40,7 @@
                 @if($product->factory)
                 <div class="flex items-center gap-4 mb-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <div class="w-14 h-14 bg-slate-100 rounded-2xl overflow-hidden flex-shrink-0">
-                         <img src="{{ $product->factory->getFirstMediaUrl('logos') ?: 'https://ui-avatars.com/api/?name=' . urlencode($product->factory->official_name) }}" class="w-full h-full object-cover">
+                         <img src="{{ $product->factory->logo_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($product->factory->official_name) }}" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-0.5">{{ __('Manufactured by') }}</p>

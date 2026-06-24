@@ -6,13 +6,13 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Banner -->
     <div class="h-64 lg:h-96 bg-slate-200 rounded-[3rem] overflow-hidden relative shadow-sm">
-        <img src="{{ $factory->getFirstMediaUrl('banners') ?: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop' }}" 
+        <img src="{{ $factory->banner_url ?: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop' }}" 
             class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         
         <div class="absolute -bottom-1 left-8 lg:left-12 translate-y-1/2 flex items-end gap-6">
             <div class="w-32 h-32 lg:w-48 lg:h-48 bg-white p-2 rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
-                <img src="{{ $factory->getFirstMediaUrl('logos') ?: 'https://ui-avatars.com/api/?name=' . urlencode($factory->official_name) . '&size=256' }}" 
+                <img src="{{ $factory->logo_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($factory->official_name) . '&size=256' }}" 
                     class="w-full h-full object-cover rounded-[1.5rem]">
             </div>
             <div class="pb-6 hidden sm:block">
