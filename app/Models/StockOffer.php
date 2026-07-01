@@ -29,4 +29,29 @@ class StockOffer extends Model implements HasMedia
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->image) {
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+            return asset('uploads/' . $this->image);
+        }
+
+        if (method_exists($this, 'getFirstMedia')) {
+            $media = $this->getFirstMedia('stock_offer_images');
+            if ($media) {
+                return $media->getUrl();
+            }
+        }
+
+        return null;
+    }
+
+    public function getImagesAttribute(): array
+    {
+        $url = $this->image_url;
+        return $url ? [$url] : [];
+    }
 }

@@ -9,7 +9,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Schema;
 
 class ProductForm
@@ -58,9 +57,10 @@ class ProductForm
 
                 Section::make('Media & Description')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('image')
-                            ->collection('product_images')
-                            ->image(),
+                        FileUpload::make('image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('products'),
                         Textarea::make('description')
                             ->rows(5)
                             ->columnSpanFull(),

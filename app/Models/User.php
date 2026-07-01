@@ -21,6 +21,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
         'name',
         'email',
         'password',
+        'avatar',
     ];
 
     protected $hidden = [
@@ -56,6 +57,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
 
     public function getFilamentAvatarUrl(): ?string
     {
+        if ($this->avatar) {
+            return asset('uploads/' . $this->avatar);
+        }
         return $this->getFirstMediaUrl('avatars') ?: null;
     }
 

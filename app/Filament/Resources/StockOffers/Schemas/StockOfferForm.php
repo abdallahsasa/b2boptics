@@ -6,7 +6,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Schema;
 
 class StockOfferForm
@@ -42,8 +42,9 @@ class StockOfferForm
 
                 Section::make('Media & Status')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('image')
-                            ->collection('stock_offer_images')
+                        FileUpload::make('image')
+                            ->disk('public')
+                            ->directory('stock-offers')
                             ->image(),
                         Select::make('status')
                             ->options([

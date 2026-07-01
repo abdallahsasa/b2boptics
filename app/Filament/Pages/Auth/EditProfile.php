@@ -5,7 +5,7 @@ namespace App\Filament\Pages\Auth;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +18,9 @@ class EditProfile extends BaseEditProfile
             ->components([
                 Section::make('Profile Information')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('avatar')
-                            ->collection('avatars')
+                        FileUpload::make('avatar')
+                            ->disk('public')
+                            ->directory('users')
                             ->avatar()
                             ->imageEditor()
                             ->columnSpanFull(),

@@ -8,7 +8,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Schema;
 
 class FactoryForm
@@ -58,12 +57,16 @@ class FactoryForm
                 
                 Section::make('Branding & Description')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('logo')
-                            ->collection('factory_logos')
-                            ->image(),
-                        SpatieMediaLibraryFileUpload::make('banner')
-                            ->collection('factory_banners')
-                            ->image(),
+                        FileUpload::make('logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('factories')
+                            ->helperText('Recommended: 512x512 pixels (1:1 ratio).'),
+                        FileUpload::make('banner')
+                            ->image()
+                            ->disk('public')
+                            ->directory('factories')
+                            ->helperText('Recommended: 1200x400 pixels or wider (3:1 ratio).'),
                         Textarea::make('description')
                             ->rows(5)
                             ->columnSpanFull(),

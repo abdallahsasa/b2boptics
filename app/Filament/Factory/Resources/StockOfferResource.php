@@ -85,6 +85,7 @@ class StockOfferResource extends Resource
                     ->schema([
                         FileUpload::make('image')
                             ->image()
+                            ->disk('public')
                             ->directory('stock-offers'),
                         Textarea::make('description')
                             ->rows(5)

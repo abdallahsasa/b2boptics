@@ -16,7 +16,8 @@ class HeroSlidersTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->disk('public'),
                 TextColumn::make('button_url')
                     ->searchable(),
                 TextColumn::make('order')

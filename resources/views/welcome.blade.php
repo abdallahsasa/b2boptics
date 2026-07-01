@@ -31,20 +31,27 @@
 
 @section('content')
 
-    <!-- SECTION 1: HERO (Search-first interface) -->
-    <section class="bg-slate-50 border-b border-slate-200 py-20 lg:py-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- SECTION 1: HERO (Search-first interface with video background) -->
+    <section class="relative overflow-hidden py-20 lg:py-32 min-h-[500px] flex items-center">
+        <!-- Video Background -->
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+            <source src="{{ asset('uploads/videos/hero.mov') }}" type="video/mp4">
+        </video>
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-slate-950/70 z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
             <div class="flex flex-col lg:flex-row gap-12 items-center">
                 <!-- Search Interface -->
                 <div class="flex-1 w-full">
-                    <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+                    <h1 class="text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
                         {{ __('Find Wholesale Optical Products & Reliable Factories') }}
                     </h1>
-                    <p class="text-lg text-slate-600 mb-8 max-w-xl">
+                    <p class="text-lg text-slate-200 mb-8 max-w-xl">
                         {{ __('The leading B2B sourcing platform for lenses, frames, and optical machinery.') }}
                     </p>
                     
-                    <div class="bg-white p-4 rounded-2xl shadow-lg border border-slate-200">
+                    <div class="bg-white p-4 rounded-2xl shadow-2xl border border-slate-100">
                         <form action="{{ route('marketplace.index') }}" method="GET" class="flex flex-col md:flex-row gap-3">
                             <div class="flex-1 relative">
                                 <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -73,17 +80,17 @@
                     </div>
                     
                     <div class="mt-6 flex flex-wrap items-center gap-3 text-sm">
-                        <span class="text-slate-500 font-medium">{{ __('Popular:') }}</span>
-                        <a href="{{ route('marketplace.index', ['search' => 'Resin Lenses']) }}" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 font-medium hover:border-primary-600 hover:text-primary-600 transition-colors">{{ __('Resin Lenses') }}</a>
-                        <a href="{{ route('marketplace.index', ['search' => 'Titanium Frames']) }}" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 font-medium hover:border-primary-600 hover:text-primary-600 transition-colors">{{ __('Titanium Frames') }}</a>
-                        <a href="{{ route('marketplace.index', ['search' => 'Edger Machine']) }}" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 font-medium hover:border-primary-600 hover:text-primary-600 transition-colors">{{ __('Edger Machines') }}</a>
+                        <span class="text-slate-300 font-medium">{{ __('Popular:') }}</span>
+                        <a href="{{ route('marketplace.index', ['search' => 'Resin Lenses']) }}" class="px-3 py-1.5 bg-white/10 backdrop-blur border border-white/20 rounded-lg text-white font-medium hover:bg-white/20 hover:border-white transition-colors">{{ __('Resin Lenses') }}</a>
+                        <a href="{{ route('marketplace.index', ['search' => 'Titanium Frames']) }}" class="px-3 py-1.5 bg-white/10 backdrop-blur border border-white/20 rounded-lg text-white font-medium hover:bg-white/20 hover:border-white transition-colors">{{ __('Titanium Frames') }}</a>
+                        <a href="{{ route('marketplace.index', ['search' => 'Edger Machine']) }}" class="px-3 py-1.5 bg-white/10 backdrop-blur border border-white/20 rounded-lg text-white font-medium hover:bg-white/20 hover:border-white transition-colors">{{ __('Edger Machines') }}</a>
                     </div>
                 </div>
 
                 <!-- Live Preview -->
                 @if($products->isNotEmpty())
                 <div class="hidden lg:block w-96 relative">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-primary-100 to-slate-100 rounded-[2rem] transform rotate-3"></div>
+                    <div class="absolute -inset-4 bg-gradient-to-r from-white/10 to-white/5 rounded-[2rem] transform rotate-3"></div>
                     <div class="relative bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden p-4">
                         <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ __('Live Products') }}</span>

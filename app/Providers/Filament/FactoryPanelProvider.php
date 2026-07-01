@@ -29,6 +29,8 @@ class FactoryPanelProvider extends PanelProvider
             ->login()
             ->registration(\App\Filament\Factory\Pages\Auth\RegisterFactory::class)
             ->brandName('OpticB2B Factory Portal')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::hex('#2254C5'),
             ])

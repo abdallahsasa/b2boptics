@@ -61,14 +61,8 @@
     <nav class="fixed top-0 w-full z-50 glass-nav" x-data="{ open: false }" x-effect="document.body.style.overflow = open ? 'hidden' : ''">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                    </div>
-                    <span class="text-2xl font-bold tracking-tight text-primary-900">Optic<span class="text-primary-600">B2B</span></span>
+                <a href="{{ route('home') }}" class="flex items-center">
+                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 lg:h-12 w-auto object-contain">
                 </a>
                 
                 <div class="hidden lg:flex items-center space-x-8 text-sm font-medium text-slate-600">
@@ -142,7 +136,7 @@
             <div>
                 <!-- Top Section -->
                 <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                    <span class="text-xl font-bold tracking-tight text-primary-900">Optic<span class="text-primary-600">B2B</span></span>
+                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-8 w-auto object-contain">
                     <button @click="open = false" class="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
@@ -183,10 +177,7 @@
             <div class="grid md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-2 mb-6">
-                        <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary-600/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </div>
-                        <span class="text-xl font-bold tracking-tight text-primary-900">Optic<span class="text-primary-600">B2B</span></span>
+                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 w-auto object-contain">
                     </div>
                     <p class="text-slate-500">{{ __('Global marketplace for optical industry professionals.') }}</p>
                 </div>

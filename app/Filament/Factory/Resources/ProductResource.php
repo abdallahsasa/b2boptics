@@ -85,6 +85,7 @@ class ProductResource extends Resource
                     ->schema([
                         FileUpload::make('image')
                             ->image()
+                            ->disk('public')
                             ->directory('products'),
                         Textarea::make('description')
                             ->rows(5)
@@ -98,6 +99,7 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('name')
                     ->searchable()

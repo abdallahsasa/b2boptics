@@ -106,12 +106,16 @@ class MyFactory extends Page
                     ->schema([
                         FileUpload::make('logo')
                             ->image()
-                            ->directory('factory-logos')
-                            ->label('Company Logo'),
+                            ->disk('public')
+                            ->directory('factories')
+                            ->label('Company Logo')
+                            ->helperText('Recommended: 512x512 pixels (1:1 ratio).'),
                         FileUpload::make('banner')
                             ->image()
-                            ->directory('factory-banners')
-                            ->label('Cover Banner'),
+                            ->disk('public')
+                            ->directory('factories')
+                            ->label('Cover Banner')
+                            ->helperText('Recommended: 1200x400 pixels or wider (3:1 ratio).'),
                         Textarea::make('description')
                             ->label('About Your Factory')
                             ->helperText('Describe what your factory produces, your specialties, certifications, and capacity.')

@@ -18,6 +18,7 @@ class HeroSliderForm
                 TextInput::make('subtitle'),
                 FileUpload::make('image')
                     ->image()
+                    ->disk('public')
                     ->directory('hero-sliders')
                     ->required(),
                 TextInput::make('button_text'),

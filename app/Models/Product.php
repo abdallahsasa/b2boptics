@@ -45,4 +45,23 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(Rating::class);
     }
+
+    public function getFirstMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
+    {
+        if ($this->image) {
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+            return asset('uploads/' . $this->image);
+        }
+
+        if (method_exists($this, 'getFirstMedia')) {
+            $media = $this->getFirstMedia($collectionName);
+            if ($media) {
+                return $media->getUrl($conversionName);
+            }
+        }
+
+        return '';
+    }
 }

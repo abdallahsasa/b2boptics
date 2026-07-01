@@ -75,28 +75,34 @@ class Factory extends Model implements HasMedia
 
     public function getLogoUrlAttribute(): ?string
     {
+        if ($this->logo) {
+            if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+                return $this->logo;
+            }
+            return asset('uploads/' . $this->logo);
+        }
         if ($this->hasMedia('logos')) {
             return $this->getFirstMediaUrl('logos');
         }
         if ($this->hasMedia('factory_logos')) {
             return $this->getFirstMediaUrl('factory_logos');
         }
-        if ($this->logo) {
-            return Storage::url($this->logo);
-        }
         return null;
     }
 
     public function getBannerUrlAttribute(): ?string
     {
+        if ($this->banner) {
+            if (str_starts_with($this->banner, 'http://') || str_starts_with($this->banner, 'https://')) {
+                return $this->banner;
+            }
+            return asset('uploads/' . $this->banner);
+        }
         if ($this->hasMedia('banners')) {
             return $this->getFirstMediaUrl('banners');
         }
         if ($this->hasMedia('factory_banners')) {
             return $this->getFirstMediaUrl('factory_banners');
-        }
-        if ($this->banner) {
-            return Storage::url($this->banner);
         }
         return null;
     }

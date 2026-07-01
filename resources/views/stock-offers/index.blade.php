@@ -18,7 +18,7 @@
             </div>
 
             <div class="aspect-video overflow-hidden bg-slate-100">
-                <img src="{{ $offer->image ?: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=800&auto=format&fit=crop' }}" 
+                <img src="{{ $offer->image_url ?: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=800&auto=format&fit=crop' }}" 
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
             </div>
 
