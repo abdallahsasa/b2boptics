@@ -87,6 +87,7 @@
     </div>
 
     <!-- Similar Products -->
+    @if($similarProducts->count())
     <div class="mt-32">
         <h2 class="text-3xl font-bold text-slate-900 mb-10">{{ __('Similar Products') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
