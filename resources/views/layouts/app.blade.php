@@ -62,10 +62,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <a href="{{ route('home') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 lg:h-12 w-auto object-contain">
+                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-14 lg:h-16 w-auto object-contain">
                 </a>
                 
-                <div class="hidden lg:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                <div class="hidden lg:flex items-center space-x-10 text-[15px] font-semibold text-slate-600">
                     <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
                     <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
                     <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
@@ -75,7 +75,7 @@
                 <div class="flex items-center gap-3 sm:gap-4">
                     <!-- Language Switcher -->
                     <div class="relative group h-full flex items-center">
-                        <button class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
+                        <button class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
                             {{ app()->getLocale() }}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </button>
@@ -94,13 +94,13 @@
                     <div class="hidden lg:flex items-center gap-4">
                         @auth
                             @if(auth()->user()->hasRole(['super_admin', 'admin']))
-                                <a href="{{ url('/admin') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                                <a href="{{ url('/admin') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Admin Panel') }}</a>
                             @else
-                                <a href="{{ url('/factory') }}" class="px-6 py-2.5 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                                <a href="{{ url('/factory') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Factory Portal') }}</a>
                             @endif
                         @else
-                            <a href="{{ url('/factory/login') }}" class="text-sm font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
-                            <a href="{{ route('filament.factory.auth.register') }}" class="px-6 py-2.5 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
+                            <a href="{{ url('/factory/login') }}" class="text-[15px] font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
+                            <a href="{{ route('filament.factory.auth.register') }}" class="px-7 py-3 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-[15px]">{{ __('Join as Factory') }}</a>
                         @endauth
                     </div>
 
