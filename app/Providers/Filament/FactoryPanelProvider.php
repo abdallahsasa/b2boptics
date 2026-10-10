@@ -19,6 +19,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
+
 class FactoryPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -56,6 +58,10 @@ class FactoryPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->plugin(
+                SpatieTranslatablePlugin::make()
+                    ->defaultLocales(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it']),
+            );
     }
 }

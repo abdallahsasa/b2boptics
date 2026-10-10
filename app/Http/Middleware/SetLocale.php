@@ -22,7 +22,7 @@ class SetLocale
             URL::defaults(['locale' => $locale]);
         } else {
             // If it's not a locale, and not a system path (like admin, livewire, etc.)
-            $isSystemPath = in_array($locale, ['admin', 'livewire', 'lang', 'api', 'auth', 'storage', 'login', 'register', 'up'])
+            $isSystemPath = in_array($locale, ['admin', 'livewire', 'lang', 'api', 'auth', 'storage', 'login', 'register', 'up', 'broadcasting', 'api-auth', 'chat'])
                 || (is_string($locale) && str_starts_with($locale, 'livewire'));
 
             if (!$isSystemPath) {

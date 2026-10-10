@@ -32,8 +32,18 @@ class MyFactory extends Page
         $factory = auth()->user()->factory;
 
         if ($factory) {
+            $officialName = $factory->getTranslation('official_name', app()->getLocale(), false);
+            if (is_array($officialName)) {
+                $officialName = $officialName[app()->getLocale()] ?? reset($officialName) ?? '';
+            }
+
+            $description = $factory->getTranslation('description', app()->getLocale(), false);
+            if (is_array($description)) {
+                $description = $description[app()->getLocale()] ?? reset($description) ?? '';
+            }
+
             $this->form->fill([
-                'official_name' => $factory->official_name,
+                'official_name' => $officialName ?: ($factory->official_name ?? ''),
                 'contact_person_first_name' => $factory->contact_person_first_name,
                 'contact_person_last_name' => $factory->contact_person_last_name,
                 'phone' => $factory->phone,
@@ -41,7 +51,7 @@ class MyFactory extends Page
                 'tax_number' => $factory->tax_number,
                 'country_id' => $factory->country_id,
                 'category_id' => $factory->category_id,
-                'description' => $factory->description,
+                'description' => $description ?: ($factory->description ?? ''),
                 'logo' => $factory->logo,
                 'banner' => $factory->banner,
             ]);
@@ -131,17 +141,28 @@ class MyFactory extends Page
 
         $factory = auth()->user()->factory;
 
+        $officialName = $data['official_name'] ?? '';
+        $description = $data['description'] ?? '';
+        unset($data['official_name'], $data['description']);
+
         if ($factory) {
             $factory->update($data);
-            // Re-generate slug if name changed
-            if (!empty($data['official_name'])) {
-                $factory->update(['slug' => Str::slug($data['official_name'])]);
+            if (!empty($officialName)) {
+                $factory->setTranslation('official_name', app()->getLocale(), $officialName);
+                $factory->slug = Str::slug($officialName);
             }
+            if ($description !== null) {
+                $factory->setTranslation('description', app()->getLocale(), $description);
+            }
+            $factory->save();
         } else {
             $data['user_id'] = auth()->id();
-            $data['slug'] = Str::slug($data['official_name']);
+            $data['slug'] = Str::slug($officialName);
             $data['status'] = 'pending';
-            Factory::create($data);
+            $factory = Factory::create($data);
+            $factory->setTranslation('official_name', app()->getLocale(), $officialName);
+            $factory->setTranslation('description', app()->getLocale(), $description);
+            $factory->save();
         }
 
         Notification::make()

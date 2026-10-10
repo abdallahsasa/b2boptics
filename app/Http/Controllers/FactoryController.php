@@ -72,9 +72,16 @@ class FactoryController extends Controller
             abort(404);
         }
 
-        $factory->load(['country', 'category', 'products' => function ($q) {
-            $q->where('status', 'approved')->latest();
-        }]);
+        $factory->load([
+            'country',
+            'category',
+            'products' => function ($q) {
+                $q->where('status', 'approved')->with('category')->latest();
+            },
+            'stockOffers' => function ($q) {
+                $q->where('status', 'active')->latest();
+            }
+        ]);
 
         return view('factories.show', compact('factory'));
     }

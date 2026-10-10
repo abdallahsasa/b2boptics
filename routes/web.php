@@ -4,6 +4,8 @@ use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\SourcingController;
 use App\Http\Controllers\StockOfferController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 // Fallback login route for the auth middleware
@@ -48,6 +50,20 @@ Route::group([
         Route::post('/', [SourcingController::class, 'store'])->name('store')->middleware('auth');
         Route::get('/{buyerRequest}', [SourcingController::class, 'show'])->name('show');
     });
+
+    // Chat
+    Route::group(['prefix' => 'chat', 'as' => 'chat.', 'middleware' => 'auth'], function () {
+        Route::post('/start', [ChatController::class, 'start'])->name('start');
+        Route::post('/message', [ChatController::class, 'message'])->name('message');
+    });
+
+    // Frontend Auth
+    Route::group(['prefix' => 'api-auth', 'as' => 'api-auth.'], function () {
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+    });
+    
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Social Auth Placeholders
     Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {

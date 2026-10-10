@@ -203,6 +203,47 @@
                                     </div>
                                 </template>
 
+                                <!-- Interactive Rating UI -->
+                                <template x-if="msg.type === 'rating'">
+                                    <div class="mt-3 bg-[#2a3942] rounded-xl p-4 border border-slate-700 w-full min-w-[240px]">
+                                        <p class="text-sm text-slate-300 font-semibold mb-3 border-b border-slate-700 pb-2">Rate your experience</p>
+                                        
+                                        <div class="space-y-3 text-sm text-slate-300">
+                                            <div class="flex items-center justify-between">
+                                                <span>Helpful</span>
+                                                <div class="flex gap-1">
+                                                    <template x-for="i in 5">
+                                                        <svg @click="!msg.ratingSubmitted && (msg.ratings.helpful = i)" :class="msg.ratings.helpful >= i ? 'text-amber-400' : 'text-slate-600'" class="w-5 h-5 cursor-pointer hover:text-amber-300 transition-colors" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span>Fast action</span>
+                                                <div class="flex gap-1">
+                                                    <template x-for="i in 5">
+                                                        <svg @click="!msg.ratingSubmitted && (msg.ratings.fast = i)" :class="msg.ratings.fast >= i ? 'text-amber-400' : 'text-slate-600'" class="w-5 h-5 cursor-pointer hover:text-amber-300 transition-colors" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span>Clear information</span>
+                                                <div class="flex gap-1">
+                                                    <template x-for="i in 5">
+                                                        <svg @click="!msg.ratingSubmitted && (msg.ratings.clear = i)" :class="msg.ratings.clear >= i ? 'text-amber-400' : 'text-slate-600'" class="w-5 h-5 cursor-pointer hover:text-amber-300 transition-colors" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button x-show="msg.ratings.helpful > 0 && msg.ratings.fast > 0 && msg.ratings.clear > 0 && !msg.ratingSubmitted" 
+                                                @click="msg.ratingSubmitted = true; addMessage('bot', 'Thank you for your rating! Have a great day.')" 
+                                                class="mt-5 w-full py-2 bg-[#00a884] text-slate-900 rounded-lg text-sm font-bold hover:bg-[#00c99f] transition-colors">
+                                            Submit Rating
+                                        </button>
+                                        <p x-show="msg.ratingSubmitted" class="mt-4 text-center text-sm text-[#00a884] font-bold">Feedback submitted ✓</p>
+                                    </div>
+                                </template>
+
                             </div>
                         </div>
                     </template>
@@ -247,22 +288,72 @@
                 messages: [],
                 newMessage: '',
                 step: 0,
+                conversationId: null,
 
                 startChat() {
                     if (this.messages.length === 0) {
-                        setTimeout(() => {
-                            this.addMessage('bot', 'Hello  This is Jane, how can help you ?');
-                            this.step = 1;
-                        }, 500);
+                        fetch('{{ route('chat.start') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ product_id: {{ $product->id }} })
+                        })
+                        .then(async response => {
+                            if (response.status === 401) {
+                                window.dispatchEvent(new CustomEvent('open-auth-modal'));
+                                window.addEventListener('auth-success', () => {
+                                    this.startChat();
+                                }, { once: true });
+                                return;
+                            }
+                            if (!response.ok) throw new Error('Network error');
+                            const data = await response.json();
+                            this.conversationId = data.conversation_id;
+                            this.listenForMessages();
+                            
+                            setTimeout(() => {
+                                this.addMessage('bot', 'Hello! This is Jane, how can I help you today?');
+                                this.step = 1;
+                            }, 500);
+                        })
+                        .catch(error => {
+                            this.addMessage('bot', 'Sorry, please login to request a quote.');
+                        });
                     }
                 },
 
-                addMessage(sender, text, options = []) {
+                listenForMessages() {
+                    if (window.Echo) {
+                        window.Echo.private('conversation.' + this.conversationId)
+                            .listen('MessageSent', (e) => {
+                                // Only add message if it's from the backend AI/System
+                                if (!e.message.sender_id) {
+                                    this.addMessage('bot', e.message.content_original);
+                                    
+                                    // Inject our static rating flow logic shortly after the AI responds
+                                    setTimeout(() => {
+                                        if (this.step === 1) {
+                                            this.addMessage('bot', 'Was this answer enough and clear?', ['Yes', 'No']);
+                                            this.step = 2;
+                                        }
+                                    }, 1500);
+                                }
+                            });
+                    }
+                },
+
+                addMessage(sender, text, options = [], type = 'text') {
                     this.messages.push({
                         id: Date.now(),
                         sender: sender,
                         text: text,
                         options: options,
+                        type: type,
+                        ratings: type === 'rating' ? { helpful: 0, fast: 0, clear: 0 } : null,
+                        ratingSubmitted: false,
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                     });
                     this.scrollToBottom();
@@ -275,21 +366,37 @@
                     this.addMessage('user', msgText);
                     this.newMessage = '';
 
-                    setTimeout(() => {
-                        this.handleBotResponse(msgText);
-                    }, 1000);
+                    // Handle predefined flow vs backend
+                    if (this.step === 2 || this.step === 3 || this.step === 5) {
+                        // For the static predefined buttons, bypass backend
+                        setTimeout(() => {
+                            this.handleBotResponse(msgText);
+                        }, 800);
+                    } else if (this.conversationId) {
+                        // Send to OpenAI Backend
+                        fetch('{{ route('chat.message') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                conversation_id: this.conversationId,
+                                message: msgText
+                            })
+                        }).catch(error => console.error(error));
+                    }
                 },
 
                 handleBotResponse(userMessage) {
                     userMessage = userMessage.toLowerCase();
 
-                    if (this.step === 1) {
-                        // Trigger pricing response
-                        this.addMessage('bot', 'The price is {{ $product->currency }} {{ number_format($product->starting_price, 2) }}\nWas this answer enough and clear?', ['Yes', 'No']);
-                        this.step = 2;
-                    } else if (this.step === 2) {
+                    // Step 1 is now handled by the backend AI, followed by our automatic "Was this enough" prompt.
+                    
+                    if (this.step === 2) {
                         if (userMessage === 'yes') {
-                            this.addMessage('bot', 'thank you fro contacting us, is there any further help I can assist you', ['Yes', 'No']);
+                            this.addMessage('bot', 'Thank you for contacting us. Is there any further help I can assist you with?', ['Yes', 'No']);
                             this.step = 3;
                         } else if (userMessage === 'no') {
                             this.addMessage('bot', 'How can I assist you more?\nContact real agent?', ['Contact Agent']);
@@ -298,14 +405,15 @@
                     } else if (this.step === 3) {
                         if (userMessage === 'yes') {
                             this.addMessage('bot', 'Please let me know');
-                            this.step = 1;
+                            this.step = 1; // Resets to AI flow
                         } else if (userMessage === 'no') {
-                            this.addMessage('bot', 'thank you contacting, , rating this chat\nHelpfull ***\nfast action ***\nclear infromation ***');
+                            this.addMessage('bot', 'Thank you for contacting us. We value your feedback.', [], 'rating');
                             this.step = 4;
                         }
                     } else if (this.step === 5) {
                         if (userMessage === 'contact agent') {
                             this.addMessage('bot', 'Transferring you to a human agent... Please wait.');
+                            // Here we could trigger a backend escalation route.
                         }
                     }
                 },

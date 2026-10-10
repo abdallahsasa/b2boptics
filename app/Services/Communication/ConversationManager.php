@@ -36,7 +36,7 @@ class ConversationManager
         ]);
 
         // Broadcast Event
-        broadcast(new MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message));
 
         // If AI is active, try to answer
         if ($conversation->status === 'ai_active' && $senderId !== null) {
@@ -48,7 +48,12 @@ class ConversationManager
 
     protected function handleAIResponse(Conversation $conversation, string $englishQuestion)
     {
-        $aiResult = $this->ai->generateReply($englishQuestion);
+        $context = '';
+        if ($conversation->product) {
+            $context = "The user is inquiring about the product '{$conversation->product->getTranslation('name', 'en')}'. The starting price is {$conversation->product->currency} {$conversation->product->starting_price}. Description: {$conversation->product->getTranslation('description', 'en')}.";
+        }
+        
+        $aiResult = $this->ai->generateReply($englishQuestion, $context);
 
         if ($aiResult['confidence'] < 0.5) {
             // Escalate
@@ -69,7 +74,7 @@ class ConversationManager
                 'source_language' => 'EN',
             ]);
             
-            broadcast(new MessageSent($message))->toOthers();
+            broadcast(new MessageSent($message));
         } else {
             // Send AI Reply
             $message = Message::create([
@@ -81,7 +86,7 @@ class ConversationManager
                 'metadata' => ['sources' => $aiResult['sources']]
             ]);
             
-            broadcast(new MessageSent($message))->toOthers();
+            broadcast(new MessageSent($message));
         }
     }
 }

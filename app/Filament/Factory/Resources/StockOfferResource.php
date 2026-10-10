@@ -20,9 +20,12 @@ use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class StockOfferResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = StockOffer::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;

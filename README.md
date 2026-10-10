@@ -1,58 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OpticB2B Platform Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Welcome to the OpticB2B platform! This document provides a high-level overview of the architecture, tech stack, and key features of the application to help any new developer (human or AI) quickly understand where everything is located.
 
-## About Laravel
+## Tech Stack
+- **Framework**: Laravel 11 (PHP 8.2+)
+- **Admin & Factory Panels**: Filament v3 (TALL Stack - Tailwind, Alpine, Laravel, Livewire)
+- **Frontend (Marketplace)**: Blade Templates, Alpine.js, Tailwind CSS (Vanilla CSS in `index.css`)
+- **Real-time WebSockets**: Laravel Reverb & Laravel Echo
+- **AI Integration**: OpenAI API (for AI Chat Agent)
+- **Translations**: Google Translate API (for seamless cross-language chat)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## System Architecture
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The platform is divided into three main interfaces:
 
-## Learning Laravel
+### 1. The Global Marketplace (Frontend)
+This is the public-facing application where buyers browse products, find stock deals, and post sourcing requests.
+- **Routes**: `routes/web.php` (Wrapped in a multi-language `{locale}` group via `SetLocale` middleware).
+- **Controllers**: `app/Http/Controllers/MarketplaceController`, `FactoryController`, `SourcingController`.
+- **Views**: `resources/views/marketplace`, `resources/views/sourcing`, `resources/views/layouts/app.blade.php`.
+- **Authentication**: Custom frontend Auth via `AuthController` with a seamless Alpine.js inline modal (`resources/views/layouts/app.blade.php`).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Factory Portal (For Sellers/Factories)
+Factories register and manage their products, stock offers, and reply to buyer requests.
+- **URL Prefix**: `/factory`
+- **Framework**: Filament Panel Provider (`app/Providers/Filament/FactoryPanelProvider.php`)
+- **Code Location**: `app/Filament/Factory/Resources/...`
+- **Authentication**: Filament's built-in auth, checking for the `factory_owner` or `factory_staff` roles.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Super Admin Panel (For Platform Owners)
+Platform administrators oversee everything (approving factories, managing categories, users).
+- **URL Prefix**: `/admin`
+- **Framework**: Filament Panel Provider (`app/Providers/Filament/AdminPanelProvider.php`)
+- **Code Location**: `app/Filament/Resources/...`
+- **Authentication**: Filament's built-in auth, checking for the `super_admin` or `admin` roles.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Core Features & Workflows
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### AI Chat & Real-Time Messaging
+A standout feature of this platform is the AI-powered WebSocket Chat System.
+- **How it Works**: Buyers click "Request a Quote" on a product. This opens a WebSocket chat (`resources/views/marketplace/show.blade.php`) connecting to Laravel Reverb.
+- **The AI Agent**: `app/Services/Communication/ConversationManager.php` intercepts messages. The OpenAI API tries to answer product questions automatically.
+- **Escalation**: If the AI confidence drops below 50%, it changes the Conversation status to `human_required`.
+- **Factory Reply**: The Factory Owner logs into the Factory Portal and opens the conversation. They chat back using a **Livewire Component** (`app/Livewire/FactoryChat.php` / `resources/views/livewire/factory-chat.blade.php`) which broadcasts events (`App\Events\MessageSent`) back to the buyer in real-time.
 
+### Auto-Translation Engine
+Since buyers and factories might speak different languages, all messages are automatically translated.
+- **Service**: `app/Services/Communication/TranslationManager.php`
+- **Mechanism**: Translates the message into English for the AI, and translates it into the receiver's local language on the fly. 
+
+### Multi-Language Router (SEO Friendly)
+- **Middleware**: `app/Http/Middleware/SetLocale.php`
+- **Behavior**: Forces URLs to include the language code (e.g., `b2boptics.com/en/marketplace`). 
+- **Exceptions**: API endpoints, WebSocket auth (`/broadcasting/auth`), and Filament panels (`/admin`, `/factory`) are whitelisted from this middleware to prevent 404 redirect loops.
+
+---
+
+## Important Commands
+
+**Start the Web Server**:
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**Start the WebSocket Server (Laravel Reverb)**:
+```bash
+php artisan reverb:start
+```
+*(Note: Reverb MUST be running for the chat widget to work!)*
 
-## Contributing
+**Clear Caches (If making config or view changes)**:
+```bash
+php artisan optimize:clear
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Where to Edit Features?
+- **Changing Frontend UI?** -> Edit Blade files in `resources/views/`. Use Tailwind.
+- **Updating Factory Dashboard?** -> Edit files in `app/Filament/Factory/Resources/`.
+- **Updating Admin Dashboard?** -> Edit files in `app/Filament/Resources/`.
+- **Modifying Chat/AI Logic?** -> Edit `app/Services/Communication/ConversationManager.php`.
+- **Fixing Routing/404s?** -> Check `SetLocale.php` middleware or `routes/web.php`.

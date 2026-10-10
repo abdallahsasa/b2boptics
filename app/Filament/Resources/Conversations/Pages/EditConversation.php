@@ -10,6 +10,8 @@ class EditConversation extends EditRecord
 {
     protected static string $resource = ConversationResource::class;
 
+    protected string $view = 'filament.resources.conversations.pages.edit-conversation';
+
     protected function getHeaderActions(): array
     {
         return [

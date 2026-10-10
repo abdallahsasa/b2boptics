@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'OpticB2B') - {{ __('Global Optics Marketplace') }}</title>
     
     <!-- Fonts -->
@@ -15,6 +16,29 @@
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Laravel Echo & Pusher -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
+    <script>
+        window.Pusher = Pusher;
+        window.Echo = new Echo({
+            broadcaster: 'reverb',
+            key: '{{ config('broadcasting.connections.reverb.key') }}',
+            wsHost: '{{ config('broadcasting.connections.reverb.options.host') }}',
+            wsPort: {{ config('broadcasting.connections.reverb.options.port') ?? 80 }},
+            wssPort: {{ config('broadcasting.connections.reverb.options.port') ?? 443 }},
+            forceTLS: {{ config('broadcasting.connections.reverb.options.useTLS') ? 'true' : 'false' }},
+            enabledTransports: ['ws', 'wss'],
+            authEndpoint: '/broadcasting/auth',
+            auth: {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            }
+        });
+    </script>
     
     <script>
         tailwind.config = {
@@ -95,11 +119,17 @@
                         @auth
                             @if(auth()->user()->hasRole(['super_admin', 'admin']))
                                 <a href="{{ url('/admin') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Admin Panel') }}</a>
-                            @else
+                            @elseif(auth()->user()->hasRole(['factory_owner', 'factory_staff']))
                                 <a href="{{ url('/factory') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Factory Portal') }}</a>
+                            @else
+                                <span class="font-bold text-slate-700">{{ auth()->user()->name }}</span>
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-[15px] font-semibold text-red-600 hover:text-red-700 transition-colors">{{ __('Logout') }}</button>
+                                </form>
                             @endif
                         @else
-                            <a href="{{ url('/factory/login') }}" class="text-[15px] font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in') }}</a>
+                            <button @click="$dispatch('open-auth-modal', { source: 'nav' })" class="text-[15px] font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in / Register') }}</button>
                             <a href="{{ route('filament.factory.auth.register') }}" class="px-7 py-3 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-[15px]">{{ __('Join as Factory') }}</a>
                         @endauth
                     </div>
@@ -156,12 +186,18 @@
                 @auth
                     @if(auth()->user()->hasRole(['super_admin', 'admin']))
                         <a href="{{ url('/admin') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
-                    @else
+                    @elseif(auth()->user()->hasRole(['factory_owner', 'factory_staff']))
                         <a href="{{ url('/factory') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                    @else
+                        <div class="text-center font-bold text-slate-700 mb-2">{{ auth()->user()->name }}</div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-center py-3 border border-red-200 rounded-xl font-bold text-red-600 hover:bg-red-50 transition-all text-sm">{{ __('Logout') }}</button>
+                        </form>
                     @endif
                 @else
-                    <a href="{{ url('/factory/login') }}" class="w-full text-center py-3 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all text-sm">{{ __('Log in') }}</a>
-                    <a href="{{ route('filament.factory.auth.register') }}" class="w-full text-center py-3 bg-primary-900 text-white rounded-xl font-bold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
+                    <button @click="$dispatch('open-auth-modal', { source: 'nav' }); open = false" class="w-full text-center py-3 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all text-sm">{{ __('Log in / Register') }}</button>
+                    <a href="{{ route('filament.factory.auth.register') }}" class="w-full text-center py-3 bg-primary-900 text-white rounded-full font-bold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
                 @endauth
             </div>
         </div>
@@ -212,5 +248,139 @@
             </div>
         </div>
     </footer>
+    <!-- Global Auth Modal -->
+    <div x-data="authModal()"
+         x-show="isOpen"
+         x-on:open-auth-modal.window="isOpen = true; source = $event.detail?.source || 'nav'"
+         x-cloak
+         class="fixed inset-0 z-[100] flex items-center justify-center">
+        
+        <div x-show="isOpen"
+             x-transition.opacity
+             class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+             @click="isOpen = false"></div>
+        
+        <div x-show="isOpen"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+             class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 overflow-hidden z-10 mx-4">
+            
+            <button @click="isOpen = false" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+
+            <!-- Tabs -->
+            <div class="flex gap-4 mb-8 border-b border-slate-100 pb-4">
+                <button @click="tab = 'login'" :class="tab === 'login' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">Sign In</button>
+                <button @click="tab = 'register'" :class="tab === 'register' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form x-show="tab === 'login'" @submit.prevent="submitLogin" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
+                    <input type="email" x-model="loginForm.email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" x-model="loginForm.password" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                </div>
+                <div x-show="error" class="text-red-500 text-sm font-bold" x-text="error"></div>
+                <button type="submit" :disabled="loading" class="w-full bg-primary-600 text-white font-bold rounded-xl py-3 shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-colors disabled:opacity-50">
+                    <span x-show="!loading">Sign In</span>
+                    <span x-show="loading">Please wait...</span>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form x-show="tab === 'register'" @submit.prevent="submitRegister" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+                    <input type="text" x-model="registerForm.name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
+                    <input type="email" x-model="registerForm.email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" x-model="registerForm.password" required minlength="8" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                </div>
+                <div x-show="error" class="text-red-500 text-sm font-bold" x-text="error"></div>
+                <button type="submit" :disabled="loading" class="w-full bg-primary-600 text-white font-bold rounded-xl py-3 shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-colors disabled:opacity-50">
+                    <span x-show="!loading">Create Account</span>
+                    <span x-show="loading">Please wait...</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('authModal', () => ({
+                isOpen: false,
+                source: 'nav',
+                tab: 'login',
+                loading: false,
+                error: null,
+                loginForm: { email: '', password: '' },
+                registerForm: { name: '', email: '', password: '' },
+
+                async submitLogin() {
+                    this.loading = true;
+                    this.error = null;
+                    try {
+                        const res = await fetch('{{ route('api-auth.login') }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                            body: JSON.stringify(this.loginForm)
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            this.isOpen = false;
+                            window.dispatchEvent(new CustomEvent('auth-success'));
+                            if (this.source === 'nav') {
+                                window.location.reload();
+                            }
+                        } else {
+                            this.error = data.message || 'Invalid credentials';
+                        }
+                    } catch (e) {
+                        this.error = 'A network error occurred.';
+                    }
+                    this.loading = false;
+                },
+
+                async submitRegister() {
+                    this.loading = true;
+                    this.error = null;
+                    try {
+                        const res = await fetch('{{ route('api-auth.register') }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                            body: JSON.stringify(this.registerForm)
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            this.isOpen = false;
+                            window.dispatchEvent(new CustomEvent('auth-success'));
+                            if (this.source === 'nav') {
+                                window.location.reload();
+                            }
+                        } else {
+                            this.error = data.message || 'Registration failed.';
+                        }
+                    } catch (e) {
+                        this.error = 'A network error occurred.';
+                    }
+                    this.loading = false;
+                }
+            }));
+        });
+    </script>
 </body>
 </html>
