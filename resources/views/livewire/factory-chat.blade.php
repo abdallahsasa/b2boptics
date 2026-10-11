@@ -2,8 +2,8 @@
     <!-- Chat Header -->
     <div class="p-4 border-b border-gray-200 bg-gray-50 rounded-t-xl flex justify-between items-center">
         <div>
-            <h3 class="font-bold text-gray-900">Chat with {{ $conversation->buyer->name }}</h3>
-            <p class="text-sm text-gray-500">Product: {{ is_array($conversation->product->name) ? ($conversation->product->name['en'] ?? '') : $conversation->product->name }}</p>
+            <h3 class="font-bold text-gray-900">Chat with {{ $conversation->buyer?->name ?? __('Buyer') }}</h3>
+            <p class="text-sm text-gray-500">Product: {{ $conversation->product ? (is_array($conversation->product->name) ? ($conversation->product->name['en'] ?? '') : $conversation->product->name) : __('General Inquiry') }}</p>
         </div>
         <div>
             <span class="px-3 py-1 text-xs font-semibold rounded-full 

@@ -16,4 +16,15 @@ class Conversation extends Model
     public function factory() { return $this->belongsTo(Factory::class); }
     public function product() { return $this->belongsTo(Product::class); }
     public function escalations() { return $this->hasMany(Escalation::class); }
+
+    public function buyer()
+    {
+        return $this->hasOneThrough(User::class, ConversationParticipant::class, 'conversation_id', 'id', 'id', 'user_id')
+            ->where('conversation_participants.role', 'buyer');
+    }
+
+    public function getBuyerUserAttribute()
+    {
+        return $this->participants()->where('role', 'buyer')->first()?->user;
+    }
 }
