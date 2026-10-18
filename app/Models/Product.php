@@ -16,7 +16,13 @@ class Product extends Model implements HasMedia
     protected $fillable = [
         'factory_id', 'category_id', 'subcategory_id', 'name', 'slug',
         'description', 'starting_price', 'currency', 'country_of_origin_id',
-        'status', 'image', 'is_featured', 'published_at'
+        'status', 'image', 'is_featured', 'published_at', 'specifications'
+    ];
+
+    protected $casts = [
+        'specifications' => 'array',
+        'is_featured' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public $translatable = ['name', 'description'];

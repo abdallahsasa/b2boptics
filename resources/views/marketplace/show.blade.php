@@ -110,6 +110,110 @@
             </div>
         </div>
 
+        <!-- Specifications / Basic Info Section -->
+        @if(!empty($product->specifications) && count($product->specifications) > 0)
+            @php
+                $rawSpecs = $product->specifications;
+                $preferredKeys = [
+                    'Transmittance', 'Material', 'Certification', 'Coating', 'Coating Color',
+                    'Abbe Value', 'Specification', 'Origin', 'Production Capacity',
+                    'Shape', 'Lenses Color', 'Customized', 'Power Range', 'Specific Gravity',
+                    'Transport Package', 'Trademark', 'HS Code'
+                ];
+                $orderedSpecs = [];
+                foreach ($preferredKeys as $pk) {
+                    if (array_key_exists($pk, $rawSpecs)) {
+                        $orderedSpecs[$pk] = $rawSpecs[$pk];
+                    }
+                }
+                foreach ($rawSpecs as $rk => $rv) {
+                    if (!array_key_exists($rk, $orderedSpecs)) {
+                        $orderedSpecs[$rk] = $rv;
+                    }
+                }
+                $specs = $orderedSpecs;
+                $keys = array_keys($specs);
+                $total = count($keys);
+                $half = (int) ceil($total / 2);
+                $leftSpecs = array_slice($specs, 0, $half, true);
+                $rightSpecs = array_slice($specs, $half, null, true);
+            @endphp
+            <div class="mt-16 bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-10">
+                <div class="border-b border-slate-100 pb-5 mb-8 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{{ __('Basic Info.') }}</h2>
+                        <p class="text-sm text-slate-400 mt-1">{{ __('Detailed technical specifications and manufacturing standards') }}</p>
+                    </div>
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 border border-primary-100">
+                        <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ __('Factory Certified') }}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                    <!-- Left Column Table -->
+                    <div class="overflow-hidden rounded-2xl border border-slate-200/80 shadow-sm">
+                        <table class="w-full text-sm text-left">
+                            <tbody class="divide-y divide-slate-200/80">
+                                @foreach($leftSpecs as $specKey => $specVal)
+                                    <tr class="divide-x divide-slate-200/80 hover:bg-slate-50/50 transition-colors">
+                                        <th scope="row" class="w-5/12 sm:w-2/5 bg-slate-50/90 px-4 py-3.5 font-medium text-slate-700 text-xs sm:text-sm">
+                                            {{ __($specKey) }}
+                                        </th>
+                                        <td class="w-7/12 sm:w-3/5 bg-white px-4 py-3.5 text-slate-900 text-xs sm:text-sm font-semibold">
+                                            {{ $specVal }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Right Column Table -->
+                    <div class="overflow-hidden rounded-2xl border border-slate-200/80 shadow-sm">
+                        <table class="w-full text-sm text-left">
+                            <tbody class="divide-y divide-slate-200/80">
+                                @foreach($rightSpecs as $specKey => $specVal)
+                                    <tr class="divide-x divide-slate-200/80 hover:bg-slate-50/50 transition-colors">
+                                        <th scope="row" class="w-5/12 sm:w-2/5 bg-slate-50/90 px-4 py-3.5 font-medium text-slate-700 text-xs sm:text-sm">
+                                            {{ __($specKey) }}
+                                        </th>
+                                        <td class="w-7/12 sm:w-3/5 bg-white px-4 py-3.5 text-slate-900 text-xs sm:text-sm font-semibold">
+                                            {{ $specVal }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Product Description Section below Basic Info -->
+                <div class="mt-12 pt-8 border-t border-slate-100">
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-4">{{ __('Product Description') }}</h3>
+                    <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm sm:text-base">
+                        @if($product->description)
+                            <p>{!! nl2br(e($product->getTranslation('description', app()->getLocale()))) !!}</p>
+                        @else
+                            <p class="text-slate-400 italic">{{ __('High quality optical product manufactured under strict ISO quality standards.') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Fallback: Display Product Description if no specifications defined -->
+            @if($product->description)
+                <div class="mt-16 bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-10">
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-4">{{ __('Product Description') }}</h3>
+                    <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-sm sm:text-base">
+                        <p>{!! nl2br(e($product->getTranslation('description', app()->getLocale()))) !!}</p>
+                    </div>
+                </div>
+            @endif
+        @endif
+
         <!-- Similar Products -->
         @if($similarProducts->count())
             <div class="mt-32">

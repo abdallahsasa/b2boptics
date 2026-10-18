@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -63,6 +64,17 @@ class ProductForm
                             ->directory('products'),
                         Textarea::make('description')
                             ->rows(5)
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Basic Info & Specifications')
+                    ->description('Technical specifications displayed in the Basic Info table on the product page')
+                    ->schema([
+                        KeyValue::make('specifications')
+                            ->label('Basic Info (Specifications)')
+                            ->keyLabel('Attribute / Property (e.g. Transmittance, Material, Shape)')
+                            ->valueLabel('Value (e.g. >95%, Sr55, Ball, Hemisphere)')
+                            ->reorderable()
                             ->columnSpanFull(),
                     ]),
 

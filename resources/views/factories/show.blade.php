@@ -84,14 +84,30 @@
 
                 <!-- Floating Banner Badges (Top Right) -->
                 <div class="absolute top-4 right-4 sm:top-6 sm:right-6 flex flex-wrap items-center justify-end gap-2.5 z-10">
+                    <!-- Diamond Member Badge -->
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-lg shadow-amber-500/20 border border-amber-300/40">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 9l10 13 10-13-10-7zm0 3.3L17.7 9H6.3L12 5.3zm-6.8 5.2h4.5l-3.3 6.9-1.2-6.9zm6.8 8.1l-2.6-6.6h5.2L12 18.6zm2.3-8.1h4.5l-1.2 6.9-3.3-6.9z" />
+                        </svg>
+                        <span>{{ __('Diamond Member') }}</span>
+                        <span class="text-amber-100 font-medium">({{ __('Since :year', ['year' => $factory->member_since ?? '2017']) }})</span>
+                    </span>
+
                     @if($factory->is_verified)
-                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-500/90 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-500/20 border border-emerald-400/40">
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600/90 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-600/20 border border-emerald-400/40">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
-                            {{ __('Verified Manufacturer') }}
+                            {{ __('Audited Supplier') }}
                         </span>
                     @endif
+
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900/80 backdrop-blur-md text-amber-400 text-xs font-bold rounded-full shadow-sm border border-slate-700/60">
+                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <span class="text-white">{{ number_format($factory->rating_score ?? 5.0, 1) }} / 5.0</span>
+                    </span>
 
                     @if($factory->country)
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-md text-slate-800 text-xs font-semibold rounded-full shadow-sm border border-white">
@@ -171,6 +187,29 @@
                                     </span>
                                 @endif
                             </div>
+
+                            @if($factory->address)
+                                <div class="flex items-center gap-2 text-xs text-slate-600 pt-1">
+                                    <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span class="text-slate-600">{{ $factory->address }}</span>
+                                </div>
+                            @endif
+
+                            @if(!empty($factory->solutions))
+                                <div class="flex flex-wrap items-center gap-2 pt-2">
+                                    @foreach($factory->solutions as $sol)
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-xs font-semibold rounded-lg border border-slate-200/80 transition-colors">
+                                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            {{ __($sol) }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -475,6 +514,52 @@
                             </div>
                         </div>
                     </div>
+
+                    @if($factory->video_url || $factory->vr_url)
+                    <!-- Factory Video & VR Tour Card -->
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">{{ __('Facility Tour & Cleanroom Production') }}</h3>
+                                <p class="text-xs text-slate-500 mt-1">{{ __('Live look inside automated coating chambers and precision optical inspection lines.') }}</p>
+                            </div>
+                            @if($factory->vr_url)
+                                <a href="{{ $factory->vr_url }}" target="_blank" rel="noopener noreferrer"
+                                   class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl text-xs shadow-md transition-all shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    <span>{{ __('Visit 360° VR Tour') }}</span>
+                                </a>
+                            @endif
+                        </div>
+
+                        <div class="rounded-2xl overflow-hidden bg-slate-900 aspect-video relative group shadow-inner">
+                            @if($factory->video_url)
+                                <video controls class="w-full h-full object-cover" poster="{{ $factory->banner_url }}">
+                                    <source src="{{ $factory->video_url }}" type="video/mp4">
+                                    {{ __('Your browser does not support the video tag.') }}
+                                </video>
+                            @else
+                                <img src="{{ $factory->banner_url }}" class="w-full h-full object-cover">
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+                    @if(!empty($factory->main_products))
+                    <!-- Main Product Categories Portfolio -->
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">{{ __('Main Products Portfolio') }}</h3>
+                        <div class="flex flex-wrap gap-2.5">
+                            @foreach($factory->main_products as $mp)
+                                <span class="px-4 py-2 bg-slate-50 hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-800 transition-all cursor-default shadow-xs">
+                                    {{ $mp }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Right Col: Quick Snapshot -->
@@ -705,6 +790,96 @@
                             </div>
                         </div>
                         @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ON-PAGE DIRECT INQUIRY SECTION (Made-in-China style) -->
+        <!-- ========================================== -->
+        <div class="mt-16 bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm">
+            <div class="max-w-4xl mx-auto">
+                <div class="border-b border-slate-100 pb-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{{ __('Send your message to this supplier') }}</h2>
+                        <p class="text-sm text-slate-500 mt-1">{{ __('Direct communication with the verified factory sales and engineering department.') }}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            {{ __('Online & Fast Response') }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- From -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6 items-center">
+                        <label class="text-sm font-bold text-slate-700 sm:text-right">
+                            <span class="text-rose-500">*</span> {{ __('From') }}:
+                        </label>
+                        <div class="sm:col-span-3">
+                            <input type="email" placeholder="{{ auth()->check() ? auth()->user()->email : 'your.email@company.com' }}"
+                                value="{{ auth()->check() ? auth()->user()->email : '' }}"
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <!-- To -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6 items-center">
+                        <label class="text-sm font-bold text-slate-700 sm:text-right">
+                            <span class="text-rose-500">*</span> {{ __('To') }}:
+                        </label>
+                        <div class="sm:col-span-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($factory->contact_person_first_name ?? 'Kay') }}&background=0284c7&color=fff" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">{{ trim(($factory->contact_person_first_name ?? 'Kay') . ' ' . ($factory->contact_person_last_name ?? '(Sales Manager)')) }}</p>
+                                <p class="text-xs text-slate-500">{{ $factory->official_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6 items-start">
+                        <label class="text-sm font-bold text-slate-700 sm:text-right pt-3">
+                            <span class="text-rose-500">*</span> {{ __('Message') }}:
+                        </label>
+                        <div class="sm:col-span-3 space-y-3">
+                            <!-- Quick Chips -->
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" @click="inquiryMessage = 'Hello, please send us your latest wholesale price list and product catalog for optical lenses. Thank you.'"
+                                    class="px-3 py-1 bg-slate-100 hover:bg-primary-50 hover:text-primary-700 text-slate-600 rounded-lg text-xs font-medium transition-colors">
+                                    + {{ __('Request Wholesale Catalog') }}
+                                </button>
+                                <button type="button" @click="inquiryMessage = 'Hello, we would like to inquire about sample availability, testing procedures, and MOQ for bulk orders.'"
+                                    class="px-3 py-1 bg-slate-100 hover:bg-primary-50 hover:text-primary-700 text-slate-600 rounded-lg text-xs font-medium transition-colors">
+                                    + {{ __('Inquire About Samples & MOQ') }}
+                                </button>
+                                <button type="button" @click="inquiryMessage = 'Hello, we are looking for OEM / private label packaging for our optical brand. Please contact us with options.'"
+                                    class="px-3 py-1 bg-slate-100 hover:bg-primary-50 hover:text-primary-700 text-slate-600 rounded-lg text-xs font-medium transition-colors">
+                                    + {{ __('OEM / Private Label Inquiry') }}
+                                </button>
+                            </div>
+
+                            <textarea x-model="inquiryMessage" rows="5"
+                                placeholder="{{ __('Detail your product requirements here: lens indexes (1.49, 1.56, 1.61, 1.67, 1.74), coating types (HMC, SHMC), diopter power range, estimated order quantity, and shipping destination.') }}"
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none transition-all"></textarea>
+                            
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+                                <p class="text-xs text-slate-400">{{ __('Enter between 20 to 4,000 characters for an accurate factory quotation.') }}</p>
+                                
+                                <button type="button" @click="contactModalOpen = true"
+                                    class="px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-600/25 transition-all text-sm flex items-center gap-2">
+                                    <span>{{ __('Send Inquiry Now') }}</span>
+                                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

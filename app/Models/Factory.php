@@ -18,8 +18,18 @@ class Factory extends Model implements HasMedia
     protected $fillable = [
         'user_id', 'official_name', 'slug', 'tax_number', 'contact_person_first_name',
         'contact_person_last_name', 'phone', 'email', 'country_id', 'language',
+        'address', 'business_type', 'member_since', 'rating_score', 'main_products',
+        'solutions', 'video_url', 'vr_url',
         'logo', 'banner', 'description', 'category_id', 'status', 'is_verified',
         'approved_at', 'approved_by'
+    ];
+
+    protected $casts = [
+        'main_products' => 'array',
+        'solutions' => 'array',
+        'rating_score' => 'float',
+        'is_verified' => 'boolean',
+        'approved_at' => 'datetime',
     ];
 
     public $translatable = ['official_name', 'description'];
