@@ -24,7 +24,7 @@ class CreateProduct extends CreateRecord
     {
         $factory = auth()->user()->factory;
         $data['factory_id'] = $factory->id;
-        $data['status'] = 'pending'; // Always pending, admin approves
+        $data['status'] = in_array($data['status'] ?? '', ['draft', 'pending']) ? $data['status'] : 'pending';
 
         return $data;
     }

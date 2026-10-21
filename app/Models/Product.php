@@ -27,6 +27,23 @@ class Product extends Model implements HasMedia
 
     public $translatable = ['name', 'description'];
 
+    protected static function booted()
+    {
+        static::saving(function ($product) {
+            if (empty($product->slug) && !empty($product->name)) {
+                $nameStr = is_array($product->name) ? ($product->name['en'] ?? reset($product->name)) : $product->name;
+                $baseSlug = \Illuminate\Support\Str::slug($nameStr) ?: 'product-' . time();
+                $slug = $baseSlug;
+                $count = 1;
+                while (static::where('slug', $slug)->where('id', '!=', $product->id ?? 0)->exists()) {
+                    $slug = "{$baseSlug}-{$count}";
+                    $count++;
+                }
+                $product->slug = $slug;
+            }
+        });
+    }
+
     public function factory(): BelongsTo
     {
         return $this->belongsTo(Factory::class);

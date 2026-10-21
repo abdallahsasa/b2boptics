@@ -9,8 +9,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class ProductForm
 {
@@ -24,22 +27,34 @@ class ProductForm
                         Select::make('factory_id')
                             ->relationship('factory', 'official_name')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         TextInput::make('name')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, $state, Set $set, Get $get) {
+                                if ($operation === 'create' || empty($get('slug'))) {
+                                    $nameStr = is_array($state) ? ($state['en'] ?? reset($state)) : $state;
+                                    $set('slug', Str::slug($nameStr));
+                                }
+                            }),
                         TextInput::make('slug')
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText('Auto-generated from name. You can also customize it.'),
                         Select::make('category_id')
                             ->relationship('category', 'name')
                             ->required()
                             ->reactive()
+                            ->searchable()
+                            ->preload()
                             ->afterStateUpdated(fn (callable $set) => $set('subcategory_id', null)),
                         Select::make('subcategory_id')
                             ->relationship('subcategory', 'name', fn ($query, $get) => $query->where('category_id', $get('category_id')))
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                     ]),
 
                 Section::make('Pricing & Origin')
@@ -50,10 +65,12 @@ class ProductForm
                             ->prefix('$'),
                         Select::make('currency')
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
+                            ->searchable()
                             ->default('USD'),
                         Select::make('country_of_origin_id')
                             ->relationship('countryOfOrigin', 'name')
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                     ]),
 
                 Section::make('Media & Description')

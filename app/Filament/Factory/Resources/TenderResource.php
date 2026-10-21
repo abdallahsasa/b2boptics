@@ -20,11 +20,27 @@ class TenderResource extends Resource
     protected static ?string $model = BuyerRequest::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxArrowDown;
-    protected static string|UnitEnum|null $navigationGroup = "Opportunities";
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Open Tenders';
-    protected static ?string $modelLabel = 'Tender';
-    protected static ?string $pluralModelLabel = 'Open Tenders';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Opportunities');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Open Tenders');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Tender');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Open Tenders');
+    }
 
     /**
      * Only show approved/active tenders to factory owners.
@@ -50,29 +66,34 @@ class TenderResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('category.name')
+                    ->label(__('Category'))
                     ->sortable(),
                 TextColumn::make('quantity')
+                    ->label(__('Quantity'))
                     ->sortable(),
                 TextColumn::make('target_price')
                     ->money(fn ($record) => $record->currency ?? 'USD')
-                    ->label('Target Price')
+                    ->label(__('Target Price'))
                     ->sortable(),
                 TextColumn::make('country.name')
-                    ->label('Buyer Country')
+                    ->label(__('Buyer Country'))
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->label('Posted'),
+                    ->label(__('Posted')),
             ])
             ->filters([
                 SelectFilter::make('category_id')
                     ->relationship('category', 'name')
-                    ->label('Category'),
+                    ->searchable()
+                    ->preload()
+                    ->label(__('Category')),
             ])
             ->recordActions([
                 ViewAction::make(),

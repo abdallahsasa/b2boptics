@@ -24,7 +24,7 @@ class CreateStockOffer extends CreateRecord
     {
         $factory = auth()->user()->factory;
         $data['factory_id'] = $factory->id;
-        $data['status'] = 'pending';
+        $data['status'] = $data['status'] ?? 'active';
 
         return $data;
     }

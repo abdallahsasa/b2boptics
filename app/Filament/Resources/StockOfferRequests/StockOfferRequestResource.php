@@ -36,10 +36,14 @@ class StockOfferRequestResource extends Resource
                         Select::make('stock_offer_id')
                             ->relationship('stockOffer', 'title')
                             ->required()
+                            ->searchable()
+                            ->preload()
                             ->disabled(fn (string $context): bool => $context === 'edit'),
                         Select::make('user_id')
                             ->relationship('user', 'name')
                             ->label('Registered Buyer')
+                            ->searchable()
+                            ->preload()
                             ->disabled(fn (string $context): bool => $context === 'edit'),
                         TextInput::make('name')
                             ->required()
@@ -64,6 +68,7 @@ class StockOfferRequestResource extends Resource
                                 'completed' => 'Completed',
                                 'cancelled' => 'Cancelled',
                             ])
+                            ->searchable()
                             ->required(),
                         Textarea::make('message')
                             ->columnSpanFull(),

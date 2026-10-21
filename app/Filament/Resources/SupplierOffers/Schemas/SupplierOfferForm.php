@@ -21,16 +21,19 @@ class SupplierOfferForm
                         Select::make('buyer_request_id')
                             ->relationship('buyerRequest', 'title')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         Select::make('factory_id')
                             ->relationship('factory', 'official_name')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         TextInput::make('offered_price')
                             ->numeric()
                             ->label('Price Offered'),
                         Select::make('currency')
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
+                            ->searchable()
                             ->default('USD'),
                         TextInput::make('delivery_time')
                             ->maxLength(255),
@@ -42,7 +45,8 @@ class SupplierOfferForm
                                 'rejected' => 'Rejected',
                             ])
                             ->default('pending')
-                            ->required(),
+                            ->required()
+                            ->searchable(),
                         Textarea::make('message')
                             ->required()
                             ->rows(5)

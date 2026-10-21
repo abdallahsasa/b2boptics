@@ -29,11 +29,27 @@ class StockOfferResource extends Resource
     protected static ?string $model = StockOffer::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
-    protected static string|UnitEnum|null $navigationGroup = "My Catalog";
     protected static ?int $navigationSort = 2;
-    protected static ?string $navigationLabel = 'My Stock Deals';
-    protected static ?string $modelLabel = 'Stock Deal';
-    protected static ?string $pluralModelLabel = 'Stock Deals';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('My Catalog');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('My Stock Deals');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Stock Deal');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Stock Deals');
+    }
 
     /**
      * Scope queries to only show this factory's stock offers.
@@ -50,47 +66,73 @@ class StockOfferResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Deal Details')
+                Section::make(__('Deal Details'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
+                            ->label(__('Title'))
                             ->required()
                             ->maxLength(255),
                         Select::make('category_id')
+                            ->label(__('Category'))
                             ->relationship('category', 'name')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                     ]),
 
-                Section::make('Pricing')
-                    ->columns(2)
+                Section::make(__('Pricing & Availability'))
+                    ->columns(3)
                     ->schema([
                         TextInput::make('price')
+                            ->label(__('Price'))
                             ->numeric()
                             ->required()
                             ->prefix('$'),
                         Select::make('currency')
+                            ->label(__('Currency'))
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
+                            ->searchable()
                             ->default('USD')
                             ->required(),
+                        Select::make('status')
+                            ->label(__('Status'))
+                            ->options([
+                                'active' => __('Active'),
+                                'sold_out' => __('Sold Out'),
+                                'inactive' => __('Inactive'),
+                                'pending' => __('Pending Review'),
+                            ])
+                            ->default('active')
+                            ->required()
+                            ->searchable(),
                     ]),
 
-                Section::make('Duration')
+                Section::make(__('Duration'))
                     ->columns(2)
                     ->schema([
                         DateTimePicker::make('starts_at')
-                            ->label('Starts At'),
+                            ->label(__('Starts At')),
                         DateTimePicker::make('ends_at')
-                            ->label('Ends At'),
+                            ->label(__('Ends At')),
                     ]),
 
-                Section::make('Media & Description')
+                Section::make(__('Media & Attachments'))
+                    ->columns(2)
                     ->schema([
                         FileUpload::make('image')
+                            ->label(__('Deal Image'))
                             ->image()
                             ->disk('public')
                             ->directory('stock-offers'),
+                        FileUpload::make('pdf_file')
+                            ->label(__('Brochure / Specification PDF'))
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->disk('public')
+                            ->directory('stock-offers/catalogs')
+                            ->helperText(__('Upload lot manifest, technical spec sheet, or PDF brochure.')),
                         Textarea::make('description')
+                            ->label(__('Deal Description'))
                             ->rows(5)
                             ->columnSpanFull(),
                     ]),
@@ -102,14 +144,18 @@ class StockOfferResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
+                    ->label(__('Category'))
                     ->sortable(),
                 TextColumn::make('price')
+                    ->label(__('Price'))
                     ->money(fn ($record) => $record->currency)
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
@@ -120,9 +166,10 @@ class StockOfferResource extends Resource
                     }),
                 TextColumn::make('ends_at')
                     ->dateTime()
-                    ->label('Expires')
+                    ->label(__('Expires'))
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label(__('Date Created'))
                     ->dateTime()
                     ->sortable(),
             ])

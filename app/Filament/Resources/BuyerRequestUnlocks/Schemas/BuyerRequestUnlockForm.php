@@ -19,26 +19,31 @@ class BuyerRequestUnlockForm
                         Select::make('buyer_request_id')
                             ->relationship('buyerRequest', 'title')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         Select::make('factory_id')
                             ->relationship('factory', 'official_name')
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         Select::make('unlocked_by')
                             ->relationship('unlockedBy', 'name')
-                            ->searchable(),
+                            ->searchable()
+                            ->preload(),
                         Select::make('unlock_method')
                             ->options([
                                 'manual' => 'Manual',
                                 'credit' => 'Credit',
                                 'payment' => 'Payment',
                             ])
+                            ->searchable()
                             ->default('manual')
                             ->required(),
                         TextInput::make('amount')
                             ->numeric(),
                         Select::make('currency')
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
+                            ->searchable()
                             ->default('USD'),
                         Select::make('status')
                             ->options([
@@ -46,6 +51,7 @@ class BuyerRequestUnlockForm
                                 'unlocked' => 'Unlocked',
                                 'refunded' => 'Refunded',
                             ])
+                            ->searchable()
                             ->default('unlocked')
                             ->required(),
                     ]),

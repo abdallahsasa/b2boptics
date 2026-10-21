@@ -50,6 +50,7 @@ class FactoryPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
+                \App\Http\Middleware\SetFilamentLocale::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -59,6 +60,18 @@ class FactoryPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('@include("filament.components.language-switch")'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4">@include("filament.components.language-switch")</div>'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::AUTH_REGISTER_FORM_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4">@include("filament.components.language-switch")</div>'),
+            )
             ->plugin(
                 SpatieTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it']),

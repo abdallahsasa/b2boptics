@@ -16,25 +16,26 @@ class ViewTender extends ViewRecord
     {
         return $schema
             ->schema([
-                Section::make('Tender Details')
+                Section::make(__('Tender Details'))
                     ->columns(2)
                     ->schema([
                         TextEntry::make('title')
+                            ->label(__('Title'))
                             ->weight('bold')
                             ->columnSpanFull(),
                         TextEntry::make('category.name')
-                            ->label('Category'),
+                            ->label(__('Category')),
                         TextEntry::make('quantity')
-                            ->label('Quantity Required'),
+                            ->label(__('Quantity Required')),
                         TextEntry::make('target_price')
                             ->money(fn ($record) => $record->currency ?? 'USD')
-                            ->label('Target Price'),
+                            ->label(__('Target Price')),
                         TextEntry::make('created_at')
                             ->dateTime()
-                            ->label('Posted On'),
+                            ->label(__('Posted On')),
                         TextEntry::make('description')
                             ->columnSpanFull()
-                            ->label('Detailed Requirements'),
+                            ->label(__('Detailed Requirements')),
                     ]),
             ]);
     }

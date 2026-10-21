@@ -86,6 +86,10 @@ Route::get('/lang/{locale}', function ($locale) {
         $path = parse_url($previousUrl, PHP_URL_PATH);
         $segments = explode('/', trim($path, '/'));
         
+        if (count($segments) > 0 && in_array($segments[0], ['factory', 'admin'])) {
+            return redirect($previousUrl);
+        }
+
         if (count($segments) > 0 && in_array($segments[0], $locales)) {
             $segments[0] = $locale;
             return redirect('/' . implode('/', $segments));

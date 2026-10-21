@@ -19,7 +19,9 @@ class BuyerRequestForm
                     ->schema([
                         Select::make('buyer_id')
                             ->relationship('buyer', 'name')
-                            ->required(),
+                            ->required()
+                            ->searchable()
+                            ->preload(),
                         TextInput::make('contact_name')
                             ->maxLength(255),
                         TextInput::make('contact_email')
@@ -35,9 +37,13 @@ class BuyerRequestForm
                     ->schema([
                         Select::make('category_id')
                             ->relationship('category', 'name')
-                            ->required(),
+                            ->required()
+                            ->searchable()
+                            ->preload(),
                         Select::make('subcategory_id')
-                            ->relationship('subcategory', 'name'),
+                            ->relationship('subcategory', 'name')
+                            ->searchable()
+                            ->preload(),
                         TextInput::make('title')
                             ->required()
                             ->maxLength(255)
@@ -57,9 +63,12 @@ class BuyerRequestForm
                             ->numeric(),
                         Select::make('currency')
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
+                            ->searchable()
                             ->default('USD'),
                         Select::make('country_id')
-                            ->relationship('country', 'name'),
+                            ->relationship('country', 'name')
+                            ->searchable()
+                            ->preload(),
                     ]),
 
                 Section::make('Status')
@@ -72,7 +81,8 @@ class BuyerRequestForm
                                 'expired' => 'Expired',
                             ])
                             ->default('pending')
-                            ->required(),
+                            ->required()
+                            ->searchable(),
                         Textarea::make('admin_notes'),
                     ]),
             ]);
