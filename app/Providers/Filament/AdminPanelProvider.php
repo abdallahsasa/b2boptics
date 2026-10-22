@@ -66,11 +66,11 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4">@include("filament.components.language-switch")</div>'),
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">@include("filament.components.language-switch")</div>'),
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::AUTH_REGISTER_FORM_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4">@include("filament.components.language-switch")</div>'),
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-end mb-4" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">@include("filament.components.language-switch")</div>'),
             )
             ->plugin(
                 SpatieTranslatablePlugin::make()

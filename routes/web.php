@@ -81,6 +81,10 @@ Route::get('/lang/{locale}', function ($locale) {
     $locales = ['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'];
     if (in_array($locale, $locales)) {
         session(['locale' => $locale]);
+
+        if (auth()->check() && auth()->user()->factory) {
+            auth()->user()->factory->update(['language' => $locale]);
+        }
         
         $previousUrl = url()->previous();
         $path = parse_url($previousUrl, PHP_URL_PATH);
