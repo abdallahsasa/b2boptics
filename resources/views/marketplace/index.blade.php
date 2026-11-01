@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Top Full-Width Banner Ad -->
+    <x-banner-ads :banners="$bannerAds ?? collect()" page="products" />
+
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Sidebar Filters -->
         <aside class="w-full lg:w-64 flex-shrink-0">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerAd;
 use App\Models\Factory;
 use App\Models\Category;
 use App\Models\Country;
@@ -62,8 +63,9 @@ class FactoryController extends Controller
         $factories = $query->paginate(12)->withQueryString();
         $categories = Category::where('type', 'product')->get();
         $countries = Country::where('status', 'active')->get();
+        $bannerAds = BannerAd::forPage('factories')->get();
 
-        return view('factories.index', compact('factories', 'categories', 'countries'));
+        return view('factories.index', compact('factories', 'categories', 'countries', 'bannerAds'));
     }
 
     public function show($locale, Factory $factory)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannerAd;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Country;
@@ -61,8 +62,9 @@ class MarketplaceController extends Controller
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::where('type', 'product')->get();
         $countries = Country::where('status', 'active')->get();
+        $bannerAds = BannerAd::forPage('products')->get();
 
-        return view('marketplace.index', compact('products', 'categories', 'countries'));
+        return view('marketplace.index', compact('products', 'categories', 'countries', 'bannerAds'));
     }
 
     public function show($locale, Product $product)

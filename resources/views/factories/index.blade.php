@@ -5,7 +5,7 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <!-- Hero Section -->
-        <div class="mb-12">
+        <div class="mb-10">
             <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
                 {{ __('Discover Verified') }} <span class="text-primary-600">{{ __('Manufacturers') }}</span>
             </h1>
@@ -13,6 +13,9 @@
                 {{ __('Browse our curated directory of top-tier optical factories and suppliers from around the world. Connect directly with the source.') }}
             </p>
         </div>
+
+        <!-- Top Full-Width Banner Ad -->
+        <x-banner-ads :banners="$bannerAds ?? collect()" page="factories" />
 
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Sidebar Filters -->
