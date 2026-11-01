@@ -209,63 +209,65 @@
 </head>
 <body class="bg-secondary text-slate-900 antialiased font-sans">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-nav" x-data="{ open: false }" x-effect="document.body.style.overflow = open ? 'hidden' : ''">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <a href="{{ route('home') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-14 lg:h-16 w-auto object-contain">
-                </a>
-                
-                <div class="hidden lg:flex items-center space-x-10 text-[15px] font-semibold text-slate-600">
-                    <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
-                    <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
-                    <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
-                    <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
-                </div>
+    <nav class="fixed top-0 inset-x-0 z-50" x-data="{ open: false }" x-effect="document.body.style.overflow = open ? 'hidden' : ''" @keydown.escape.window="open = false">
+        <div class="glass-nav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20 items-center">
+                    <a href="{{ route('home') }}" class="flex items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-14 lg:h-16 w-auto object-contain">
+                    </a>
+                    
+                    <div class="hidden lg:flex items-center gap-10 text-[15px] font-semibold text-slate-600">
+                        <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
+                        <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
+                        <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
+                        <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
+                    </div>
 
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <!-- Language Switcher -->
-                    <div class="relative group h-full flex items-center">
-                        <button class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
-                            {{ app()->getLocale() }}
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="absolute right-0 top-full pt-2 w-32 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 py-2">
-                                @foreach(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'] as $lang)
-                                    <a href="{{ route('lang.switch', ['locale' => $lang]) }}" class="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary-600 uppercase {{ app()->getLocale() == $lang ? 'text-primary-600' : '' }}">
-                                        {{ $lang }}
-                                    </a>
-                                @endforeach
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <!-- Language Switcher -->
+                        <div class="relative group h-full flex items-center">
+                            <button class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase">
+                                {{ app()->getLocale() }}
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            <div class="absolute right-0 rtl:right-auto rtl:left-0 top-full pt-2 w-32 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 py-2">
+                                    @foreach(['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'] as $lang)
+                                        <a href="{{ route('lang.switch', ['locale' => $lang]) }}" class="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary-600 uppercase {{ app()->getLocale() == $lang ? 'text-primary-600' : '' }}">
+                                            {{ $lang }}
+                                        </a>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Desktop Auth Buttons -->
-                    <div class="hidden lg:flex items-center gap-4">
-                        @auth
-                            @if(auth()->user()->hasRole(['super_admin', 'admin']))
-                                <a href="{{ url('/admin') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Admin Panel') }}</a>
-                            @elseif(auth()->user()->hasRole(['factory_owner', 'factory_staff']))
-                                <a href="{{ url('/factory') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Factory Portal') }}</a>
+                        <!-- Desktop Auth Buttons -->
+                        <div class="hidden lg:flex items-center gap-4">
+                            @auth
+                                @if(auth()->user()->hasRole(['super_admin', 'admin']))
+                                    <a href="{{ url('/admin') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Admin Panel') }}</a>
+                                @elseif(auth()->user()->hasRole(['factory_owner', 'factory_staff']))
+                                    <a href="{{ url('/factory') }}" class="px-7 py-3 bg-primary-600 text-white rounded-full font-semibold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-[15px]">{{ __('Factory Portal') }}</a>
+                                @else
+                                    <span class="font-bold text-slate-700">{{ auth()->user()->name }}</span>
+                                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-[15px] font-semibold text-red-600 hover:text-red-700 transition-colors">{{ __('Logout') }}</button>
+                                    </form>
+                                @endif
                             @else
-                                <span class="font-bold text-slate-700">{{ auth()->user()->name }}</span>
-                                <form method="POST" action="{{ route('logout') }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-[15px] font-semibold text-red-600 hover:text-red-700 transition-colors">{{ __('Logout') }}</button>
-                                </form>
-                            @endif
-                        @else
-                            <button @click="$dispatch('open-auth-modal', { source: 'nav' })" class="text-[15px] font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in / Register') }}</button>
-                            <a href="{{ route('filament.factory.auth.register') }}" class="px-7 py-3 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-[15px]">{{ __('Join as Factory') }}</a>
-                        @endauth
-                    </div>
+                                <button @click="$dispatch('open-auth-modal', { source: 'nav' })" class="text-[15px] font-semibold text-slate-700 hover:text-primary-600 transition-colors">{{ __('Log in / Register') }}</button>
+                                <a href="{{ route('filament.factory.auth.register') }}" class="px-7 py-3 bg-primary-900 text-white rounded-full font-semibold hover:bg-black transition-all text-[15px]">{{ __('Join as Factory') }}</a>
+                            @endauth
+                        </div>
 
-                    <!-- Hamburger Button -->
-                    <button @click="open = !open" class="lg:hidden p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all focus:outline-none" aria-label="Toggle Menu">
-                        <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        <svg x-show="open" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+                        <!-- Hamburger Button -->
+                        <button @click="open = !open" type="button" class="lg:hidden p-2.5 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 transition-all focus:outline-none" aria-label="Toggle Menu">
+                            <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                            <svg x-show="open" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -273,58 +275,76 @@
         <!-- Mobile Menu Drawer Backdrop -->
         <div x-show="open" 
              x-cloak
-             x-transition:opacity
-             class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
+             x-transition:enter="transition-opacity ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] lg:hidden"
              @click="open = false">
         </div>
 
         <!-- Mobile Menu Drawer Panel -->
         <div x-show="open" 
              x-cloak 
-             x-transition:enter="transform transition ease-in-out duration-300"
-             x-transition:enter-start="translate-x-full"
+             x-transition:enter="transform transition ease-out duration-300"
+             x-transition:enter-start="translate-x-full rtl:-translate-x-full"
              x-transition:enter-end="translate-x-0"
-             x-transition:leave="transform transition ease-in-out duration-300"
+             x-transition:leave="transform transition ease-in duration-200"
              x-transition:leave-start="translate-x-0"
-             x-transition:leave-end="translate-x-full"
-             class="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-2xl border-l border-slate-100 p-6 flex flex-col justify-between lg:hidden"
-             @click.away="open = false">
+             x-transition:leave-end="translate-x-full rtl:-translate-x-full"
+             class="fixed top-0 bottom-0 right-0 rtl:right-auto rtl:left-0 z-[70] h-[100dvh] w-full max-w-xs bg-white shadow-2xl border-l rtl:border-l-0 rtl:border-r border-slate-100 p-6 flex flex-col justify-between overflow-y-auto lg:hidden">
             
             <div>
                 <!-- Top Section -->
-                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                    <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-8 w-auto object-contain">
-                    <button @click="open = false" class="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                    <a href="{{ route('home') }}" class="flex items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 w-auto object-contain">
+                    </a>
+                    <button @click="open = false" type="button" class="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-all" aria-label="Close Menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="flex flex-col space-y-4">
-                    <a href="{{ route('marketplace.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
-                    <a href="{{ route('sourcing.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
-                    <a href="{{ route('stock-offers.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
-                    <a href="{{ route('factories.index') }}" class="text-base font-bold text-slate-800 hover:text-primary-600 transition-colors py-2 border-b border-slate-50 {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
+                <div class="flex flex-col space-y-1.5">
+                    <a href="{{ route('marketplace.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('marketplace.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
+                        <span>{{ __('Products') }}</span>
+                        <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                    <a href="{{ route('sourcing.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('sourcing.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
+                        <span>{{ __('Find Deals') }}</span>
+                        <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                    <a href="{{ route('stock-offers.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('stock-offers.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
+                        <span>{{ __('Stock Deals') }}</span>
+                        <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                    <a href="{{ route('factories.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('factories.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
+                        <span>{{ __('Factories') }}</span>
+                        <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </a>
                 </div>
             </div>
 
             <!-- Bottom Auth Section -->
-            <div class="pt-6 border-t border-slate-100 flex flex-col gap-3">
+            <div class="pt-6 mt-6 border-t border-slate-100 flex flex-col gap-3">
                 @auth
                     @if(auth()->user()->hasRole(['super_admin', 'admin']))
-                        <a href="{{ url('/admin') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
+                        <a href="{{ url('/admin') }}" class="w-full text-center py-3.5 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Admin Panel') }}</a>
                     @elseif(auth()->user()->hasRole(['factory_owner', 'factory_staff']))
-                        <a href="{{ url('/factory') }}" class="w-full text-center py-3 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
+                        <a href="{{ url('/factory') }}" class="w-full text-center py-3.5 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all text-sm">{{ __('Factory Portal') }}</a>
                     @else
-                        <div class="text-center font-bold text-slate-700 mb-2">{{ auth()->user()->name }}</div>
+                        <div class="text-center font-bold text-slate-700 mb-1">{{ auth()->user()->name }}</div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-center py-3 border border-red-200 rounded-xl font-bold text-red-600 hover:bg-red-50 transition-all text-sm">{{ __('Logout') }}</button>
                         </form>
                     @endif
                 @else
-                    <button @click="$dispatch('open-auth-modal', { source: 'nav' }); open = false" class="w-full text-center py-3 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all text-sm">{{ __('Log in / Register') }}</button>
-                    <a href="{{ route('filament.factory.auth.register') }}" class="w-full text-center py-3 bg-primary-900 text-white rounded-full font-bold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
+                    <button @click="$dispatch('open-auth-modal', { source: 'nav' }); open = false" class="w-full text-center py-3.5 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all text-sm">{{ __('Log in / Register') }}</button>
+                    <a href="{{ route('filament.factory.auth.register') }}" class="w-full text-center py-3.5 bg-primary-900 text-white rounded-full font-bold hover:bg-black transition-all text-sm">{{ __('Join as Factory') }}</a>
                 @endauth
             </div>
         </div>
