@@ -1,6 +1,92 @@
 @extends('layouts.app')
 
-@section('title', $product->getTranslation('name', app()->getLocale()))
+@php
+    $locale = app()->getLocale();
+    $productName = $product->getTranslation('name', $locale);
+    $categoryName = $product->category?->getTranslation('name', $locale) ?? __('Optical Product');
+    $factoryName = $product->factory?->official_name ?? 'OpticB2B';
+    $rawDesc = trim(preg_replace('/\s+/', ' ', strip_tags($product->getTranslation('description', $locale) ?? '')));
+    $seoDescription = \Illuminate\Support\Str::limit(
+        $rawDesc ?: __('Source :product (:category) wholesale directly from :factory on OpticB2B.', ['product' => $productName, 'category' => $categoryName, 'factory' => $factoryName]),
+        160
+    );
+    $productImage = $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200&auto=format&fit=crop';
+@endphp
+
+@section('title', $productName)
+@section('meta_title', $productName . ' - ' . $categoryName . ' | ' . $factoryName . ' | OpticB2B')
+@section('meta_description', $seoDescription)
+@section('meta_keywords', implode(', ', array_filter([$productName, $categoryName, $factoryName, $product->factory?->country?->name, __('wholesale optical supply'), 'OpticB2B'])))
+@section('og_type', 'product')
+@section('og_image', $productImage)
+
+@push('meta_extra')
+    @if($product->starting_price)
+        <meta property="product:price:amount" content="{{ number_format((float) $product->starting_price, 2, '.', '') }}">
+        <meta property="product:price:currency" content="{{ $product->currency ?: 'USD' }}">
+    @endif
+@endpush
+
+@push('structured_data')
+@php
+    $productSchema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 1,
+                        'name' => __('Home'),
+                        'item' => route('home'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 2,
+                        'name' => __('Products'),
+                        'item' => route('marketplace.index'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 3,
+                        'name' => $productName,
+                        'item' => route('marketplace.product.show', $product),
+                    ],
+                ],
+            ],
+            [
+                '@type' => 'Product',
+                'name' => $productName,
+                'description' => $seoDescription,
+                'image' => [$productImage],
+                'category' => $categoryName,
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $factoryName,
+                ],
+                'manufacturer' => [
+                    '@type' => 'Organization',
+                    'name' => $factoryName,
+                    'url' => $product->factory ? route('factories.show', $product->factory) : url('/'),
+                ],
+                'offers' => [
+                    '@type' => 'Offer',
+                    'url' => route('marketplace.product.show', $product),
+                    'priceCurrency' => $product->currency ?: 'USD',
+                    'price' => number_format((float) ($product->starting_price ?? 0), 2, '.', ''),
+                    'availability' => 'https://schema.org/InStock',
+                    'seller' => [
+                        '@type' => 'Organization',
+                        'name' => $factoryName,
+                    ],
+                ],
+            ],
+        ],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

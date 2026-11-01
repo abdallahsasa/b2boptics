@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
-@section('title', $stockOffer->getTranslation('title', app()->getLocale()))
+@php
+    $locale = app()->getLocale();
+    $offerTitle = $stockOffer->getTranslation('title', $locale);
+    $offerDesc = \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($stockOffer->getTranslation('description', $locale) ?? ''))), 160);
+    $offerImage = collect($stockOffer->images)->first() ?: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop';
+@endphp
+
+@section('title', $offerTitle)
+@section('meta_title', $offerTitle . ' - ' . __('Stock Clearance Deal') . ' | OpticB2B')
+@section('meta_description', $offerDesc ?: __('Limited-time wholesale optical clearance offer on OpticB2B.'))
+@section('og_type', 'product')
+@section('og_image', $offerImage)
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

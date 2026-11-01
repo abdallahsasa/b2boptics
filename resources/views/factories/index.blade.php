@@ -1,6 +1,74 @@
 @extends('layouts.app')
 
-@section('title', __('Factory Directory'))
+@php
+    $activeCategory = request('category') ? $categories->firstWhere('slug', request('category')) : null;
+    $activeCountry = request('country') ? $countries->firstWhere('code', request('country')) : null;
+    $categoryName = $activeCategory ? $activeCategory->getTranslation('name', app()->getLocale()) : null;
+    $countryName = $activeCountry ? $activeCountry->name : null;
+
+    $seoTitle = collect([
+        $categoryName ? $categoryName . ' ' . __('Manufacturers') : __('Verified Optical Factories & Manufacturers Directory'),
+        $countryName ? __('in :country', ['country' => $countryName]) : null,
+    ])->filter()->implode(' ');
+
+    $seoDescription = __('Connect directly with :total verified optical factories and OEM/ODM eyewear suppliers worldwide. Request wholesale quotes and custom production on OpticB2B.', ['total' => $factories->total()]);
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_title', $seoTitle . ' | OpticB2B')
+@section('meta_description', $seoDescription)
+@section('meta_keywords', implode(', ', array_filter([$categoryName, $countryName, __('optical factories directory'), __('verified eyewear manufacturers'), __('OEM ODM eyewear supplier'), 'OpticB2B'])))
+
+@push('seo_pagination')
+    @if($factories->previousPageUrl())
+        <link rel="prev" href="{{ $factories->previousPageUrl() }}">
+    @endif
+    @if($factories->nextPageUrl())
+        <link rel="next" href="{{ $factories->nextPageUrl() }}">
+    @endif
+@endpush
+
+@push('structured_data')
+@php
+    $factoriesSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'CollectionPage',
+        'name' => $seoTitle,
+        'description' => $seoDescription,
+        'url' => url()->current(),
+        'breadcrumb' => [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => __('Home'),
+                    'item' => route('home'),
+                ],
+                [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => __('Factory Directory'),
+                    'item' => route('factories.index'),
+                ],
+            ],
+        ],
+        'mainEntity' => [
+            '@type' => 'ItemList',
+            'numberOfItems' => $factories->total(),
+            'itemListElement' => $factories->getCollection()->values()->map(function ($fac, $idx) {
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $idx + 1,
+                    'url' => route('factories.show', $fac),
+                    'name' => $fac->official_name,
+                ];
+            })->all(),
+        ],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode($factoriesSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

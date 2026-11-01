@@ -1,6 +1,70 @@
 @extends('layouts.app')
 
-@section('title', $factory->official_name)
+@php
+    $locale = app()->getLocale();
+    $factoryName = $factory->official_name;
+    $factoryCountry = $factory->country?->name ?? __('Global');
+    $factoryCategory = $factory->category?->getTranslation('name', $locale) ?? __('Optical Manufacturing');
+    $rawFactoryDesc = trim(preg_replace('/\s+/', ' ', strip_tags($factory->getTranslation('description', $locale) ?? $factory->description ?? '')));
+    $seoFactoryDescription = \Illuminate\Support\Str::limit(
+        $rawFactoryDesc ?: __('Connect directly with :factory, a verified :category manufacturer in :country on OpticB2B.', ['factory' => $factoryName, 'category' => $factoryCategory, 'country' => $factoryCountry]),
+        160
+    );
+    $factoryOgImage = $factory->banner_url ?: ($factory->logo_url ?: asset('uploads/hero_showcase.jpg'));
+@endphp
+
+@section('title', $factoryName)
+@section('meta_title', $factoryName . ' - ' . __('Verified Optical Manufacturer in :country', ['country' => $factoryCountry]) . ' | OpticB2B')
+@section('meta_description', $seoFactoryDescription)
+@section('meta_keywords', implode(', ', array_filter([$factoryName, $factoryCategory, $factoryCountry, __('optical factory'), __('wholesale eyewear manufacturer'), 'OpticB2B'])))
+@section('og_type', 'profile')
+@section('og_image', $factoryOgImage)
+
+@push('structured_data')
+@php
+    $factorySchema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 1,
+                        'name' => __('Home'),
+                        'item' => route('home'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 2,
+                        'name' => __('Factory Directory'),
+                        'item' => route('factories.index'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 3,
+                        'name' => $factoryName,
+                        'item' => route('factories.show', $factory),
+                    ],
+                ],
+            ],
+            [
+                '@type' => 'Organization',
+                'name' => $factoryName,
+                'description' => $seoFactoryDescription,
+                'url' => route('factories.show', $factory),
+                'logo' => $factory->logo_url ?: asset('images/logo.png'),
+                'image' => $factoryOgImage,
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressCountry' => $factory->country?->code ?? $factoryCountry,
+                ],
+            ],
+        ],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode($factorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @section('content')
 <div x-data="{

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', __('OpticB2B - Global Optical Marketplace'))
+@section('title', __('OpticB2B - Global Optical B2B Marketplace & Verified Factory Network'))
+@section('meta_title', __('OpticB2B | Source Optical Lenses, Eyewear Frames & Lab Machinery Direct From Factories'))
+@section('meta_description', __('Connect directly with 150+ audited optical manufacturers worldwide. Source wholesale prescription lenses, titanium & acetate frames, sunglasses, and ophthalmic lab equipment on OpticB2B.'))
+@section('meta_keywords', __('optical B2B marketplace, wholesale optical lenses, eyewear frame manufacturers, OEM sunglasses supplier, ophthalmic lab machinery, optical factory directory, OpticB2B'))
 
 @php
     $categories = \App\Models\Category::where('type', 'product')->get();

@@ -1,9 +1,88 @@
 @extends('layouts.app')
 
-@section('title', __('Products'))
+@php
+    $activeCategory = request('category') ? $categories->firstWhere('slug', request('category')) : null;
+    $activeCountry = request('country') ? $countries->firstWhere('code', request('country')) : null;
+    $categoryName = $activeCategory ? $activeCategory->getTranslation('name', app()->getLocale()) : null;
+    $countryName = $activeCountry ? $activeCountry->name : null;
+
+    $seoTitle = collect([
+        $categoryName ?: __('Wholesale Optical Products, Lenses & Frames'),
+        $countryName ? __('from :country', ['country' => $countryName]) : null,
+        request('search') ? '"' . e(request('search')) . '"' : null,
+    ])->filter()->implode(' ');
+
+    $seoDescription = __('Browse :total verified B2B optical products including prescription lenses, eyewear frames, and lab equipment directly from audited factories.', ['total' => $products->total()]);
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_title', $seoTitle . ' | OpticB2B')
+@section('meta_description', $seoDescription)
+@section('meta_keywords', implode(', ', array_filter([$categoryName, $countryName, __('wholesale optical lenses'), __('B2B eyewear frames'), __('optical lab equipment'), 'OpticB2B'])))
+
+@push('seo_pagination')
+    @if($products->previousPageUrl())
+        <link rel="prev" href="{{ $products->previousPageUrl() }}">
+    @endif
+    @if($products->nextPageUrl())
+        <link rel="next" href="{{ $products->nextPageUrl() }}">
+    @endif
+@endpush
+
+@push('structured_data')
+@php
+    $marketplaceSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'CollectionPage',
+        'name' => $seoTitle,
+        'description' => $seoDescription,
+        'url' => url()->current(),
+        'breadcrumb' => [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => __('Home'),
+                    'item' => route('home'),
+                ],
+                [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => __('Products'),
+                    'item' => route('marketplace.index'),
+                ],
+            ],
+        ],
+        'mainEntity' => [
+            '@type' => 'ItemList',
+            'numberOfItems' => $products->total(),
+            'itemListElement' => $products->getCollection()->values()->map(function ($prod, $idx) {
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $idx + 1,
+                    'url' => route('marketplace.product.show', $prod),
+                    'name' => $prod->getTranslation('name', app()->getLocale()),
+                ];
+            })->all(),
+        ],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode($marketplaceSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Page Heading -->
+    <div class="mb-8">
+        <h1 class="text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
+            {{ $categoryName ?: __('Optical Products') }} <span class="text-primary-600">{{ __('Marketplace') }}</span>
+        </h1>
+        <p class="text-slate-500 mt-2 text-base max-w-2xl">
+            {{ __('Source wholesale lenses, eyewear frames, and optical machinery directly from verified global manufacturers.') }}
+        </p>
+    </div>
+
     <!-- Top Full-Width Banner Ad -->
     <x-banner-ads :banners="$bannerAds ?? collect()" page="products" />
 

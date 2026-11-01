@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', __('Stock Deals'))
+@section('title', __('Stock Deals & Optical Clearance Offers'))
+@section('meta_title', __('Wholesale Optical Stock Clearance Deals & Ready-to-Ship Inventory | OpticB2B'))
+@section('meta_description', __('Grab limited-time wholesale clearance deals on ready-to-ship optical lenses, eyewear frames, and lab equipment directly from verified manufacturers.'))
+@section('meta_keywords', __('optical stock clearance, wholesale eyewear deals, ready to ship optical frames, bulk lenses clearance, OpticB2B'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

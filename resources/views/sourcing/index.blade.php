@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', __('Find Your Best Deal'))
+@section('title', __('Find Your Best Deal - B2B Optical Sourcing & RFQs'))
+@section('meta_title', __('B2B Optical Sourcing Requests & Custom Eyewear RFQs | OpticB2B'))
+@section('meta_description', __('Post custom optical sourcing requests (RFQs) or bid on active wholesale buyer inquiries from opticians, distributors, and optical labs worldwide.'))
+@section('meta_keywords', __('optical RFQ, B2B eyewear sourcing, custom eyewear manufacturing request, wholesale optical quotes, OpticB2B'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

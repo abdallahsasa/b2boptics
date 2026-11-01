@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', __('Post a Sourcing Request'))
+@section('meta_title', __('Submit Custom Optical RFQ & Sourcing Request | OpticB2B'))
+@section('meta_description', __('Submit your custom optical product or private-label eyewear RFQ once and receive competitive wholesale quotes from audited global factories.'))
+@section('meta_robots', 'noindex, follow')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

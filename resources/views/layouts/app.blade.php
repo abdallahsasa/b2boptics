@@ -4,7 +4,128 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'OpticB2B') - {{ __('Global Optics Marketplace') }}</title>
+
+    @php
+        $currentLocale = app()->getLocale();
+        $supportedLocales = ['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'];
+        $decodeMeta = fn (string $val): string => html_entity_decode(trim($val), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        $rawTitle = $decodeMeta($__env->yieldContent('meta_title') ?: $__env->yieldContent('title', 'OpticB2B'));
+        $brandSuffix = __('Global Optical B2B Marketplace');
+        $fullTitle = str_contains(strtolower($rawTitle), 'opticb2b')
+            ? $rawTitle
+            : $rawTitle . ' | OpticB2B - ' . $brandSuffix;
+        $metaDescription = $decodeMeta($__env->yieldContent('meta_description', __('Source optical lenses, eyewear frames, sunglasses, and ophthalmic lab equipment directly from 150+ audited global manufacturers on OpticB2B.')));
+        $metaKeywords = $decodeMeta($__env->yieldContent('meta_keywords', __('B2B optical marketplace, wholesale eyewear frames, optical lenses manufacturer, OEM eyewear factory, ophthalmic lab machinery, bulk sunglasses supplier, OpticB2B')));
+        $metaRobots = $decodeMeta($__env->yieldContent('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'));
+        $canonicalUrl = $decodeMeta($__env->yieldContent('canonical_url', url()->current()));
+        $ogType = $decodeMeta($__env->yieldContent('og_type', 'website'));
+        $ogImage = $decodeMeta($__env->yieldContent('og_image', asset('uploads/hero_showcase.jpg')));
+
+        // Build localized path for hreflang alternates
+        $requestSegments = request()->segments();
+        if (!empty($requestSegments) && in_array($requestSegments[0], $supportedLocales, true)) {
+            array_shift($requestSegments);
+        }
+        $relativePathAfterLocale = implode('/', $requestSegments);
+
+        $localeRegionMap = [
+            'en' => 'en_US',
+            'ar' => 'ar_AE',
+            'tr' => 'tr_TR',
+            'zh' => 'zh_CN',
+            'ru' => 'ru_RU',
+            'de' => 'de_DE',
+            'es' => 'es_ES',
+            'fr' => 'fr_FR',
+            'it' => 'it_IT',
+        ];
+        $ogLocale = $localeRegionMap[$currentLocale] ?? $currentLocale;
+    @endphp
+
+    <!-- Primary SEO Meta Tags -->
+    <title>{{ $fullTitle }}</title>
+    <meta name="title" content="{{ $fullTitle }}">
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="robots" content="{{ $metaRobots }}">
+    <meta name="author" content="OpticB2B">
+    <meta name="theme-color" content="#2254C5">
+
+    <!-- Canonical & Pagination Links -->
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    @stack('seo_pagination')
+
+    <!-- Multilingual Hreflang Alternate Links -->
+    @foreach($supportedLocales as $langCode)
+        <link rel="alternate" hreflang="{{ $langCode }}" href="{{ url('/' . $langCode . ($relativePathAfterLocale ? '/' . $relativePathAfterLocale : '')) }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default" href="{{ url('/en' . ($relativePathAfterLocale ? '/' . $relativePathAfterLocale : '')) }}">
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:site_name" content="OpticB2B">
+    <meta property="og:type" content="{{ $ogType }}">
+    <meta property="og:locale" content="{{ $ogLocale }}">
+    @foreach($localeRegionMap as $langKey => $regionVal)
+        @if($langKey !== $currentLocale)
+            <meta property="og:locale:alternate" content="{{ $regionVal }}">
+        @endif
+    @endforeach
+    <meta property="og:title" content="{{ $fullTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $rawTitle }}">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $fullTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+
+    @stack('meta_extra')
+
+    <!-- Global Organization & WebSite Structured Data (JSON-LD) -->
+    @php
+        $globalSchema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => url('/') . '#organization',
+                    'name' => 'OpticB2B',
+                    'url' => url('/' . $currentLocale),
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => asset('images/logo.png'),
+                    ],
+                    'description' => $metaDescription,
+                ],
+                [
+                    '@type' => 'WebSite',
+                    '@id' => url('/') . '#website',
+                    'url' => url('/' . $currentLocale),
+                    'name' => 'OpticB2B',
+                    'inLanguage' => $currentLocale,
+                    'publisher' => [
+                        '@id' => url('/') . '#organization',
+                    ],
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => [
+                            '@type' => 'EntryPoint',
+                            'urlTemplate' => route('marketplace.index') . '?search={search_term_string}',
+                        ],
+                        'query-input' => 'required name=search_term_string',
+                    ],
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($globalSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    @stack('structured_data')
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

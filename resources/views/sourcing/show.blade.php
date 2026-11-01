@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', $buyerRequest->title)
+@section('meta_title', $buyerRequest->title . ' - ' . __('B2B Optical Sourcing RFQ') . ' | OpticB2B')
+@section('meta_description', \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($buyerRequest->description ?? ''))), 160))
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
