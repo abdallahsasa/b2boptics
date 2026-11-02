@@ -404,6 +404,18 @@
                     </svg>
                     <span>{{ __('Credentials & Contact') }}</span>
                 </button>
+
+                <!-- Tab 5: Reviews & Ratings (Scrolls to #reviews-section) -->
+                <a href="#reviews-section"
+                    class="flex items-center gap-2 pb-4 font-bold text-sm sm:text-base border-b-2 border-transparent text-slate-500 hover:text-amber-600 transition-all whitespace-nowrap">
+                    <svg class="w-5 h-5 text-amber-400 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span>{{ __('Reviews') }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800 font-bold">
+                        {{ $factory->approvedRatings->count() }}
+                    </span>
+                </a>
             </div>
         </div>
 
@@ -860,9 +872,182 @@
         </div>
 
         <!-- ========================================== -->
+        <!-- VERIFIED BUYER REVIEWS & RATINGS SECTION   -->
+        <!-- ========================================== -->
+        <div id="reviews-section" class="mt-16 bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100 pb-8 mb-8">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold uppercase tracking-wider mb-3">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <span>{{ __('Verified Buyer Feedback') }}</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{{ __('Factory Ratings & Reviews') }}</h2>
+                        <p class="text-sm text-slate-500 mt-1">{{ __('Authentic reviews submitted by verified buyers who have communicated or traded with :name.', ['name' => $factory->official_name]) }}</p>
+                    </div>
+
+                    <!-- Overall Score Box -->
+                    <div class="flex items-center gap-4 bg-slate-50 px-6 py-4 rounded-2xl border border-slate-100 shrink-0">
+                        <div class="text-center">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-slate-900">{{ number_format($factory->rating_score ?? 5.0, 1) }}</span>
+                            <span class="text-xs font-bold text-slate-400 block">{{ __('out of 5.0') }}</span>
+                        </div>
+                        <div class="h-10 w-px bg-slate-200"></div>
+                        <div>
+                            <div class="flex items-center gap-1 text-amber-400 mb-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="w-5 h-5 {{ ($factory->rating_score ?? 5.0) >= $i - 0.25 ? 'text-amber-400' : 'text-slate-200' }} fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                @endfor
+                            </div>
+                            <p class="text-xs font-semibold text-slate-500">{{ __(':count Verified Reviews', ['count' => $factory->approvedRatings->count()]) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                @if(session('rating_success'))
+                    <div class="mb-8 bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-2xl flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-sm font-semibold">{{ session('rating_success') }}</span>
+                    </div>
+                @endif
+
+                @if(session('rating_error'))
+                    <div class="mb-8 bg-rose-50 border border-rose-200 text-rose-800 px-6 py-4 rounded-2xl flex items-center gap-3">
+                        <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-sm font-semibold">{{ session('rating_error') }}</span>
+                    </div>
+                @endif
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Left Column: Submit or Eligibility Status -->
+                    <div class="lg:col-span-5">
+                        @if(!empty($canRate))
+                            <form action="{{ route('factories.rate', $factory) }}" method="POST"
+                                  x-data="{ selectedRating: {{ $userRating?->rating ?? 5 }}, hoverRating: 0 }"
+                                  class="bg-slate-50 p-6 sm:p-7 rounded-2xl border border-slate-200/80 space-y-5">
+                                @csrf
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">
+                                        {{ $userRating ? __('Update Your Factory Rating') : __('Rate This Manufacturer') }}
+                                    </h3>
+                                    <p class="text-xs text-slate-500 mt-1">{{ __('Share your experience regarding product quality, response speed, and reliability.') }}</p>
+                                </div>
+
+                                <!-- Interactive Star Picker -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">{{ __('Your Rating') }} *</label>
+                                    <input type="hidden" name="rating" :value="selectedRating">
+                                    <div class="flex items-center gap-2">
+                                        @for($star = 1; $star <= 5; $star++)
+                                            <button type="button"
+                                                @click="selectedRating = {{ $star }}"
+                                                @mouseenter="hoverRating = {{ $star }}"
+                                                @mouseleave="hoverRating = 0"
+                                                class="p-1 focus:outline-none transition-transform hover:scale-110">
+                                                <svg class="w-8 h-8 transition-colors fill-current"
+                                                     :class="(hoverRating || selectedRating) >= {{ $star }} ? 'text-amber-400' : 'text-slate-300'"
+                                                     viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                </svg>
+                                            </button>
+                                        @endfor
+                                        <span class="ml-2 text-sm font-bold text-slate-700" x-text="selectedRating + ' / 5'"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Review Comment -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">{{ __('Review Comment') }}</label>
+                                    <textarea name="comment" rows="4"
+                                        placeholder="{{ __('Describe your experience with sample quality, lead time, and communication...') }}"
+                                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:outline-none transition-all">{{ old('comment', $userRating?->comment) }}</textarea>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-600/20 transition-all text-sm">
+                                    {{ $userRating ? __('Update Review') : __('Publish Verified Review') }}
+                                </button>
+                            </form>
+                        @elseif(auth()->check())
+                            <div class="bg-slate-50 p-6 sm:p-7 rounded-2xl border border-slate-200/80 space-y-4">
+                                <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900">{{ __('Verified Buyer Reviews Only') }}</h3>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    {{ __('To maintain B2B trust, only buyers who have contacted this factory, started a product quote chat, or requested a stock deal can submit a rating.') }}
+                                </p>
+                                <a href="#inquiry-section"
+                                   class="inline-flex items-center gap-2 text-xs font-bold text-primary-600 hover:text-primary-700">
+                                    <span>{{ __('Send an inquiry below to connect first') }}</span>
+                                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                </a>
+                            </div>
+                        @else
+                            <div class="bg-slate-50 p-6 sm:p-7 rounded-2xl border border-slate-200/80 space-y-4">
+                                <h3 class="text-base font-bold text-slate-900">{{ __('Have you worked with :name?', ['name' => $factory->official_name]) }}</h3>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    {{ __('Sign in to your buyer account to rate your experience with this manufacturer.') }}
+                                </p>
+                                <button type="button"
+                                    @click="$dispatch('open-auth-modal', { source: 'factory-review' })"
+                                    class="w-full py-3 bg-slate-900 hover:bg-black text-white font-bold rounded-xl text-sm transition-all">
+                                    {{ __('Log in to Write a Review') }}
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Right Column: Reviews List -->
+                    <div class="lg:col-span-7 space-y-4">
+                        @forelse($factory->approvedRatings as $review)
+                            <div class="p-6 rounded-2xl bg-slate-50/70 border border-slate-100 space-y-3">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center shrink-0">
+                                            {{ strtoupper(substr($review->buyer?->name ?? 'B', 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <p class="text-sm font-bold text-slate-900">{{ $review->buyer?->name ?? __('Verified Buyer') }}</p>
+                                                <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-full text-[10px] font-bold">
+                                                    {{ __('Verified Buyer') }}
+                                                </span>
+                                            </div>
+                                            <p class="text-xs text-slate-400">{{ $review->created_at?->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-0.5 text-amber-400 shrink-0">
+                                        @for($s = 1; $s <= 5; $s++)
+                                            <svg class="w-4 h-4 {{ $review->rating >= $s ? 'text-amber-400' : 'text-slate-200' }} fill-current" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                            </svg>
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                @if($review->comment)
+                                    <p class="text-sm text-slate-600 leading-relaxed">{{ $review->comment }}</p>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="p-10 rounded-2xl bg-slate-50/60 border border-dashed border-slate-200 text-center">
+                                <p class="text-sm font-bold text-slate-700">{{ __('No written reviews yet') }}</p>
+                                <p class="text-xs text-slate-500 mt-1">{{ __('Be the first verified buyer to share your sourcing experience with :name.', ['name' => $factory->official_name]) }}</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
         <!-- ON-PAGE DIRECT INQUIRY SECTION (Made-in-China style) -->
         <!-- ========================================== -->
-        <div class="mt-16 bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm">
+        <div id="inquiry-section" class="mt-12 bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm">
             <div class="max-w-4xl mx-auto">
                 <div class="border-b border-slate-100 pb-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -877,15 +1062,28 @@
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                @if(session('inquiry_success'))
+                    <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-2xl flex items-center gap-3">
+                        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-sm font-semibold">{{ session('inquiry_success') }}</span>
+                    </div>
+                @endif
+
+                <form action="{{ route('factories.inquire', $factory) }}" method="POST" class="space-y-6">
+                    @csrf
+                    <input type="hidden" name="topic" :value="inquiryTopic">
                     <!-- From -->
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6 items-center">
                         <label class="text-sm font-bold text-slate-700 sm:text-right">
                             <span class="text-rose-500">*</span> {{ __('From') }}:
                         </label>
-                        <div class="sm:col-span-3">
+                        <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <input type="email" placeholder="{{ auth()->check() ? auth()->user()->email : 'your.email@company.com' }}"
-                                value="{{ auth()->check() ? auth()->user()->email : '' }}"
+                                value="{{ auth()->check() ? auth()->user()->email : '' }}" readonly
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none">
+                            <input type="text" name="company_name" placeholder="{{ __('Company Name (Optional)') }}"
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none transition-all">
+                            <input type="text" name="phone" placeholder="{{ __('Phone / WhatsApp (Optional)') }}"
                                 class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none transition-all">
                         </div>
                     </div>
@@ -928,24 +1126,34 @@
                                 </button>
                             </div>
 
-                            <textarea x-model="inquiryMessage" rows="5"
+                            <textarea name="message" x-model="inquiryMessage" required minlength="5" rows="5"
                                 placeholder="{{ __('Detail your product requirements here: lens indexes (1.49, 1.56, 1.61, 1.67, 1.74), coating types (HMC, SHMC), diopter power range, estimated order quantity, and shipping destination.') }}"
                                 class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none transition-all"></textarea>
                             
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
-                                <p class="text-xs text-slate-400">{{ __('Enter between 20 to 4,000 characters for an accurate factory quotation.') }}</p>
+                                <p class="text-xs text-slate-400">{{ __('Enter your product specifications for an accurate factory quotation.') }}</p>
                                 
-                                <button type="button" @click="contactModalOpen = true"
-                                    class="px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-600/25 transition-all text-sm flex items-center gap-2">
-                                    <span>{{ __('Send Inquiry Now') }}</span>
-                                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </button>
+                                @auth
+                                    <button type="submit"
+                                        class="px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-600/25 transition-all text-sm flex items-center gap-2">
+                                        <span>{{ __('Send Inquiry Now') }}</span>
+                                        <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </button>
+                                @else
+                                    <button type="button" @click="$dispatch('open-auth-modal', { source: 'factory-inquiry' })"
+                                        class="px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-600/25 transition-all text-sm flex items-center gap-2">
+                                        <span>{{ __('Log in & Send Inquiry') }}</span>
+                                        <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </button>
+                                @endauth
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -992,7 +1200,10 @@
             </div>
 
             <!-- Modal Body -->
-            <div class="p-6 sm:p-8 space-y-5">
+            <form action="{{ route('factories.inquire', $factory) }}" method="POST" class="p-6 sm:p-8 space-y-4">
+                @csrf
+                <input type="hidden" name="topic" :value="inquiryTopic">
+
                 <!-- Topic Selection -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">{{ __('Select Inquiry Topic') }}</label>
@@ -1013,42 +1224,58 @@
                     </div>
                 </div>
 
-                <!-- Fast Actions -->
-                <div class="space-y-3 pt-2">
-                    @if($factory->email)
-                    <a href="mailto:{{ $factory->email }}?subject=B2B%20Inquiry%20via%20OpticB2B:%20"
-                        class="w-full py-3.5 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2.5 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                        <span>{{ __('Send Email to :email', ['email' => $factory->email]) }}</span>
-                    </a>
-                    @endif
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ __('Company Name') }}</label>
+                        <input type="text" name="company_name" placeholder="{{ __('Your Company') }}"
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ __('Phone / WhatsApp') }}</label>
+                        <input type="text" name="phone" placeholder="+1 555 000 0000"
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none">
+                    </div>
+                </div>
 
-                    @if($factory->phone)
-                    <a href="tel:{{ $factory->phone }}"
-                        class="w-full py-3.5 px-4 bg-slate-900 hover:bg-black text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2.5 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                        <span>{{ __('Call Direct: :phone', ['phone' => $factory->phone]) }}</span>
-                    </a>
-                    @endif
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ __('Direct Message to Factory') }} *</label>
+                    <textarea name="message" x-model="inquiryMessage" required minlength="5" rows="4"
+                        placeholder="{{ __('Write your inquiry details, required quantities, and specifications...') }}"
+                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-600 focus:bg-white focus:outline-none"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    @auth
+                        <button type="submit"
+                            class="w-full py-3.5 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2.5 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                            <span>{{ __('Send Message Directly to Factory') }}</span>
+                        </button>
+                    @else
+                        <button type="button" @click="contactModalOpen = false; $dispatch('open-auth-modal', { source: 'factory-modal' })"
+                            class="w-full py-3.5 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2.5 transition-all">
+                            <span>{{ __('Log in to Send Message') }}</span>
+                        </button>
+                    @endauth
                 </div>
 
                 <!-- Copy Quick Contacts -->
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span>{{ __('Need direct records?') }}</span>
+                    <span>{{ __('Direct contact info:') }}</span>
                     <div class="flex items-center gap-3">
                         @if($factory->email)
-                        <button @click="copyToClipboard('{{ $factory->email }}', '{{ __('Email') }}')" class="font-bold text-primary-600 hover:underline">
+                        <button type="button" @click="copyToClipboard('{{ $factory->email }}', '{{ __('Email') }}')" class="font-bold text-primary-600 hover:underline">
                             {{ __('Copy Email') }}
                         </button>
                         @endif
                         @if($factory->phone)
-                        <button @click="copyToClipboard('{{ $factory->phone }}', '{{ __('Phone') }}')" class="font-bold text-primary-600 hover:underline">
+                        <button type="button" @click="copyToClipboard('{{ $factory->phone }}', '{{ __('Phone') }}')" class="font-bold text-primary-600 hover:underline">
                             {{ __('Copy Phone') }}
                         </button>
                         @endif
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 

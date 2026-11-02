@@ -58,7 +58,49 @@ class StockOfferController extends Controller
 
         \App\Models\StockOfferRequest::create($validated);
 
+        if ($stockOffer->factory_id) {
+            $offerTitle = $stockOffer->getTranslation('title', 'en');
+            $conversation = \App\Models\Conversation::create([
+                'subject' => 'Stock Deal Request: ' . $offerTitle,
+                'type' => 'stock_offer_inquiry',
+                'status' => 'human_required',
+                'factory_id' => $stockOffer->factory_id,
+            ]);
+
+            if (auth()->check()) {
+                $conversation->participants()->create([
+                    'user_id' => auth()->id(),
+                    'role' => 'buyer',
+                ]);
+            }
+
+            $details = [
+                'buyer_name' => $validated['name'],
+                'buyer_email' => $validated['email'],
+                'buyer_phone' => $validated['phone'],
+                'company_name' => $validated['company_name'] ?? null,
+                'quantity' => $validated['quantity_requested'] . ' units',
+                'product_name' => 'Stock Deal: ' . $offerTitle,
+                'product_url' => route('stock-offers.show', $stockOffer),
+            ];
+
+            $msgText = !empty($validated['message'])
+                ? $validated['message']
+                : sprintf('Requested %d units of "%s".', $validated['quantity_requested'], $offerTitle);
+
+            $message = \App\Models\Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => auth()->id(),
+                'type' => 'user',
+                'content_original' => $msgText,
+                'source_language' => strtoupper(app()->getLocale()),
+                'metadata' => array_filter($details),
+            ]);
+
+            \App\Services\Communication\ConversationManager::notifyFactoryByEmail($conversation, $message, $details);
+        }
+
         return redirect()->route('stock-offers.show', $stockOffer)
-            ->with('success', 'Your request has been submitted successfully! Our team will contact you shortly to connect you with the manufacturer.');
+            ->with('success', __('Your request and message have been sent directly to :factory! They have been notified on their account and by email.', ['factory' => $stockOffer->factory?->official_name ?? __('the manufacturer')]));
     }
 }

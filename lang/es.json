@@ -1,6 +1,6 @@
 {
     "Products": "Productos",
-    "Find Deals": "Buscar Ofertas",
+    "Find Deals": "Licitaciones",
     "Stock Deals": "Ofertas de Stock",
     "Dashboard": "Tablero",
     "Log in": "Iniciar sesión",
@@ -317,5 +317,6 @@
     "This device": "Este dispositivo",
     "No other active sessions found.": "No se encontraron otras sesiones activas.",
     "Tender Details": "Detalles de la Licitación",
-    "Starting Price": "Precio Inicial"
+    "Starting Price": "Precio Inicial",
+    "Tenders": "Licitaciones"
 }

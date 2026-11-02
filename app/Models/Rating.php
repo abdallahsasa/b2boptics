@@ -25,4 +25,19 @@ class Rating extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Rating $rating) {
+            if ($rating->factory_id) {
+                $rating->factory()->first()?->recalculateRatingScore();
+            }
+        });
+
+        static::deleted(function (Rating $rating) {
+            if ($rating->factory_id) {
+                $rating->factory()->first()?->recalculateRatingScore();
+            }
+        });
+    }
 }

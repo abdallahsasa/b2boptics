@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', __('Find Your Best Deal - B2B Optical Sourcing & RFQs'))
-@section('meta_title', __('B2B Optical Sourcing Requests & Custom Eyewear RFQs | OpticB2B'))
-@section('meta_description', __('Post custom optical sourcing requests (RFQs) or bid on active wholesale buyer inquiries from opticians, distributors, and optical labs worldwide.'))
-@section('meta_keywords', __('optical RFQ, B2B eyewear sourcing, custom eyewear manufacturing request, wholesale optical quotes, OpticB2B'))
+@section('title', __('Tenders - B2B Optical Sourcing & RFQs'))
+@section('meta_title', __('B2B Optical Tenders & Custom Eyewear RFQs | OpticB2B'))
+@section('meta_description', __('Post custom optical sourcing tenders (RFQs) or bid on active wholesale buyer inquiries from opticians, distributors, and optical labs worldwide.'))
+@section('meta_keywords', __('optical tenders, optical RFQ, B2B eyewear sourcing, custom eyewear manufacturing request, wholesale optical quotes, OpticB2B'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -12,7 +12,7 @@
              <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover">
         </div>
         <div class="relative z-10 text-center max-w-3xl mx-auto">
-            <h1 class="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">{{ __('Find Your') }} <span class="text-primary-400 text-italic">{{ __('Best Deal') }}</span> {{ __('Today') }}</h1>
+            <h1 class="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">{{ __('Open') }} <span class="text-primary-400 text-italic">{{ __('Tenders') }}</span></h1>
             <p class="text-white/80 text-lg lg:text-xl mb-10 leading-relaxed">{{ __('Submit your request once, and let the world\'s leading optics manufacturers compete for your business.') }}</p>
             <a href="{{ route('sourcing.create') }}" class="inline-flex items-center gap-3 px-10 py-5 bg-white text-primary-900 rounded-full font-bold text-xl hover:bg-primary-50 transition-all shadow-xl shadow-black/20">
                 {{ __('Post Your Request') }}

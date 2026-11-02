@@ -2,6 +2,7 @@
 
 namespace App\Filament\Factory\Widgets;
 
+use App\Models\Conversation;
 use App\Models\Product;
 use App\Models\StockOffer;
 use App\Models\SupplierOffer;
@@ -31,8 +32,18 @@ class FactoryStatsOverview extends StatsOverviewWidget
         $activeStockOffers = StockOffer::where('factory_id', $factory->id)->where('status', 'active')->count();
         $totalSupplierOffers = SupplierOffer::where('factory_id', $factory->id)->count();
         $activeTenders = BuyerRequest::where('status', 'approved')->count();
+        $totalMessages = Conversation::where('factory_id', $factory->id)->count();
+        $unreadMessages = Conversation::where('factory_id', $factory->id)
+            ->whereIn('status', ['human_required', 'open', 'ai_active'])
+            ->count();
 
         return [
+            Stat::make(__('Customer Messages'), $totalMessages)
+                ->description(__('awaiting reply: :unread', ['unread' => $unreadMessages]))
+                ->color($unreadMessages > 0 ? 'warning' : 'success')
+                ->icon('heroicon-o-envelope')
+                ->url(url('/factory/conversations')),
+
             Stat::make(__('Total Products'), $totalProducts)
                 ->description(__('approved: :approved, pending: :pending', ['approved' => $approvedProducts, 'pending' => $pendingProducts]))
                 ->color('primary')

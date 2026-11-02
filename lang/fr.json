@@ -1,6 +1,6 @@
 {
     "Products": "Produits",
-    "Find Deals": "Trouver des offres",
+    "Find Deals": "Appels d'offres",
     "Stock Deals": "Offres de stock",
     "Dashboard": "Tableau de bord",
     "Log in": "Se connecter",
@@ -317,5 +317,6 @@
     "This device": "Cet appareil",
     "No other active sessions found.": "Aucune autre session active trouvée.",
     "Tender Details": "Détails de l'Appel d'Offres",
-    "Starting Price": "Prix de Départ"
+    "Starting Price": "Prix de Départ",
+    "Tenders": "Appels d'offres"
 }

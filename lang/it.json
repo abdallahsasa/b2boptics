@@ -1,6 +1,6 @@
 {
     "Products": "Prodotti",
-    "Find Deals": "Trova Offerte",
+    "Find Deals": "Gare d'appalto",
     "Stock Deals": "Offerte Stock",
     "Dashboard": "Bacheca",
     "Log in": "Accedi",
@@ -317,5 +317,6 @@
     "This device": "Questo dispositivo",
     "No other active sessions found.": "Nessun'altra sessione attiva trovata.",
     "Tender Details": "Dettagli della Gara",
-    "Starting Price": "Prezzo di Partenza"
+    "Starting Price": "Prezzo di Partenza",
+    "Tenders": "Gare d'appalto"
 }

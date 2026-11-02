@@ -1,6 +1,6 @@
 {
     "Products": "Товары",
-    "Find Deals": "Найти предложения",
+    "Find Deals": "Тендеры",
     "Stock Deals": "Сделки со склада",
     "Dashboard": "Панель управления",
     "Log in": "Войти",
@@ -317,5 +317,6 @@
     "This device": "Это устройство",
     "No other active sessions found.": "Других активных сессий не найдено.",
     "Tender Details": "Детали тендера",
-    "Starting Price": "Начальная цена"
+    "Starting Price": "Начальная цена",
+    "Tenders": "Тендеры"
 }

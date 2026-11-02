@@ -10,7 +10,7 @@
     <nav class="flex text-sm text-slate-400 mb-8 gap-2">
         <a href="{{ route('home') }}" class="hover:text-primary-600">{{ __('Home') }}</a>
         <span>/</span>
-        <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600">{{ __('Find Deal') }}</a>
+        <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600">{{ __('Tenders') }}</a>
         <span>/</span>
         <span class="text-slate-900 font-medium">{{ __('Request') }} #{{ str_pad($buyerRequest->id, 5, '0', STR_PAD_LEFT) }}</span>
     </nav>

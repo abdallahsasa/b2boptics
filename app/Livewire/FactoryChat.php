@@ -41,8 +41,9 @@ class FactoryChat extends Component
 
         broadcast(new MessageSent($message));
 
-        // If the conversation was 'human_required', we can set it to 'resolved' or leave it.
-        // The factory owner might want to keep it open.
+        if ($this->conversation->status !== 'resolved') {
+            $this->conversation->update(['status' => 'resolved']);
+        }
         
         $this->newMessage = '';
     }

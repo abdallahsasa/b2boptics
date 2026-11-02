@@ -219,7 +219,7 @@
                     
                     <div class="hidden lg:flex items-center gap-10 text-[15px] font-semibold text-slate-600">
                         <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
-                        <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Find Deals') }}</a>
+                        <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Tenders') }}</a>
                         <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
                         <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
                     </div>
@@ -314,7 +314,7 @@
                         <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
                     <a href="{{ route('sourcing.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('sourcing.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
-                        <span>{{ __('Find Deals') }}</span>
+                        <span>{{ __('Tenders') }}</span>
                         <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
                     <a href="{{ route('stock-offers.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('stock-offers.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">

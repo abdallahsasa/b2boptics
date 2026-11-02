@@ -1,6 +1,6 @@
 {
     "Products": "Products",
-    "Find Deals": "Find Deals",
+    "Find Deals": "Tenders",
     "Stock Deals": "Stock Deals",
     "Dashboard": "Dashboard",
     "Log in": "Log in",
@@ -317,5 +317,6 @@
     "This device": "This device",
     "No other active sessions found.": "No other active sessions found.",
     "Tender Details": "Tender Details",
-    "Starting Price": "Starting Price"
+    "Starting Price": "Starting Price",
+    "Tenders": "Tenders"
 }

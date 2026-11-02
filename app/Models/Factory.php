@@ -74,6 +74,49 @@ class Factory extends Model implements HasMedia
         return $this->hasMany(Rating::class);
     }
 
+    public function approvedRatings(): HasMany
+    {
+        return $this->hasMany(Rating::class)->where('status', 'approved')->latest();
+    }
+
+    public function canBeRatedBy(?User $user): bool
+    {
+        if (!$user || (int) $this->user_id === (int) $user->id) {
+            return false;
+        }
+
+        // 1. Contacted factory via product chat or direct factory inquiry
+        $hasConversation = Conversation::where('factory_id', $this->id)
+            ->whereHas('participants', fn ($q) => $q->where('user_id', $user->id))
+            ->exists();
+
+        if ($hasConversation) {
+            return true;
+        }
+
+        // 2. Requested a stock deal from this factory
+        $hasStockRequest = StockOfferRequest::where('user_id', $user->id)
+            ->whereHas('stockOffer', fn ($q) => $q->where('factory_id', $this->id))
+            ->exists();
+
+        if ($hasStockRequest) {
+            return true;
+        }
+
+        // 3. Received a supplier offer from this factory on a sourcing request
+        return SupplierOffer::where('factory_id', $this->id)
+            ->whereHas('buyerRequest', fn ($q) => $q->where('buyer_id', $user->id))
+            ->exists();
+    }
+
+    public function recalculateRatingScore(): void
+    {
+        $avg = $this->ratings()->where('status', 'approved')->avg('rating');
+        $this->update([
+            'rating_score' => $avg ? round((float) $avg, 1) : 5.0,
+        ]);
+    }
+
     protected static function booted()
     {
         static::saving(function ($factory) {

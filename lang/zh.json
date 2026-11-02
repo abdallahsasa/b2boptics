@@ -1,6 +1,6 @@
 {
     "Products": "产品",
-    "Find Deals": "寻找交易",
+    "Find Deals": "招标",
     "Stock Deals": "库存交易",
     "Dashboard": "控制面板",
     "Log in": "登录",
@@ -317,5 +317,6 @@
     "This device": "当前设备",
     "No other active sessions found.": "未找到其他活动会话。",
     "Tender Details": "招标详情",
-    "Starting Price": "起步价格"
+    "Starting Price": "起步价格",
+    "Tenders": "招标"
 }

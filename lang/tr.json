@@ -1,6 +1,6 @@
 {
     "Products": "Ürünler",
-    "Find Deals": "Fırsat Bul",
+    "Find Deals": "İhaleler",
     "Stock Deals": "Stok Fırsatları",
     "Dashboard": "Panel",
     "Log in": "Giriş Yap",
@@ -317,5 +317,6 @@
     "This device": "Bu cihaz",
     "No other active sessions found.": "Başka aktif oturum bulunamadı.",
     "Tender Details": "İhale Detayları",
-    "Starting Price": "Başlangıç Fiyatı"
+    "Starting Price": "Başlangıç Fiyatı",
+    "Tenders": "İhaleler"
 }

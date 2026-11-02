@@ -1,6 +1,6 @@
 {
     "Products": "المنتجات",
-    "Find Deals": "البحث عن صفقات",
+    "Find Deals": "المناقصات",
     "Stock Deals": "عروض المخزون",
     "Dashboard": "لوحة التحكم",
     "Log in": "تسجيل الدخول",
@@ -317,5 +317,6 @@
     "This device": "هذا الجهاز",
     "No other active sessions found.": "لا توجد جلسات نشطة أخرى.",
     "Tender Details": "تفاصيل المناقصة",
-    "Starting Price": "السعر المبدئي"
+    "Starting Price": "السعر المبدئي",
+    "Tenders": "المناقصات"
 }

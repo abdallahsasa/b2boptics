@@ -35,6 +35,8 @@ Route::group([
     Route::group(['prefix' => 'factories', 'as' => 'factories.'], function () {
         Route::get('/', [FactoryController::class, 'index'])->name('index');
         Route::get('/{factory:slug}', [FactoryController::class, 'show'])->name('show');
+        Route::post('/{factory:slug}/rate', [FactoryController::class, 'rate'])->name('rate')->middleware('auth');
+        Route::post('/{factory:slug}/inquire', [FactoryController::class, 'inquire'])->name('inquire')->middleware('auth');
     });
 
     // Stock Deals
@@ -55,6 +57,7 @@ Route::group([
     Route::group(['prefix' => 'chat', 'as' => 'chat.', 'middleware' => 'auth'], function () {
         Route::post('/start', [ChatController::class, 'start'])->name('start');
         Route::post('/message', [ChatController::class, 'message'])->name('message');
+        Route::post('/rate', [ChatController::class, 'rate'])->name('rate');
     });
 
     // Frontend Auth
