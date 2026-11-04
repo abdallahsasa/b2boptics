@@ -428,45 +428,45 @@
 
             <!-- Tabs -->
             <div class="flex gap-4 mb-8 border-b border-slate-100 pb-4">
-                <button @click="tab = 'login'" :class="tab === 'login' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">Sign In</button>
-                <button @click="tab = 'register'" :class="tab === 'register' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">Create Account</button>
+                <button @click="tab = 'login'" :class="tab === 'login' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">{{ __('Sign In') }}</button>
+                <button @click="tab = 'register'" :class="tab === 'register' ? 'text-primary-600 border-primary-600' : 'text-slate-500 border-transparent hover:text-slate-800'" class="pb-4 -mb-4 font-bold border-b-2 transition-colors">{{ __('Create Account') }}</button>
             </div>
 
             <!-- Login Form -->
             <form x-show="tab === 'login'" @submit.prevent="submitLogin" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Email') }}</label>
                     <input type="email" x-model="loginForm.email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Password</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Password') }}</label>
                     <input type="password" x-model="loginForm.password" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
                 <div x-show="error" class="text-red-500 text-sm font-bold" x-text="error"></div>
                 <button type="submit" :disabled="loading" class="w-full bg-primary-600 text-white font-bold rounded-xl py-3 shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-colors disabled:opacity-50">
-                    <span x-show="!loading">Sign In</span>
-                    <span x-show="loading">Please wait...</span>
+                    <span x-show="!loading">{{ __('Sign In') }}</span>
+                    <span x-show="loading">{{ __('Please wait...') }}</span>
                 </button>
             </form>
 
             <!-- Register Form -->
             <form x-show="tab === 'register'" @submit.prevent="submitRegister" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Full Name') }}</label>
                     <input type="text" x-model="registerForm.name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Email') }}</label>
                     <input type="email" x-model="registerForm.email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Password</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Password') }}</label>
                     <input type="password" x-model="registerForm.password" required minlength="8" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
                 <div x-show="error" class="text-red-500 text-sm font-bold" x-text="error"></div>
                 <button type="submit" :disabled="loading" class="w-full bg-primary-600 text-white font-bold rounded-xl py-3 shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-colors disabled:opacity-50">
-                    <span x-show="!loading">Create Account</span>
-                    <span x-show="loading">Please wait...</span>
+                    <span x-show="!loading">{{ __('Create Account') }}</span>
+                    <span x-show="loading">{{ __('Please wait...') }}</span>
                 </button>
             </form>
         </div>

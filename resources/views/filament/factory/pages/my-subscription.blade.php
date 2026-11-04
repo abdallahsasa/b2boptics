@@ -283,7 +283,7 @@
                             </div>
 
                             <h4 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0;">
-                                {{ $pkg->name }}
+                                {{ __($pkg->name) }}
                             </h4>
 
                             <div class="ob-pkg-price-row">
@@ -298,7 +298,7 @@
 
                             @if($pkg->description)
                                 <p style="font-size: 13.5px; color: #64748b; margin: 0 0 18px 0; line-height: 1.55;">
-                                    {{ $pkg->description }}
+                                    {{ __($pkg->description) }}
                                 </p>
                             @endif
 
@@ -319,7 +319,7 @@
                                 @foreach($features as $feature)
                                     <li class="ob-feature-item">
                                         <span class="ob-check-icon">✓</span>
-                                        <span>{{ $feature }}</span>
+                                        <span>{{ __($feature) }}</span>
                                     </li>
                                 @endforeach
                             </ul>

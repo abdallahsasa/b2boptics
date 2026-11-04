@@ -143,12 +143,12 @@
                             </div>
 
                             <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
-                                {{ $pkg->name }}
+                                {{ __($pkg->name) }}
                             </h3>
 
                             @if($pkg->description)
                                 <p class="text-sm text-slate-500 leading-relaxed mb-6">
-                                    {{ $pkg->description }}
+                                    {{ __($pkg->description) }}
                                 </p>
                             @endif
 

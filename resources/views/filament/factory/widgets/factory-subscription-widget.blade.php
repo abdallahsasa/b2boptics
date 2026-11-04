@@ -111,7 +111,7 @@
                     {{ $planName }}
                 </h3>
                 <p style="font-size: 13.5px; color: #64748b; margin: 4px 0 0 0;">
-                    {{ $package?->description ?? __('Free factory membership with up to :limit product listings and up to :images images per product.', ['limit' => $productLimit, 'images' => $maxImages]) }}
+                    {{ $package?->description ? __($package->description) : __('Free factory membership with up to :limit product listings and up to :images images per product.', ['limit' => $productLimit, 'images' => $maxImages]) }}
                 </p>
             </div>
 

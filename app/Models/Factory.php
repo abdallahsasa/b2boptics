@@ -82,7 +82,7 @@ class Factory extends Model implements HasMedia
     public function subscriptionPlanLabel(): string
     {
         if ($pkg = $this->activePackage()) {
-            return (string) $pkg->name;
+            return __((string) $pkg->name);
         }
 
         return match ($this->subscription_plan ?: 'free') {
