@@ -59,7 +59,7 @@
                 '@type' => 'Product',
                 'name' => $productName,
                 'description' => $seoDescription,
-                'image' => [$productImage],
+                'image' => $product->gallery_urls ?: [$productImage],
                 'category' => $categoryName,
                 'brand' => [
                     '@type' => 'Brand',
@@ -107,14 +107,51 @@
         @endif
 
         <div class="flex flex-col lg:flex-row gap-12">
-            <!-- Image Gallery -->
-            <div class="flex-1">
+            <!-- Image Gallery (Up to 10 Images) -->
+            @php
+                $galleryUrls = $product->gallery_urls;
+                if (empty($galleryUrls)) {
+                    $galleryUrls = ['https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200&auto=format&fit=crop'];
+                }
+            @endphp
+            <div class="flex-1" x-data="{ activeSlide: 0, slides: @js($galleryUrls) }">
                 <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm p-4">
-                    <div class="aspect-square bg-slate-50 rounded-[1.5rem] overflow-hidden">
-                        <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200&auto=format&fit=crop' }}"
+                    <div class="relative aspect-square bg-slate-50 rounded-[1.5rem] overflow-hidden group">
+                        <img :src="slides[activeSlide]"
                             alt="{{ $product->getTranslation('name', app()->getLocale()) }}"
-                            class="w-full h-full object-cover">
+                            class="w-full h-full object-cover transition-all duration-300">
+
+                        @if(count($galleryUrls) > 1)
+                            <button type="button"
+                                @click="activeSlide = (activeSlide - 1 + slides.length) % slides.length"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                            </button>
+                            <button type="button"
+                                @click="activeSlide = (activeSlide + 1) % slides.length"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-slate-900/75 text-white text-xs font-bold backdrop-blur-sm">
+                                <span x-text="activeSlide + 1"></span> / {{ count($galleryUrls) }}
+                            </div>
+                        @endif
                     </div>
+
+                    @if(count($galleryUrls) > 1)
+                        <div class="grid grid-cols-5 sm:grid-cols-6 gap-2.5 mt-4">
+                            @foreach($galleryUrls as $idx => $imgUrl)
+                                <button type="button"
+                                    @click="activeSlide = {{ $idx }}"
+                                    :class="activeSlide === {{ $idx }} ? 'ring-2 ring-primary-600 border-primary-600 scale-[0.98]' : 'border-slate-200 opacity-75 hover:opacity-100'"
+                                    class="aspect-square rounded-xl overflow-hidden border bg-slate-50 transition-all">
+                                    <img src="{{ $imgUrl }}"
+                                        alt="{{ $product->getTranslation('name', app()->getLocale()) }} - {{ $idx + 1 }}"
+                                        class="w-full h-full object-cover">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
 

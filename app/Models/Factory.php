@@ -21,7 +21,8 @@ class Factory extends Model implements HasMedia
         'address', 'business_type', 'member_since', 'rating_score', 'main_products',
         'solutions', 'video_url', 'vr_url',
         'logo', 'banner', 'description', 'category_id', 'status', 'is_verified',
-        'approved_at', 'approved_by'
+        'approved_at', 'approved_by',
+        'subscription_package_id', 'subscription_plan', 'product_limit', 'max_images_per_product', 'subscription_expires_at',
     ];
 
     protected $casts = [
@@ -30,7 +31,75 @@ class Factory extends Model implements HasMedia
         'rating_score' => 'float',
         'is_verified' => 'boolean',
         'approved_at' => 'datetime',
+        'product_limit' => 'integer',
+        'max_images_per_product' => 'integer',
+        'subscription_expires_at' => 'datetime',
     ];
+
+    public function subscriptionPackage(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionPackage::class, 'subscription_package_id');
+    }
+
+    public function activePackage(): ?SubscriptionPackage
+    {
+        return $this->subscriptionPackage ?: SubscriptionPackage::defaultPackage();
+    }
+
+    public function productLimit(): int
+    {
+        if (!empty($this->product_limit)) {
+            return (int) $this->product_limit;
+        }
+
+        return (int) ($this->activePackage()?->product_limit ?: 10);
+    }
+
+    public function maxImagesPerProduct(): int
+    {
+        if (!empty($this->max_images_per_product)) {
+            return (int) $this->max_images_per_product;
+        }
+
+        return (int) ($this->activePackage()?->max_images_per_product ?: 10);
+    }
+
+    public function productsCount(): int
+    {
+        return $this->products()->count();
+    }
+
+    public function remainingProductSlots(): int
+    {
+        return max(0, $this->productLimit() - $this->productsCount());
+    }
+
+    public function canCreateMoreProducts(): bool
+    {
+        return $this->productsCount() < $this->productLimit();
+    }
+
+    public function subscriptionPlanLabel(): string
+    {
+        if ($pkg = $this->activePackage()) {
+            return (string) $pkg->name;
+        }
+
+        return match ($this->subscription_plan ?: 'free') {
+            'pro' => __('Pro Factory Plan'),
+            'enterprise' => __('Enterprise Plan'),
+            default => __('Free Starter Package'),
+        };
+    }
+
+    public function subscriptionPriceLabel(): string
+    {
+        if ($pkg = $this->activePackage()) {
+            return $pkg->formattedPrice();
+        }
+
+        return __('FREE ($0)');
+    }
 
     public $translatable = ['official_name', 'description'];
 
@@ -122,6 +191,23 @@ class Factory extends Model implements HasMedia
         static::saving(function ($factory) {
             if (empty($factory->slug) && !empty($factory->official_name)) {
                 $factory->slug = \Illuminate\Support\Str::slug($factory->official_name);
+            }
+
+            if (empty($factory->subscription_package_id)) {
+                $defaultPkg = SubscriptionPackage::defaultPackage();
+                if ($defaultPkg) {
+                    $factory->subscription_package_id = $defaultPkg->id;
+                    $factory->subscription_plan = $defaultPkg->slug;
+                    $factory->product_limit = $factory->product_limit ?: $defaultPkg->product_limit;
+                    $factory->max_images_per_product = $factory->max_images_per_product ?: $defaultPkg->max_images_per_product;
+                }
+            } elseif ($factory->isDirty('subscription_package_id')) {
+                $pkg = SubscriptionPackage::find($factory->subscription_package_id);
+                if ($pkg) {
+                    $factory->subscription_plan = $pkg->slug;
+                    $factory->product_limit = $pkg->product_limit;
+                    $factory->max_images_per_product = $pkg->max_images_per_product;
+                }
             }
         });
     }

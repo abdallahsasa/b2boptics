@@ -241,6 +241,9 @@ class MyFactory extends Page
             $data['user_id'] = auth()->id();
             $data['slug'] = Str::slug($officialName) ?: 'factory-' . time();
             $data['status'] = 'pending';
+            $data['subscription_plan'] = 'free';
+            $data['product_limit'] = 10;
+            $data['max_images_per_product'] = 10;
             $factory = Factory::create($data);
             $factory->setTranslation('official_name', app()->getLocale(), $officialName);
             $factory->setTranslation('description', app()->getLocale(), $description);

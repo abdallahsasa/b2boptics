@@ -25,6 +25,16 @@ Route::group([
         return view('welcome');
     })->name('home');
 
+    // Factory Subscription Packages Page
+    Route::get('/packages', function () {
+        $packages = \App\Models\SubscriptionPackage::where('is_active', true)
+            ->orderByDesc('is_default')
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('packages.index', compact('packages'));
+    })->name('packages.index');
+
     // Marketplace
     Route::group(['prefix' => 'marketplace', 'as' => 'marketplace.'], function () {
         Route::get('/', [MarketplaceController::class, 'index'])->name('index');

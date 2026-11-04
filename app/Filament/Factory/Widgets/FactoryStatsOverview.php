@@ -12,6 +12,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class FactoryStatsOverview extends StatsOverviewWidget
 {
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
         $factory = auth()->user()->factory;
@@ -37,17 +39,31 @@ class FactoryStatsOverview extends StatsOverviewWidget
             ->whereIn('status', ['human_required', 'open', 'ai_active'])
             ->count();
 
+        $productLimit = $factory->productLimit();
+        $maxImages = $factory->maxImagesPerProduct();
+
         return [
+            Stat::make(__('Subscription Plan'), $factory->subscriptionPlanLabel())
+                ->description(__(':used/:limit products • :images images/product', [
+                    'used' => $totalProducts,
+                    'limit' => $productLimit,
+                    'images' => $maxImages,
+                ]))
+                ->color('success')
+                ->icon('heroicon-o-sparkles')
+                ->url(url('/factory/my-subscription')),
+
             Stat::make(__('Customer Messages'), $totalMessages)
                 ->description(__('awaiting reply: :unread', ['unread' => $unreadMessages]))
                 ->color($unreadMessages > 0 ? 'warning' : 'success')
                 ->icon('heroicon-o-envelope')
                 ->url(url('/factory/conversations')),
 
-            Stat::make(__('Total Products'), $totalProducts)
+            Stat::make(__('Product Listings'), "{$totalProducts} / {$productLimit}")
                 ->description(__('approved: :approved, pending: :pending', ['approved' => $approvedProducts, 'pending' => $pendingProducts]))
-                ->color('primary')
-                ->icon('heroicon-o-shopping-bag'),
+                ->color($totalProducts >= $productLimit ? 'danger' : 'primary')
+                ->icon('heroicon-o-shopping-bag')
+                ->url(url('/factory/products')),
 
             Stat::make(__('Stock Deals'), $totalStockOffers)
                 ->description(__('currently active: :active', ['active' => $activeStockOffers]))

@@ -125,6 +125,41 @@ class FactoryForm
                             ->columnSpanFull(),
                     ]),
 
+                Section::make('Subscription & Listing Limits')
+                    ->description('Factory subscription package and product/image quotas')
+                    ->columns(3)
+                    ->schema([
+                        Select::make('subscription_package_id')
+                            ->label('Subscription Package')
+                            ->relationship('subscriptionPackage', 'name')
+                            ->preload()
+                            ->searchable()
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if ($state && ($pkg = \App\Models\SubscriptionPackage::find($state))) {
+                                    $set('subscription_plan', $pkg->slug);
+                                    $set('product_limit', $pkg->product_limit);
+                                    $set('max_images_per_product', $pkg->max_images_per_product);
+                                }
+                            })
+                            ->helperText('Default: Free Starter Package ($0)'),
+                        TextInput::make('product_limit')
+                            ->label('Max Product Listings')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(10)
+                            ->required()
+                            ->helperText('Default: 10 free product listings.'),
+                        TextInput::make('max_images_per_product')
+                            ->label('Max Images per Product')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(30)
+                            ->default(10)
+                            ->required()
+                            ->helperText('Default: 10 images per product.'),
+                    ]),
+
                 Section::make('Status & Verification')
                     ->columns(3)
                     ->schema([

@@ -56,6 +56,36 @@ class ProductResource extends Resource
         return __('Products');
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        $factory = auth()->user()?->factory;
+        if (!$factory) {
+            return null;
+        }
+
+        return $factory->productsCount() . '/' . $factory->productLimit();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        $factory = auth()->user()?->factory;
+        if (!$factory) {
+            return 'gray';
+        }
+
+        $used = $factory->productsCount();
+        $limit = $factory->productLimit();
+
+        if ($used >= $limit) {
+            return 'danger';
+        }
+        if ($used >= (int) ceil($limit * 0.8)) {
+            return 'warning';
+        }
+
+        return 'success';
+    }
+
     protected static ?string $recordTitleAttribute = 'name';
 
     /**
@@ -129,11 +159,22 @@ class ProductResource extends Resource
 
                 Section::make(__('Media & Description'))
                     ->schema([
-                        FileUpload::make('image')
-                            ->label(__('Product Image'))
+                        FileUpload::make('images')
+                            ->label(__('Product Gallery (Up to :max Images)', [
+                                'max' => auth()->user()?->factory?->maxImagesPerProduct() ?? 10,
+                            ]))
                             ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->maxFiles(fn () => auth()->user()?->factory?->maxImagesPerProduct() ?? 10)
                             ->disk('public')
-                            ->directory('products'),
+                            ->directory('products')
+                            ->panelLayout('grid')
+                            ->helperText(fn () => __('Upload up to :max product photos. Drag to reorder — the first image is used as the main cover photo.', [
+                                'max' => auth()->user()?->factory?->maxImagesPerProduct() ?? 10,
+                            ]))
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->label(__('Product Description'))
                             ->rows(5)
@@ -190,6 +231,17 @@ class ProductResource extends Resource
                     ->label(__('Starting Price'))
                     ->money(fn ($record) => $record->currency)
                     ->sortable(),
+                TextColumn::make('images_count')
+                    ->label(__('Photos'))
+                    ->state(function ($record): string {
+                        $count = is_array($record->images) && count($record->images) > 0
+                            ? count($record->images)
+                            : ($record->image ? 1 : 0);
+                        $max = $record->factory?->maxImagesPerProduct() ?? 10;
+                        return "{$count} / {$max}";
+                    })
+                    ->badge()
+                    ->color('info'),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()

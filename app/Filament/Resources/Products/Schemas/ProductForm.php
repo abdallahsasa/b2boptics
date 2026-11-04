@@ -75,10 +75,18 @@ class ProductForm
 
                 Section::make('Media & Description')
                     ->schema([
-                        FileUpload::make('image')
+                        FileUpload::make('images')
+                            ->label('Product Gallery (Up to 10 Images)')
                             ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->maxFiles(10)
                             ->disk('public')
-                            ->directory('products'),
+                            ->directory('products')
+                            ->panelLayout('grid')
+                            ->helperText('Upload up to 10 product photos. Drag to reorder — the first image is used as the main cover photo.')
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->rows(5)
                             ->columnSpanFull(),

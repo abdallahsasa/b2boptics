@@ -16,10 +16,11 @@ class Product extends Model implements HasMedia
     protected $fillable = [
         'factory_id', 'category_id', 'subcategory_id', 'name', 'slug',
         'description', 'starting_price', 'currency', 'country_of_origin_id',
-        'status', 'image', 'is_featured', 'published_at', 'specifications'
+        'status', 'image', 'images', 'is_featured', 'published_at', 'specifications'
     ];
 
     protected $casts = [
+        'images' => 'array',
         'specifications' => 'array',
         'is_featured' => 'boolean',
         'published_at' => 'datetime',
@@ -40,6 +41,17 @@ class Product extends Model implements HasMedia
                     $count++;
                 }
                 $product->slug = $slug;
+            }
+
+            $maxImages = $product->factory ? $product->factory->maxImagesPerProduct() : 10;
+
+            if (is_array($product->images)) {
+                $cleanImages = array_values(array_filter($product->images));
+                $cleanImages = array_slice($cleanImages, 0, $maxImages);
+                $product->images = $cleanImages;
+                $product->image = $cleanImages[0] ?? null;
+            } elseif (!empty($product->image) && empty($product->images)) {
+                $product->images = [$product->image];
             }
         });
     }
@@ -71,11 +83,16 @@ class Product extends Model implements HasMedia
 
     public function getFirstMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
     {
-        if ($this->image) {
-            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-                return $this->image;
+        $firstImage = $this->image;
+        if (!$firstImage && is_array($this->images) && !empty($this->images)) {
+            $firstImage = reset($this->images);
+        }
+
+        if ($firstImage) {
+            if (str_starts_with($firstImage, 'http://') || str_starts_with($firstImage, 'https://')) {
+                return $firstImage;
             }
-            return asset('uploads/' . $this->image);
+            return asset('uploads/' . $firstImage);
         }
 
         if (method_exists($this, 'getFirstMedia')) {
@@ -86,5 +103,36 @@ class Product extends Model implements HasMedia
         }
 
         return '';
+    }
+
+    public function getGalleryUrlsAttribute(): array
+    {
+        $rawList = [];
+
+        if (is_array($this->images) && !empty($this->images)) {
+            $rawList = $this->images;
+        } elseif (!empty($this->image)) {
+            $rawList = [$this->image];
+        }
+
+        $urls = [];
+        foreach ($rawList as $img) {
+            if (!$img) {
+                continue;
+            }
+            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
+                $urls[] = $img;
+            } else {
+                $urls[] = asset('uploads/' . $img);
+            }
+        }
+
+        if (empty($urls) && method_exists($this, 'getMedia')) {
+            foreach ($this->getMedia('images') as $media) {
+                $urls[] = $media->getUrl();
+            }
+        }
+
+        return array_slice(array_values(array_unique($urls)), 0, 10);
     }
 }
