@@ -9,33 +9,114 @@
         $usedProducts = $factory?->productsCount() ?? 0;
         $remainingProducts = max(0, $productLimit - $usedProducts);
         $usagePercent = $productLimit > 0 ? min(100, (int) round(($usedProducts / $productLimit) * 100)) : 0;
+        $canCreateMore = $usedProducts < $productLimit;
     @endphp
 
-    <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <!-- Left: Package Name & Free Badge -->
-            <div class="space-y-2">
-                <div class="flex flex-wrap items-center gap-2.5">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        {{ __('Active Subscription Plan') }}
-                    </span>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-                        {{ $priceLabel }}
-                    </span>
-                </div>
+    <style>
+        .ob-dash-sub {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 24px 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+        }
+        .dark .ob-dash-sub { background: #111827; border-color: #1f2937; }
+        .ob-dash-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .dark .ob-dash-top { border-bottom-color: #1f2937; }
+        .ob-dash-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .ob-pill-emerald {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .ob-pill-blue {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        .ob-dash-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+        .ob-dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            padding-top: 20px;
+        }
+        .ob-dash-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        .dark .ob-dash-box { background: #1f2937; border-color: #374151; }
+        .ob-dash-box-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .ob-dash-bar-bg {
+            width: 100%;
+            height: 9px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .dark .ob-dash-bar-bg { background: #374151; }
+        .ob-dash-bar-fg {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #2254c5, #3b82f6);
+        }
+    </style>
 
-                <h3 class="text-xl font-bold text-gray-950 dark:text-white">
+    <div class="ob-dash-sub">
+        <div class="ob-dash-top">
+            <div>
+                <div class="ob-dash-pills">
+                    <span class="ob-pill-emerald">● {{ __('Active Subscription Plan') }}</span>
+                    <span class="ob-pill-blue">{{ $priceLabel }}</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">
                     {{ $planName }}
                 </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
+                <p style="font-size: 13.5px; color: #64748b; margin: 4px 0 0 0;">
                     {{ $package?->description ?? __('Free factory membership with up to :limit product listings and up to :images images per product.', ['limit' => $productLimit, 'images' => $maxImages]) }}
                 </p>
             </div>
 
-            <!-- Right: Action Buttons -->
-            <div class="flex flex-wrap items-center gap-3 shrink-0">
-                @if($factory && $factory->canCreateMoreProducts())
+            <div class="ob-dash-actions">
+                @if($canCreateMore)
                     <x-filament::button tag="a" href="{{ url('/factory/products/create') }}" icon="heroicon-o-plus">
                         {{ __('Add Product (:remaining left)', ['remaining' => $remainingProducts]) }}
                     </x-filament::button>
@@ -51,57 +132,54 @@
             </div>
         </div>
 
-        <!-- Plan Limitations & Live Usage -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
+        <div class="ob-dash-grid">
             <!-- 1. Product Listing Limit -->
-            <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-4 border border-gray-100 dark:border-gray-800">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">
+            <div class="ob-dash-box">
+                <div class="ob-dash-box-hdr">
                     <span>{{ __('Product Listings Limit') }}</span>
-                    <span class="{{ $usedProducts >= $productLimit ? 'text-red-600' : 'text-primary-600' }}">
+                    <span style="color: {{ $usedProducts >= $productLimit ? '#dc2626' : '#2254c5' }};">
                         {{ $usedProducts }} / {{ $productLimit }} {{ __('Used') }}
                     </span>
                 </div>
-                <div class="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
-                    <div class="h-full rounded-full transition-all duration-500 {{ $usedProducts >= $productLimit ? 'bg-red-500' : 'bg-primary-600' }}"
-                         style="width: {{ $usagePercent }}%"></div>
+                <div class="ob-dash-bar-bg">
+                    <div class="ob-dash-bar-fg" style="width: {{ max($usagePercent, 4) }}%; {{ $usedProducts >= $productLimit ? 'background:#ef4444;' : '' }}"></div>
                 </div>
-                <p class="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                <div style="font-size: 12px; font-weight: 600; color: #475569;">
                     @if($remainingProducts > 0)
                         {{ __(':remaining of :limit free product slots remaining', ['remaining' => $remainingProducts, 'limit' => $productLimit]) }}
                     @else
                         {{ __('Maximum of :limit free product listings reached', ['limit' => $productLimit]) }}
                     @endif
-                </p>
+                </div>
             </div>
 
             <!-- 2. Images Per Product Limit -->
-            <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-4 border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+            <div class="ob-dash-box">
+                <div class="ob-dash-box-hdr">
                     <span>{{ __('Images Per Product Limit') }}</span>
-                    <span class="text-emerald-600">{{ __('Max :images Photos', ['images' => $maxImages]) }}</span>
+                    <span style="color: #059669;">{{ __('Max :images Photos', ['images' => $maxImages]) }}</span>
                 </div>
-                <p class="text-lg font-bold text-gray-900 dark:text-white">
+                <div style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
                     {{ __(':images Images / Product', ['images' => $maxImages]) }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: #475569;">
                     {{ __('Each product listing supports up to :images gallery images', ['images' => $maxImages]) }}
-                </p>
+                </div>
             </div>
 
             <!-- 3. Plan Price & Status -->
-            <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-4 border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+            <div class="ob-dash-box">
+                <div class="ob-dash-box-hdr">
                     <span>{{ __('Package Price') }}</span>
-                    <span class="text-emerald-600">{{ __('Active') }}</span>
+                    <span style="color: #059669;">{{ __('Active') }}</span>
                 </div>
-                <p class="text-lg font-bold text-emerald-600">
+                <div style="font-size: 18px; font-weight: 800; color: #059669; margin-bottom: 4px;">
                     {{ $priceLabel }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: #475569;">
                     {{ __('Includes Direct Buyer Messaging, Showroom & Tenders') }}
-                </p>
+                </div>
             </div>
         </div>
     </div>
 </x-filament-widgets::widget>
-

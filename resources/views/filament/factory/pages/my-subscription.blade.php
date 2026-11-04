@@ -13,26 +13,174 @@
         $usedProducts = $factory?->productsCount() ?? 0;
         $remainingProducts = max(0, $productLimit - $usedProducts);
         $usagePercent = $productLimit > 0 ? min(100, (int) round(($usedProducts / $productLimit) * 100)) : 0;
+        $canCreateMore = $usedProducts < $productLimit;
     @endphp
 
-    <div class="space-y-8">
+    <style>
+        .ob-sub-wrap { display: flex; flex-direction: column; gap: 28px; }
+        .ob-sub-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+        }
+        .dark .ob-sub-card { background: #111827; border-color: #1f2937; }
+        .ob-sub-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .dark .ob-sub-header { border-bottom-color: #1f2937; }
+        .ob-sub-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .ob-badge-green {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .ob-badge-blue {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        .ob-sub-title { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0; line-height: 1.25; }
+        .dark .ob-sub-title { color: #f8fafc; }
+        .ob-sub-desc { font-size: 14px; color: #64748b; margin: 6px 0 0 0; }
+        .dark .ob-sub-desc { color: #94a3b8; }
+        .ob-limits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding-top: 22px;
+        }
+        .ob-limit-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+        }
+        .dark .ob-limit-box { background: #1f2937; border-color: #374151; }
+        .ob-limit-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+        .dark .ob-limit-top { color: #e2e8f0; }
+        .ob-progress-track {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .dark .ob-progress-track { background: #374151; }
+        .ob-progress-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #2254c5, #3b82f6);
+            transition: width 0.4s ease;
+        }
+        .ob-progress-fill.ob-danger { background: #ef4444; }
+        .ob-pkg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .ob-pkg-card {
+            background: #ffffff;
+            border: 2px solid #2254c5;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 25px rgba(34, 84, 197, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            max-width: 520px;
+        }
+        .dark .ob-pkg-card { background: #111827; border-color: #3b82f6; }
+        .ob-pkg-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin: 14px 0 18px 0;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .dark .ob-pkg-price-row { border-bottom-color: #1f2937; }
+        .ob-pkg-price { font-size: 36px; font-weight: 900; color: #059669; line-height: 1; }
+        .ob-pkg-quotas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .ob-pkg-quota-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .dark .ob-pkg-quota-item { background: #1f2937; border-color: #374151; }
+        .ob-pkg-quota-num { font-size: 24px; font-weight: 900; color: #2254c5; line-height: 1.1; }
+        .dark .ob-pkg-quota-num { color: #60a5fa; }
+        .ob-pkg-quota-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-top: 4px; }
+        .ob-feature-list { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 11px; }
+        .ob-feature-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; font-weight: 600; color: #334155; }
+        .dark .ob-feature-item { color: #cbd5e1; }
+        .ob-check-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 9999px;
+            background: #d1fae5;
+            color: #059669;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 900;
+            margin-top: 1px;
+        }
+    </style>
+
+    <div class="ob-sub-wrap">
         <!-- Current Active Plan & Limitations Summary -->
-        <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100 dark:border-gray-800 pb-6">
+        <div class="ob-sub-card">
+            <div class="ob-sub-header">
                 <div>
-                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            {{ __('Current Active Package') }}
-                        </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-                            {{ $priceLabel }}
-                        </span>
+                    <div class="ob-sub-badges">
+                        <span class="ob-badge-green">● {{ __('Current Active Package') }}</span>
+                        <span class="ob-badge-blue">{{ $priceLabel }}</span>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-950 dark:text-white">
-                        {{ $planLabel }}
-                    </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <h2 class="ob-sub-title">{{ $planLabel }}</h2>
+                    <p class="ob-sub-desc">
                         {{ __('Your factory account includes :limit free product listings and up to :images images per product.', [
                             'limit' => $productLimit,
                             'images' => $maxImages,
@@ -40,13 +188,13 @@
                     </p>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    @if($factory && $factory->canCreateMoreProducts())
-                        <x-filament::button tag="a" href="{{ url('/factory/products/create') }}" icon="heroicon-o-plus">
+                <div>
+                    @if($canCreateMore)
+                        <x-filament::button tag="a" href="{{ url('/factory/products/create') }}" icon="heroicon-o-plus" size="lg">
                             {{ __('Add New Product (:remaining left)', ['remaining' => $remainingProducts]) }}
                         </x-filament::button>
                     @else
-                        <x-filament::button color="gray" disabled icon="heroicon-o-lock-closed">
+                        <x-filament::button color="gray" disabled icon="heroicon-o-lock-closed" size="lg">
                             {{ __('Limit Reached (:limit/:limit)', ['limit' => $productLimit]) }}
                         </x-filament::button>
                     @endif
@@ -54,52 +202,59 @@
             </div>
 
             <!-- Plan Limitations & Live Usage -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-                <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-5 border border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ __('Product Listings Limitation') }}</span>
-                        <span class="text-sm font-bold {{ $usedProducts >= $productLimit ? 'text-red-600' : 'text-primary-600' }}">
+            <div class="ob-limits-grid">
+                <div class="ob-limit-box">
+                    <div class="ob-limit-top">
+                        <span>{{ __('Product Listings Limitation') }}</span>
+                        <span style="color: {{ $usedProducts >= $productLimit ? '#dc2626' : '#2254c5' }};">
                             {{ $usedProducts }} / {{ $productLimit }} {{ __('Products Used') }}
                         </span>
                     </div>
-                    <div class="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full transition-all duration-500 {{ $usedProducts >= $productLimit ? 'bg-red-500' : 'bg-primary-600' }}"
-                             style="width: {{ $usagePercent }}%"></div>
+                    <div class="ob-progress-track">
+                        <div class="ob-progress-fill {{ $usedProducts >= $productLimit ? 'ob-danger' : '' }}"
+                             style="width: {{ max($usagePercent, 4) }}%"></div>
                     </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <div style="font-size: 12.5px; color: #64748b;">
                         @if($remainingProducts > 0)
                             {{ __('You can publish :remaining more product listings for free on your current package.', ['remaining' => $remainingProducts]) }}
                         @else
                             {{ __('You have reached the maximum of :limit free product listings on your current package.', ['limit' => $productLimit]) }}
                         @endif
-                    </p>
+                    </div>
                 </div>
 
-                <div class="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-5 border border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ __('Product Photo Gallery Limitation') }}</span>
-                        <span class="text-sm font-bold text-emerald-600">
+                <div class="ob-limit-box">
+                    <div class="ob-limit-top">
+                        <span>{{ __('Product Photo Gallery Limitation') }}</span>
+                        <span style="color: #059669;">
                             {{ __('Max :images Images / Product', ['images' => $maxImages]) }}
                         </span>
                     </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
+                    <div style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
+                        {{ __('Up to :images High-Resolution Photos per Product', ['images' => $maxImages]) }}
+                    </div>
+                    <div style="font-size: 12.5px; color: #64748b; line-height: 1.5;">
                         {{ __('Each of your :limit product listings supports up to :images high-resolution photos with drag-and-drop gallery ordering.', [
                             'limit' => $productLimit,
                             'images' => $maxImages,
                         ]) }}
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Subscription Packages Grid -->
         <div>
-            <div class="mb-4">
-                <h3 class="text-lg font-bold text-gray-950 dark:text-white">{{ __('Available Subscription Packages') }}</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('Choose the subscription package for your factory showroom and product catalog.') }}</p>
+            <div style="margin-bottom: 16px;">
+                <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">
+                    {{ __('Available Subscription Packages') }}
+                </h3>
+                <p style="font-size: 13.5px; color: #64748b; margin: 0;">
+                    {{ __('Choose the subscription package for your factory showroom and product catalog.') }}
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="ob-pkg-grid">
                 @foreach($packages as $pkg)
                     @php
                         $isCurrent = ($activePackage && (int) $activePackage->id === (int) $pkg->id)
@@ -107,64 +262,64 @@
                         $features = is_array($pkg->features) && count($pkg->features) > 0
                             ? $pkg->features
                             : [
-                                __('Up to :limit Product Listings', ['limit' => $pkg->product_limit]),
-                                __('Up to :images Images per Product', ['images' => $pkg->max_images_per_product]),
+                                __('Up to :limit Product Listings for Free', ['limit' => $pkg->product_limit]),
+                                __('Up to :images High-Resolution Images per Product', ['images' => $pkg->max_images_per_product]),
                                 __('Direct Buyer Messaging & Email Notifications'),
-                                __('Verified Factory Showroom Profile'),
+                                __('Verified Factory Showroom Profile (Video & 360 VR)'),
                                 __('Access to Buyer Tenders & Stock Deals'),
+                                __('Multi-Language Catalog Support (9 Languages)'),
                             ];
                     @endphp
 
-                    <div class="rounded-2xl border-2 {{ $isCurrent ? 'border-primary-600 dark:border-primary-500 ring-2 ring-primary-600/10' : 'border-gray-200 dark:border-gray-800' }} bg-white dark:bg-gray-900 p-6 shadow-sm flex flex-col justify-between">
+                    <div class="ob-pkg-card">
                         <div>
-                            <div class="flex items-center justify-between gap-2 mb-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider {{ $pkg->isFree() ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-primary-50 text-primary-700' }}">
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px;">
+                                <span class="ob-badge-green">
                                     {{ $pkg->isFree() ? __('100% Free Package') : strtoupper($pkg->billing_cycle) }}
                                 </span>
                                 @if($isCurrent)
-                                    <span class="inline-flex items-center gap-1 text-xs font-bold text-primary-600 dark:text-primary-400">
-                                        <x-filament::icon icon="heroicon-m-check-badge" class="w-4 h-4" />
-                                        {{ __('Current Plan') }}
-                                    </span>
+                                    <span class="ob-badge-blue">✓ {{ __('Current Plan') }}</span>
                                 @endif
                             </div>
 
-                            <h4 class="text-xl font-bold text-gray-950 dark:text-white">{{ $pkg->name }}</h4>
+                            <h4 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0;">
+                                {{ $pkg->name }}
+                            </h4>
 
-                            <div class="mt-3 mb-4 flex items-baseline gap-2">
+                            <div class="ob-pkg-price-row">
                                 @if($pkg->isFree())
-                                    <span class="text-3xl font-extrabold text-emerald-600">{{ __('FREE') }}</span>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">($0.00)</span>
+                                    <span class="ob-pkg-price">{{ __('FREE') }}</span>
+                                    <span style="font-size: 14px; font-weight: 700; color: #64748b;">($0.00)</span>
                                 @else
-                                    <span class="text-3xl font-extrabold text-gray-950 dark:text-white">{{ $pkg->currency }} {{ number_format((float) $pkg->price, 2) }}</span>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">/ {{ $pkg->billing_cycle }}</span>
+                                    <span class="ob-pkg-price" style="color: #0f172a;">{{ $pkg->currency }} {{ number_format((float) $pkg->price, 2) }}</span>
+                                    <span style="font-size: 14px; font-weight: 700; color: #64748b;">/ {{ $pkg->billing_cycle }}</span>
                                 @endif
                             </div>
 
                             @if($pkg->description)
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">
+                                <p style="font-size: 13.5px; color: #64748b; margin: 0 0 18px 0; line-height: 1.55;">
                                     {{ $pkg->description }}
                                 </p>
                             @endif
 
                             <!-- Package Quota Badges -->
-                            <div class="grid grid-cols-2 gap-2.5 mb-5">
-                                <div class="rounded-xl bg-gray-50 dark:bg-gray-800 p-3 text-center border border-gray-100 dark:border-gray-700">
-                                    <p class="text-lg font-extrabold text-gray-950 dark:text-white">{{ $pkg->product_limit }}</p>
-                                    <p class="text-[11px] font-semibold text-gray-500 dark:text-gray-400">{{ __('Products Limit') }}</p>
+                            <div class="ob-pkg-quotas">
+                                <div class="ob-pkg-quota-item">
+                                    <div class="ob-pkg-quota-num">{{ $pkg->product_limit }}</div>
+                                    <div class="ob-pkg-quota-lbl">{{ __('Products Limit') }}</div>
                                 </div>
-                                <div class="rounded-xl bg-gray-50 dark:bg-gray-800 p-3 text-center border border-gray-100 dark:border-gray-700">
-                                    <p class="text-lg font-extrabold text-gray-950 dark:text-white">{{ $pkg->max_images_per_product }}</p>
-                                    <p class="text-[11px] font-semibold text-gray-500 dark:text-gray-400">{{ __('Images / Product') }}</p>
+                                <div class="ob-pkg-quota-item">
+                                    <div class="ob-pkg-quota-num">{{ $pkg->max_images_per_product }}</div>
+                                    <div class="ob-pkg-quota-lbl">{{ __('Images / Product') }}</div>
                                 </div>
                             </div>
 
                             <!-- Feature Checklist -->
-                            <ul class="space-y-2.5 text-sm border-t border-gray-100 dark:border-gray-800 pt-4 mb-6">
+                            <ul class="ob-feature-list">
                                 @foreach($features as $feature)
-                                    <li class="flex items-start gap-2.5 text-gray-700 dark:text-gray-300">
-                                        <x-filament::icon icon="heroicon-o-check-circle" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                                        <span class="text-xs font-medium">{{ $feature }}</span>
+                                    <li class="ob-feature-item">
+                                        <span class="ob-check-icon">✓</span>
+                                        <span>{{ $feature }}</span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -172,11 +327,11 @@
 
                         <div>
                             @if($isCurrent)
-                                <x-filament::button color="success" disabled class="w-full" icon="heroicon-m-check-circle">
+                                <x-filament::button color="success" disabled class="w-full" size="lg" icon="heroicon-m-check-circle">
                                     {{ __('Active on Your Account') }}
                                 </x-filament::button>
                             @else
-                                <x-filament::button wire:click="selectPackage({{ $pkg->id }})" class="w-full" icon="heroicon-o-bolt">
+                                <x-filament::button wire:click="selectPackage({{ $pkg->id }})" class="w-full" size="lg" icon="heroicon-o-bolt">
                                     {{ __('Activate :name', ['name' => $pkg->name]) }}
                                 </x-filament::button>
                             @endif

@@ -7,23 +7,108 @@
     $quantity = $firstMessageMeta['quantity'] ?? null;
 @endphp
 
-<div class="flex flex-col h-[680px] bg-white rounded-xl shadow-sm border border-gray-200">
-    <!-- Chat Header with Full Customer Details -->
-    <div class="p-4 sm:p-5 border-b border-gray-200 bg-gray-50 rounded-t-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div class="space-y-1">
-            <div class="flex items-center gap-2.5 flex-wrap">
-                <h3 class="font-bold text-gray-900 text-base">{{ $conversation->subject ?: ('Chat with ' . $buyerName) }}</h3>
-                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $conversation->status === 'resolved' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800' }}">
+<div>
+    <style>
+        .ob-chat-card {
+            display: flex;
+            flex-direction: column;
+            height: 680px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+        }
+        .dark .ob-chat-card { background: #111827; border-color: #1f2937; }
+        .ob-chat-hdr {
+            padding: 18px 22px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .dark .ob-chat-hdr { background: #1f2937; border-bottom-color: #374151; }
+        .ob-chat-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: #475569;
+        }
+        .dark .ob-chat-meta { color: #cbd5e1; }
+        .ob-chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .dark .ob-chat-body { background: #0f172a; }
+        .ob-chat-row { display: flex; }
+        .ob-chat-row.ob-me { justify-content: flex-end; }
+        .ob-chat-row.ob-them { justify-content: flex-start; }
+        .ob-chat-bubble {
+            max-width: 75%;
+            padding: 13px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.55;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+        }
+        .ob-chat-row.ob-me .ob-chat-bubble {
+            background: #2254c5;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+        .ob-chat-row.ob-them .ob-chat-bubble {
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+        .dark .ob-chat-row.ob-them .ob-chat-bubble {
+            background: #1f2937;
+            color: #f8fafc;
+            border-color: #374151;
+        }
+        .ob-chat-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+        .dark .ob-chat-footer { background: #111827; border-top-color: #1f2937; }
+        .ob-chat-form { display: flex; gap: 10px; align-items: center; }
+        .ob-chat-input {
+            flex: 1;
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            outline: none;
+        }
+        .dark .ob-chat-input { background: #1f2937; border-color: #374151; color: #ffffff; }
+    </style>
+
+    <div class="ob-chat-card">
+        <!-- Chat Header with Full Customer Details -->
+        <div class="ob-chat-hdr">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">
+                    {{ $conversation->subject ?: ('Chat with ' . $buyerName) }}
+                </h3>
+                <span style="padding: 3px 10px; font-size: 11px; font-weight: 700; border-radius: 9999px; {{ $conversation->status === 'resolved' ? 'background:#d1fae5;color:#047857;' : 'background:#fef3c7;color:#92400e;' }}">
                     {{ $conversation->status === 'resolved' ? __('Replied') : __('Needs Reply') }}
                 </span>
             </div>
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+
+            <div class="ob-chat-meta">
                 <span><strong>{{ __('Customer') }}:</strong> {{ $buyerName }}</span>
                 @if($buyerEmail)
-                    <span><strong>{{ __('Email') }}:</strong> <a href="mailto:{{ $buyerEmail }}" class="text-primary-600 hover:underline">{{ $buyerEmail }}</a></span>
+                    <span><strong>{{ __('Email') }}:</strong> <a href="mailto:{{ $buyerEmail }}" style="color:#2254c5;font-weight:600;text-decoration:none;">{{ $buyerEmail }}</a></span>
                 @endif
                 @if($buyerPhone)
-                    <span><strong>{{ __('Phone') }}:</strong> <a href="tel:{{ $buyerPhone }}" class="text-primary-600 hover:underline">{{ $buyerPhone }}</a></span>
+                    <span><strong>{{ __('Phone') }}:</strong> <a href="tel:{{ $buyerPhone }}" style="color:#2254c5;font-weight:600;text-decoration:none;">{{ $buyerPhone }}</a></span>
                 @endif
                 @if($companyName)
                     <span><strong>{{ __('Company') }}:</strong> {{ $companyName }}</span>
@@ -32,76 +117,69 @@
                     <span><strong>{{ __('Quantity') }}:</strong> {{ $quantity }}</span>
                 @endif
             </div>
+
             @if($conversation->product)
-                <p class="text-xs text-gray-500">
+                <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
                     <strong>{{ __('Product') }}:</strong>
                     {{ is_array($conversation->product->name) ? ($conversation->product->name['en'] ?? reset($conversation->product->name)) : $conversation->product->getTranslation('name', 'en') }}
-                </p>
+                </div>
             @endif
+        </div>
+
+        <!-- Messages Area -->
+        <div class="ob-chat-body" id="chat-messages">
+            @foreach($messages as $message)
+                @php
+                    $isMe = $message->sender_id === auth()->id();
+                    $isSystem = is_null($message->sender_id);
+                @endphp
+
+                @if($isSystem)
+                    <div style="display:flex;justify-content:center;margin:6px 0;">
+                        <span style="background:#eff6ff;color:#1e40af;font-size:12px;font-weight:600;padding:4px 12px;border-radius:9999px;border:1px solid #bfdbfe;">
+                            {{ $message->content_original }}
+                        </span>
+                    </div>
+                @else
+                    <div class="ob-chat-row {{ $isMe ? 'ob-me' : 'ob-them' }}">
+                        <div class="ob-chat-bubble">
+                            <div style="white-space: pre-line;">{{ $message->content_original }}</div>
+                            <div style="font-size: 10px; opacity: 0.7; margin-top: 6px; text-align: right;">
+                                {{ $message->created_at->format('M d, H:i') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+
+        <!-- Input Area -->
+        <div class="ob-chat-footer">
+            <form wire:submit="sendMessage" class="ob-chat-form">
+                <input
+                    type="text"
+                    wire:model="newMessage"
+                    placeholder="{{ __('Type your reply to the customer...') }}"
+                    class="ob-chat-input"
+                    required
+                >
+                <x-filament::button type="submit" size="lg" icon="heroicon-m-paper-airplane">
+                    {{ __('Send Reply') }}
+                </x-filament::button>
+            </form>
         </div>
     </div>
 
-    <!-- Messages Area -->
-    <div class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50/50" id="chat-messages">
-        @foreach($messages as $message)
-            @php
-                $isMe = $message->sender_id === auth()->id();
-                $isSystem = is_null($message->sender_id);
-            @endphp
-
-            @if($isSystem)
-                <div class="flex justify-center my-2">
-                    <span class="bg-blue-50 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">
-                        {{ $message->content_original }}
-                    </span>
-                </div>
-            @else
-                <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }}">
-                    <div class="max-w-[75%] {{ $isMe ? 'bg-primary-600 text-white rounded-l-xl rounded-tr-xl' : 'bg-white border border-gray-200 text-gray-900 rounded-r-xl rounded-tl-xl' }} p-3.5 shadow-sm relative">
-                        <p class="text-sm whitespace-pre-line">{{ $message->content_original }}</p>
-                        <span class="text-[10px] {{ $isMe ? 'text-primary-100' : 'text-gray-400' }} block mt-1.5 text-right">
-                            {{ $message->created_at->format('M d, H:i') }}
-                        </span>
-                    </div>
-                </div>
-            @endif
-        @endforeach
-    </div>
-
-    <!-- Input Area -->
-    <div class="p-4 border-t border-gray-200 bg-white rounded-b-xl">
-        <form wire:submit="sendMessage" class="flex gap-2">
-            <input 
-                type="text" 
-                wire:model="newMessage" 
-                placeholder="{{ __('Type your reply to the customer...') }}" 
-                class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                required
-            >
-            <button 
-                type="submit" 
-                class="inline-flex items-center px-5 py-2.5 bg-primary-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                wire:loading.attr="disabled"
-            >
-                {{ __('Send Reply') }}
-            </button>
-        </form>
-    </div>
-
-    <!-- Auto-scroll script -->
     <script>
         document.addEventListener('livewire:initialized', () => {
             const messagesContainer = document.getElementById('chat-messages');
-            
             const scrollToBottom = () => {
-                if(messagesContainer) {
+                if (messagesContainer) {
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }
             };
-            
             scrollToBottom();
-            
-            Livewire.hook('morph.updated', ({ component, el }) => {
+            Livewire.hook('morph.updated', () => {
                 scrollToBottom();
             });
         });
