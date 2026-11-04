@@ -49,7 +49,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
         }
         
         if ($panel->getId() === 'factory') {
-            return $this->hasRole(['factory_owner', 'factory_staff']);
+            return $this->hasRole(['factory_owner', 'factory_staff', 'super_admin', 'admin']);
         }
 
         return false;

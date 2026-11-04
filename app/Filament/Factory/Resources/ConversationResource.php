@@ -62,12 +62,22 @@ class ConversationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $factory = auth()->user()?->factory;
+        $user = auth()->user();
+        $factory = $user?->factory;
 
-        return parent::getEloquentQuery()
-            ->where('factory_id', $factory?->id ?? 0)
+        $query = parent::getEloquentQuery()
             ->with(['buyer', 'product', 'messages' => fn ($q) => $q->latest()])
             ->latest('updated_at');
+
+        if ($factory) {
+            return $query->where('factory_id', $factory->id);
+        }
+
+        if ($user && $user->hasRole(['super_admin', 'admin'])) {
+            return $query;
+        }
+
+        return $query->where('factory_id', 0);
     }
 
     public static function canCreate(): bool

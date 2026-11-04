@@ -214,7 +214,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">
                     <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-14 lg:h-16 w-auto object-contain">
+                        <img src="{{ asset('images/logo.png') }}?v=2" alt="OpticB2B Logo" class="h-11 sm:h-12 lg:h-14 w-auto object-contain">
                     </a>
                     
                     <div class="hidden lg:flex items-center gap-10 text-[15px] font-semibold text-slate-600">
@@ -301,7 +301,7 @@
                 <!-- Top Section -->
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                     <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 w-auto object-contain">
+                        <img src="{{ asset('images/logo.png') }}?v=2" alt="OpticB2B Logo" class="h-10 w-auto object-contain">
                     </a>
                     <button @click="open = false" type="button" class="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-all" aria-label="Close Menu">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -365,7 +365,7 @@
             <div class="grid md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-2 mb-6">
-                        <img src="{{ asset('images/logo.png') }}" alt="OpticB2B Logo" class="h-10 w-auto object-contain">
+                        <img src="{{ asset('images/logo.png') }}?v=2" alt="OpticB2B Logo" class="h-11 w-auto object-contain">
                     </div>
                     <p class="text-slate-500">{{ __('Global marketplace for optical industry professionals.') }}</p>
                 </div>

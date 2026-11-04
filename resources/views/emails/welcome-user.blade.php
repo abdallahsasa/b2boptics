@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('Welcome to OpticB2B') }}</title>
 </head>
+@php
+    $configuredUrl = rtrim(config('app.url', 'https://opticb2b.com'), '/');
+    $baseUrl = (str_contains($configuredUrl, 'localhost') || str_contains($configuredUrl, '127.0.0.1'))
+        ? 'https://opticb2b.com'
+        : $configuredUrl;
+@endphp
 <body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
         <tr>
@@ -65,7 +71,7 @@
                                                 1. Complete Your Factory Showroom Profile
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Open <a href="{{ url('/factory/my-factory') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">My Factory Profile</a> in your portal to add your company logo, cover banner, workshop video (MP4), 360° VR tour link, main product lines, and contact details.
+                                                Open <a href="{{ $baseUrl }}/factory/my-factory" style="color:#2563eb;font-weight:600;text-decoration:none;">My Factory Profile</a> in your portal to add your company logo, cover banner, workshop video (MP4), 360° VR tour link, main product lines, and contact details.
                                             </div>
                                         </td>
                                     </tr>
@@ -75,7 +81,7 @@
                                                 2. List Your First 10 Products for Free (Up to 10 Photos Each)
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Go to <a href="{{ url('/factory/products/create') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">My Products → Add Product</a> to upload up to 10 products for free. Each product supports up to 10 gallery photos, wholesale starting price, and technical specifications.
+                                                Go to <a href="{{ $baseUrl }}/factory/products/create" style="color:#2563eb;font-weight:600;text-decoration:none;">My Products → Add Product</a> to upload up to 10 products for free. Each product supports up to 10 gallery photos, wholesale starting price, and technical specifications.
                                             </div>
                                         </td>
                                     </tr>
@@ -85,17 +91,17 @@
                                                 3. Respond to Direct Customer Messages
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                When buyers contact your factory or inquire about your products, you receive an instant email notification and a message thread inside <a href="{{ url('/factory/conversations') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">Customer Messages</a>.
+                                                When buyers contact your factory or inquire about your products, you receive an instant email notification and a message thread inside <a href="{{ $baseUrl }}/factory/conversations" style="color:#2563eb;font-weight:600;text-decoration:none;">Customer Messages</a>.
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding:12px 0;">
                                             <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px;">
-                                                4. Bid on Buyer Tenders & Post Stock Deals
+                                                4. Bid on Buyer Tenders &amp; Post Stock Deals
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Browse open buyer sourcing requests under <strong>Tenders</strong> to submit quotes, or publish ready-to-ship clearance lots under <strong>Stock Deals</strong>.
+                                                Browse open buyer sourcing requests under <a href="{{ $baseUrl }}/factory/tenders" style="color:#2563eb;font-weight:600;text-decoration:none;">Tenders</a> to submit quotes, or publish ready-to-ship clearance lots under <a href="{{ $baseUrl }}/factory/stock-offers" style="color:#2563eb;font-weight:600;text-decoration:none;">Stock Deals</a>.
                                             </div>
                                         </td>
                                     </tr>
@@ -103,7 +109,7 @@
 
                                 <!-- CTA Button for Factory -->
                                 <div style="text-align:center;margin:28px 0 12px;">
-                                    <a href="{{ url('/factory') }}"
+                                    <a href="{{ $baseUrl }}/factory"
                                        style="display:inline-block;background-color:#2563eb;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 30px;border-radius:12px;">
                                         Open Your Factory Portal
                                     </a>
@@ -121,7 +127,7 @@
                                                 1. Browse Wholesale Optical Products
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Visit <a href="{{ url('/en/marketplace') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">Products</a> to filter optical frames, sunglasses, lenses, contact lenses, and lab machinery by category, country of origin, and specifications.
+                                                Visit <a href="{{ $baseUrl }}/en/marketplace" style="color:#2563eb;font-weight:600;text-decoration:none;">Products</a> to filter optical frames, sunglasses, lenses, contact lenses, and lab machinery by category, country of origin, and specifications.
                                             </div>
                                         </td>
                                     </tr>
@@ -131,7 +137,7 @@
                                                 2. Explore Verified Factory Showrooms
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Check <a href="{{ url('/en/factories') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">Factories</a> to inspect manufacturer showrooms, watch workshop videos, take 360° virtual tours, and read verified buyer reviews.
+                                                Check <a href="{{ $baseUrl }}/en/factories" style="color:#2563eb;font-weight:600;text-decoration:none;">Factories</a> to inspect manufacturer showrooms, watch workshop videos, take 360° virtual tours, and read verified buyer reviews.
                                             </div>
                                         </td>
                                     </tr>
@@ -148,10 +154,10 @@
                                     <tr>
                                         <td style="padding:12px 0;">
                                             <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px;">
-                                                4. Post Sourcing Tenders & Claim Stock Deals
+                                                4. Post Sourcing Tenders &amp; Claim Stock Deals
                                             </div>
                                             <div style="font-size:13px;color:#475569;line-height:1.55;">
-                                                Have a custom order? Post a <a href="{{ url('/en/find-deal') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">Tender</a> to receive competitive bids from multiple factories, or browse <a href="{{ url('/en/stock-deals') }}" style="color:#2563eb;font-weight:600;text-decoration:none;">Stock Deals</a> for ready-to-ship wholesale lots.
+                                                Have a custom order? Post a <a href="{{ $baseUrl }}/en/find-deal" style="color:#2563eb;font-weight:600;text-decoration:none;">Tender</a> to receive competitive bids from multiple factories, or browse <a href="{{ $baseUrl }}/en/stock-deals" style="color:#2563eb;font-weight:600;text-decoration:none;">Stock Deals</a> for ready-to-ship wholesale lots.
                                             </div>
                                         </td>
                                     </tr>
@@ -159,18 +165,18 @@
 
                                 <!-- CTA Buttons for Buyer -->
                                 <div style="text-align:center;margin:28px 0 16px;">
-                                    <a href="{{ url('/en/marketplace') }}"
+                                    <a href="{{ $baseUrl }}/en/marketplace"
                                        style="display:inline-block;background-color:#2563eb;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:12px;margin:4px;">
                                         Explore Optical Products
                                     </a>
-                                    <a href="{{ url('/en/factories') }}"
+                                    <a href="{{ $baseUrl }}/en/factories"
                                        style="display:inline-block;background-color:#0f172a;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:12px;margin:4px;">
                                         Browse Verified Factories
                                     </a>
                                 </div>
 
                                 <div style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 18px;margin-top:20px;font-size:12px;color:#475569;text-align:center;">
-                                    Are you an optical manufacturer? <a href="{{ url('/en/packages') }}" style="color:#2563eb;font-weight:700;text-decoration:none;">View our Free Factory Package (10 Free Product Listings) →</a>
+                                    Are you an optical manufacturer? <a href="{{ $baseUrl }}/en/packages" style="color:#2563eb;font-weight:700;text-decoration:none;">View our Free Factory Package (10 Free Product Listings) →</a>
                                 </div>
                             @endif
                         </td>

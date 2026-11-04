@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Customer Inquiry - OpticB2B</title>
 </head>
+@php
+    $configuredUrl = rtrim(config('app.url', 'https://opticb2b.com'), '/');
+    $baseUrl = (str_contains($configuredUrl, 'localhost') || str_contains($configuredUrl, '127.0.0.1'))
+        ? 'https://opticb2b.com'
+        : $configuredUrl;
+@endphp
 <body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a;">
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #f1f5f9; padding: 32px 16px;">
         <tr>
@@ -127,7 +133,7 @@
 
                             <!-- CTA Button -->
                             <div style="text-align: center; margin: 30px 0 10px 0;">
-                                <a href="{{ url('/factory/conversations/' . $conversation->id . '/edit') }}"
+                                <a href="{{ $baseUrl }}/factory/conversations/{{ $conversation->id }}/edit"
                                    style="display: inline-block; background-color: #2254c5; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 12px;">
                                     View &amp; Reply in Factory Portal &rarr;
                                 </a>
@@ -139,7 +145,7 @@
                     <tr>
                         <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 32px; text-align: center; font-size: 12px; color: #64748b;">
                             You received this email because a buyer contacted your factory profile on <strong>OpticB2B</strong>.<br>
-                            Log in to your <a href="{{ url('/factory') }}" style="color: #2254c5; text-decoration: none; font-weight: 600;">Factory Portal</a> to manage all customer messages.
+                            Log in to your <a href="{{ $baseUrl }}/factory/conversations" style="color: #2254c5; text-decoration: none; font-weight: 600;">Factory Portal Inbox</a> to manage all customer messages.
                         </td>
                     </tr>
                 </table>

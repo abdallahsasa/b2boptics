@@ -31,18 +31,28 @@ class FactoryPanelProvider extends PanelProvider
             ->login()
             ->registration(\App\Filament\Factory\Pages\Auth\RegisterFactory::class)
             ->brandName('OpticB2B Factory Portal')
-            ->brandLogo(asset('images/logo.png'))
+            ->brandLogo(asset('images/logo.png') . '?v=2')
             ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => Color::hex('#2254C5'),
             ])
             ->discoverResources(in: app_path('Filament/Factory/Resources'), for: 'App\Filament\Factory\Resources')
+            ->resources([
+                \App\Filament\Factory\Resources\ConversationResource::class,
+                \App\Filament\Factory\Resources\ProductResource::class,
+                \App\Filament\Factory\Resources\StockOfferResource::class,
+                \App\Filament\Factory\Resources\TenderResource::class,
+            ])
             ->discoverPages(in: app_path('Filament/Factory/Pages'), for: 'App\Filament\Factory\Pages')
             ->pages([
                 Dashboard::class,
+                \App\Filament\Factory\Pages\MyFactory::class,
+                \App\Filament\Factory\Pages\MySubscription::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Factory/Widgets'), for: 'App\Filament\Factory\Widgets')
             ->widgets([
+                \App\Filament\Factory\Widgets\FactorySubscriptionWidget::class,
+                \App\Filament\Factory\Widgets\FactoryStatsOverview::class,
                 AccountWidget::class,
             ])
             ->middleware([

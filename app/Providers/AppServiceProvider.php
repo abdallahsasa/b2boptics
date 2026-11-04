@@ -32,5 +32,22 @@ class AppServiceProvider extends ServiceProvider
                 'mail.from.name' => 'OpticB2B',
             ]);
         }
+
+        // Automatically clear stale route or Filament component caches on the server after deployment
+        try {
+            $filamentCacheDir = base_path('bootstrap/cache/filament');
+            if (is_dir($filamentCacheDir)) {
+                \Illuminate\Support\Facades\File::deleteDirectory($filamentCacheDir);
+            }
+
+            if (app()->routesAreCached() && !\Illuminate\Support\Facades\Route::has('filament.factory.resources.conversations.index')) {
+                $routeCacheFile = app()->getCachedRoutesPath();
+                if (is_file($routeCacheFile)) {
+                    @unlink($routeCacheFile);
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignore filesystem permission issues
+        }
     }
 }
