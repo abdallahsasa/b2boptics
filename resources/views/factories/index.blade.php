@@ -73,13 +73,29 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <!-- Hero Section -->
-        <div class="mb-10">
-            <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
-                {{ __('Discover Verified') }} <span class="text-primary-600">{{ __('Manufacturers') }}</span>
-            </h1>
-            <p class="text-slate-500 mt-4 text-lg max-w-2xl">
-                {{ __('Browse our curated directory of top-tier optical factories and suppliers from around the world. Connect directly with the source.') }}
-            </p>
+        <div class="mb-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                    {{ __('Discover Verified') }} <span class="text-primary-600">{{ __('Manufacturers') }}</span>
+                </h1>
+                <p class="text-slate-500 mt-4 text-lg max-w-2xl">
+                    {{ __('Browse our curated directory of top-tier optical factories, brands, and wholesalers from around the world. Connect directly with the source.') }}
+                </p>
+            </div>
+
+            <!-- Quick Business Type Filter Pills -->
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ request()->fullUrlWithQuery(['type' => null, 'page' => null]) }}"
+                   class="px-4 py-2 rounded-full text-xs font-bold transition-all border {{ !request('type') ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300' }}">
+                    {{ __('All Types') }}
+                </a>
+                @foreach(['Factory', 'Brand', 'Wholesaler'] as $typeOption)
+                    <a href="{{ request()->fullUrlWithQuery(['type' => $typeOption, 'page' => null]) }}"
+                       class="px-4 py-2 rounded-full text-xs font-bold transition-all border {{ request('type') === $typeOption ? 'bg-primary-600 text-white border-primary-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-primary-300 hover:text-primary-600' }}">
+                        {{ __($typeOption) }}
+                    </a>
+                @endforeach
+            </div>
         </div>
 
         <!-- Top Full-Width Banner Ad -->
@@ -96,6 +112,23 @@
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search factories...') }}" 
                                 class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-600 focus:border-transparent text-sm">
                             <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                    </div>
+
+                    <!-- Business Type -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">{{ __('Business Type') }}</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="type" value="" {{ !request('type') ? 'checked' : '' }} onchange="this.form.submit()" class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
+                                <span class="text-sm text-slate-600 group-hover:text-primary-600">{{ __('All Types') }}</span>
+                            </label>
+                            @foreach(['Factory', 'Brand', 'Wholesaler'] as $typeOption)
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="type" value="{{ $typeOption }}" {{ request('type') === $typeOption ? 'checked' : '' }} onchange="this.form.submit()" class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
+                                <span class="text-sm text-slate-600 group-hover:text-primary-600">{{ __($typeOption) }}</span>
+                            </label>
+                            @endforeach
                         </div>
                     </div>
 
@@ -176,17 +209,25 @@
                                         {{ $factory->country->name }}
                                     </div>
                                 @endif
+
+                                <!-- Business Type Badge (Factory / Brand / Wholesaler) -->
+                                <div class="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm border {{ $factory->businessTypeBadgeClasses() }}">
+                                    {{ $factory->businessTypeLabel() }}
+                                </div>
                             </div>
 
                             <div class="p-6 flex-1 flex flex-col">
-                                <!-- Category Badge -->
-                                @if($factory->category)
-                                    <div class="mb-4">
+                                <!-- Category & Business Type Badges -->
+                                <div class="mb-4 flex flex-wrap items-center gap-2">
+                                    <span class="px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider border {{ $factory->businessTypeBadgeClasses() }}">
+                                        {{ $factory->businessTypeLabel() }}
+                                    </span>
+                                    @if($factory->category)
                                         <span class="px-3 py-1 bg-primary-50 text-primary-700 text-[10px] font-bold rounded-full uppercase tracking-wider inline-block">
                                             {{ $factory->category->getTranslation('name', app()->getLocale()) }}
                                         </span>
-                                    </div>
-                                @endif
+                                    @endif
+                                </div>
 
                                 <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-1">
                                     {{ $factory->official_name }}

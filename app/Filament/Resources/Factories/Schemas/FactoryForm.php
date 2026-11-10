@@ -26,6 +26,11 @@ class FactoryForm
                             ->searchable()
                             ->preload()
                             ->label('Owner'),
+                        Select::make('business_type')
+                            ->label('Business Type')
+                            ->options(\App\Models\Factory::businessTypeOptions())
+                            ->default('Factory')
+                            ->required(),
                         TextInput::make('official_name')
                             ->required()
                             ->maxLength(255),
@@ -71,17 +76,6 @@ class FactoryForm
                     ->description('Showroom presentation and manufacturing capabilities')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('business_type')
-                            ->label('Business Type')
-                            ->placeholder('e.g. Manufacturer / Factory & Trading Company')
-                            ->datalist([
-                                'Manufacturer / Factory & Trading Company',
-                                'Manufacturer / Factory',
-                                'Custom OEM/ODM Lab',
-                                'Trading Company',
-                                'Wholesaler / Distributor',
-                            ])
-                            ->maxLength(255),
                         TextInput::make('member_since')
                             ->label('Year Established / Member Since')
                             ->placeholder('2017')

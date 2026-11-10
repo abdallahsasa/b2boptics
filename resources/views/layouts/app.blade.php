@@ -452,6 +452,15 @@
             <!-- Register Form -->
             <form x-show="tab === 'register'" @submit.prevent="submitRegister" class="space-y-4">
                 <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Account Type') }}</label>
+                    <select x-model="registerForm.account_type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
+                        <option value="buyer">{{ __('Buyer / Optical Retailer') }}</option>
+                        <option value="Factory">{{ __('Factory') }}</option>
+                        <option value="Brand">{{ __('Brand') }}</option>
+                        <option value="Wholesaler">{{ __('Wholesaler') }}</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-sm font-bold text-slate-700 mb-1">{{ __('Full Name') }}</label>
                     <input type="text" x-model="registerForm.name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-600 focus:border-primary-600 transition-all outline-none">
                 </div>
@@ -481,7 +490,7 @@
                 loading: false,
                 error: null,
                 loginForm: { email: '', password: '' },
-                registerForm: { name: '', email: '', password: '' },
+                registerForm: { account_type: 'buyer', name: '', email: '', password: '' },
 
                 async submitLogin() {
                     this.loading = true;
@@ -495,6 +504,10 @@
                         const data = await res.json();
                         if (res.ok) {
                             this.isOpen = false;
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                                return;
+                            }
                             window.dispatchEvent(new CustomEvent('auth-success'));
                             if (this.source === 'nav') {
                                 window.location.reload();
@@ -520,6 +533,10 @@
                         const data = await res.json();
                         if (res.ok) {
                             this.isOpen = false;
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                                return;
+                            }
                             window.dispatchEvent(new CustomEvent('auth-success'));
                             if (this.source === 'nav') {
                                 window.location.reload();

@@ -19,6 +19,15 @@ class FactoriesTable
                 TextColumn::make('official_name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('business_type')
+                    ->label('Type')
+                    ->state(fn ($record) => $record->businessTypeKey())
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Brand' => 'info',
+                        'Wholesaler' => 'warning',
+                        default => 'primary',
+                    }),
                 TextColumn::make('tax_number')
                     ->searchable(),
                 TextColumn::make('owner.name')
@@ -46,6 +55,9 @@ class FactoriesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('business_type')
+                    ->label('Business Type')
+                    ->options(\App\Models\Factory::businessTypeOptions()),
                 SelectFilter::make('status')
                     ->options([
                         'pending' => 'Pending',

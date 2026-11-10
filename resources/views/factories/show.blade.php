@@ -213,6 +213,13 @@
 
                             <!-- Meta Chips -->
                             <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 font-bold rounded-xl text-xs border {{ $factory->businessTypeBadgeClasses() }}">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                    {{ $factory->businessTypeLabel() }}
+                                </span>
+
                                 @if($factory->category)
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-50 text-primary-700 font-bold rounded-xl text-xs">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -757,6 +764,17 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Business Type (Factory / Brand / Wholesaler) -->
+                        <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary-600 shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{{ __('Business Type') }}</p>
+                                <p class="text-base font-bold text-slate-900 mt-0.5">{{ $factory->businessTypeLabel() }}</p>
+                            </div>
+                        </div>
+
                         <!-- Official Tax / Business ID -->
                         @if($factory->tax_number)
                         <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start justify-between">

@@ -19,6 +19,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'account_type' => 'nullable|string|in:buyer,Factory,Brand,Wholesaler',
         ]);
 
         $user = User::create([
@@ -27,17 +28,56 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('buyer');
+        $accountType = $request->input('account_type', 'buyer');
+        $isSupplier = in_array($accountType, ['Factory', 'Brand', 'Wholesaler'], true);
 
-        try {
-            Mail::to($user->email)->send(new WelcomeUserMail($user, 'buyer'));
-        } catch (\Throwable $e) {
-            Log::error('Failed to send buyer welcome email: ' . $e->getMessage());
+        if ($isSupplier) {
+            $user->assignRole('factory_owner');
+            session(['registered_business_type' => $accountType]);
+
+            try {
+                $locale = app()->getLocale() ?: 'en';
+                $factory = new \App\Models\Factory([
+                    'user_id' => $user->id,
+                    'business_type' => $accountType,
+                    'email' => $user->email,
+                    'language' => $locale,
+                    'member_since' => date('Y'),
+                    'status' => 'pending',
+                    'subscription_plan' => 'free',
+                    'product_limit' => 10,
+                    'max_images_per_product' => 10,
+                ]);
+                foreach (array_unique([$locale, 'en']) as $lang) {
+                    $factory->setTranslation('official_name', $lang, $user->name);
+                }
+                $factory->save();
+            } catch (\Throwable $e) {
+                Log::error('Failed to auto-create supplier profile on frontend register: ' . $e->getMessage());
+            }
+
+            try {
+                Mail::to($user->email)->send(new WelcomeUserMail($user, 'factory'));
+            } catch (\Throwable $e) {
+                Log::error('Failed to send factory welcome email: ' . $e->getMessage());
+            }
+        } else {
+            $user->assignRole('buyer');
+
+            try {
+                Mail::to($user->email)->send(new WelcomeUserMail($user, 'buyer'));
+            } catch (\Throwable $e) {
+                Log::error('Failed to send buyer welcome email: ' . $e->getMessage());
+            }
         }
 
         Auth::login($user);
 
-        return response()->json(['success' => true, 'user' => $user]);
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'redirect_url' => $isSupplier ? url('/factory/my-factory') : null,
+        ]);
     }
 
     public function login(Request $request)

@@ -182,8 +182,13 @@
                                     class="w-full h-full object-contain p-1">
                             </div>
                             <div>
-                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-0.5">
-                                    {{ __('Manufactured by') }}</p>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">
+                                        {{ __('Supplied by') }}</p>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border {{ $product->factory->businessTypeBadgeClasses() }}">
+                                        {{ $product->factory->businessTypeLabel() }}
+                                    </span>
+                                </div>
                                 <a href="{{ route('factories.show', $product->factory) }}"
                                     class="text-lg font-bold text-slate-900 hover:text-primary-600 transition-colors">{{ $product->factory->official_name }}</a>
                             </div>

@@ -101,6 +101,50 @@ class Factory extends Model implements HasMedia
         return __('FREE ($0)');
     }
 
+    public static function businessTypeOptions(): array
+    {
+        return [
+            'Factory' => __('Factory'),
+            'Brand' => __('Brand'),
+            'Wholesaler' => __('Wholesaler'),
+        ];
+    }
+
+    public function businessTypeKey(): string
+    {
+        $raw = strtolower(trim((string) $this->business_type));
+
+        if (str_contains($raw, 'brand')) {
+            return 'Brand';
+        }
+
+        if (str_contains($raw, 'wholesal') || str_contains($raw, 'distributor') || str_contains($raw, 'trading')) {
+            if (!str_contains($raw, 'manufacturer') && !str_contains($raw, 'factory')) {
+                return 'Wholesaler';
+            }
+        }
+
+        return 'Factory';
+    }
+
+    public function businessTypeLabel(): string
+    {
+        return __(match ($this->businessTypeKey()) {
+            'Brand' => 'Brand',
+            'Wholesaler' => 'Wholesaler',
+            default => 'Factory',
+        });
+    }
+
+    public function businessTypeBadgeClasses(): string
+    {
+        return match ($this->businessTypeKey()) {
+            'Brand' => 'bg-purple-50 text-purple-700 border-purple-200',
+            'Wholesaler' => 'bg-amber-50 text-amber-700 border-amber-200',
+            default => 'bg-blue-50 text-blue-700 border-blue-200',
+        };
+    }
+
     public $translatable = ['official_name', 'description'];
 
     public function owner(): BelongsTo
@@ -189,6 +233,10 @@ class Factory extends Model implements HasMedia
     protected static function booted()
     {
         static::saving(function ($factory) {
+            if (empty($factory->business_type)) {
+                $factory->business_type = 'Factory';
+            }
+
             if (empty($factory->getTranslations('official_name'))) {
                 $fallbackName = $factory->owner?->name ?: 'Factory';
                 $factory->setTranslation('official_name', 'en', $fallbackName);

@@ -62,7 +62,7 @@ class MyFactory extends Page
                 'category_id' => $factory->category_id,
                 'address' => $factory->address,
                 'language' => $factory->language ?? 'en',
-                'business_type' => $factory->business_type ?? 'Manufacturer / Factory & Trading Company',
+                'business_type' => $factory->businessTypeKey(),
                 'member_since' => $factory->member_since ?? '2017',
                 'video_url' => $factory->video_url,
                 'vr_url' => $factory->vr_url,
@@ -75,7 +75,7 @@ class MyFactory extends Page
         } else {
             $this->form->fill([
                 'email' => auth()->user()->email,
-                'business_type' => 'Manufacturer / Factory & Trading Company',
+                'business_type' => session('registered_business_type', 'Factory'),
                 'member_since' => date('Y'),
                 'language' => app()->getLocale(),
             ]);
@@ -90,8 +90,14 @@ class MyFactory extends Page
                 \Filament\Schemas\Components\Section::make(__('Company Information'))
                     ->columns(2)
                     ->schema([
+                        Select::make('business_type')
+                            ->label(__('Business Type'))
+                            ->options(Factory::businessTypeOptions())
+                            ->default('Factory')
+                            ->required()
+                            ->native(false),
                         TextInput::make('official_name')
-                            ->label(__('Factory / Company Name'))
+                            ->label(__('Company / Brand / Factory Name'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('tax_number')
@@ -108,7 +114,7 @@ class MyFactory extends Page
                             ->required()
                             ->searchable(),
                         TextInput::make('address')
-                            ->label(__('Factory Address / Industrial Zone'))
+                            ->label(__('Company Address / Industrial Zone'))
                             ->placeholder(__('e.g. Situ Glasses Industrial Zone, Danyang, Zhenjiang, Jiangsu, China'))
                             ->maxLength(255),
                         Select::make('language')
@@ -132,17 +138,6 @@ class MyFactory extends Page
                     ->description(__('Showroom details displayed on your public factory showroom page'))
                     ->columns(2)
                     ->schema([
-                        TextInput::make('business_type')
-                            ->label(__('Business Type'))
-                            ->placeholder(__('e.g. Manufacturer / Factory & Trading Company'))
-                            ->datalist([
-                                'Manufacturer / Factory & Trading Company',
-                                'Manufacturer / Factory',
-                                'Custom OEM/ODM Lab',
-                                'Trading Company',
-                                'Wholesaler / Distributor',
-                            ])
-                            ->maxLength(255),
                         TextInput::make('member_since')
                             ->label(__('Year Established / Member Since'))
                             ->placeholder('2017')

@@ -29,6 +29,27 @@ class FactoryController extends Controller
             });
         }
 
+        // Filter by Business Type (Factory, Brand, Wholesaler)
+        if ($request->filled('type') && in_array($request->type, ['Factory', 'Brand', 'Wholesaler'], true)) {
+            $type = $request->type;
+            $query->where(function ($q) use ($type) {
+                if ($type === 'Brand') {
+                    $q->where('business_type', 'like', '%Brand%');
+                } elseif ($type === 'Wholesaler') {
+                    $q->where(function ($sq) {
+                        $sq->where('business_type', 'like', '%Wholesal%')
+                           ->orWhere('business_type', 'like', '%Distributor%');
+                    })->where('business_type', 'not like', '%Factory%')
+                      ->where('business_type', 'not like', '%Manufacturer%');
+                } else {
+                    $q->where('business_type', 'Factory')
+                      ->orWhere('business_type', 'like', '%Factory%')
+                      ->orWhere('business_type', 'like', '%Manufacturer%')
+                      ->orWhereNull('business_type');
+                }
+            });
+        }
+
         // Filter by Category
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {

@@ -717,7 +717,7 @@
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
                                 <span class="font-medium">{{ $factory->country->name ?? 'Global' }}</span>
                                 <span class="text-slate-300">•</span>
-                                <span>{{ $factory->business_type ?? __('Manufacturer / Factory') }}</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border {{ $factory->businessTypeBadgeClasses() }}">{{ $factory->businessTypeLabel() }}</span>
                             </div>
 
                             <!-- Capability Chips -->
