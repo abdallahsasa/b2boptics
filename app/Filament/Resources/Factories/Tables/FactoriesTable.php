@@ -50,10 +50,12 @@ class FactoriesTable
                     ->boolean()
                     ->label('Verified'),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Created At')
+                    ->dateTime('M d, Y H:i')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('business_type')
                     ->label('Business Type')
