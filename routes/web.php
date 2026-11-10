@@ -35,6 +35,40 @@ Route::group([
         return view('packages.index', compact('packages'));
     })->name('packages.index');
 
+    // Informational & Support Pages
+    Route::view('/how-it-works', 'pages.how-it-works')->name('pages.how-it-works');
+    Route::view('/contact-us', 'pages.contact')->name('pages.contact');
+    Route::post('/contact-us', function (\Illuminate\Http\Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'company' => 'nullable|string|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:3000',
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::raw(
+                "New Contact Us Inquiry on OpticB2B\n\n" .
+                "Name: {$validated['name']}\n" .
+                "Email: {$validated['email']}\n" .
+                "Company: " . ($validated['company'] ?: 'N/A') . "\n" .
+                "Subject: {$validated['subject']}\n\n" .
+                "Message:\n{$validated['message']}",
+                function ($msg) use ($validated) {
+                    $msg->to('support@opticb2b.com')
+                        ->replyTo($validated['email'], $validated['name'])
+                        ->subject('[OpticB2B Contact] ' . $validated['subject']);
+                }
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Contact form email error: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('contact_success', __('Thank you! Your message has been sent to our support team.'));
+    })->name('pages.contact.submit');
+    Route::view('/privacy-policy', 'pages.privacy')->name('pages.privacy');
+
     // Marketplace
     Route::group(['prefix' => 'marketplace', 'as' => 'marketplace.'], function () {
         Route::get('/', [MarketplaceController::class, 'index'])->name('index');

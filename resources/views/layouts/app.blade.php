@@ -221,7 +221,7 @@
                         <a href="{{ route('marketplace.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('marketplace.*') ? 'text-primary-600' : '' }}">{{ __('Products') }}</a>
                         <a href="{{ route('sourcing.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('sourcing.*') ? 'text-primary-600' : '' }}">{{ __('Tenders') }}</a>
                         <a href="{{ route('stock-offers.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('stock-offers.index') ? 'text-primary-600' : '' }}">{{ __('Stock Deals') }}</a>
-                        <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Suppliers') }}</a>
+                        <a href="{{ route('factories.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('factories.*') ? 'text-primary-600' : '' }}">{{ __('Factories') }}</a>
                         <a href="{{ route('packages.index') }}" class="hover:text-primary-600 transition-colors {{ request()->routeIs('packages.*') ? 'text-primary-600' : '' }}">{{ __('Packages') }}</a>
                     </div>
 
@@ -323,7 +323,7 @@
                         <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
                     <a href="{{ route('factories.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('factories.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
-                        <span>{{ __('Suppliers') }}</span>
+                        <span>{{ __('Factories') }}</span>
                         <svg class="w-4 h-4 opacity-50 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
                     <a href="{{ route('packages.index') }}" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-bold transition-colors {{ request()->routeIs('packages.*') ? 'bg-primary-50 text-primary-600' : 'text-slate-800 hover:bg-slate-50 hover:text-primary-600' }}">
@@ -381,9 +381,9 @@
                     <h4 class="font-bold mb-6">{{ __('Support') }}</h4>
                     <ul class="space-y-4 text-slate-500 text-sm">
                         <li><a href="{{ route('packages.index') }}" class="hover:text-primary-600 font-semibold text-primary-600">{{ __('Factory Packages (Free)') }}</a></li>
-                        <li><a href="#" class="hover:text-primary-600">{{ __('How it Works') }}</a></li>
-                        <li><a href="#" class="hover:text-primary-600">{{ __('Contact Us') }}</a></li>
-                        <li><a href="#" class="hover:text-primary-600">{{ __('Privacy Policy') }}</a></li>
+                        <li><a href="{{ route('pages.how-it-works') }}" class="hover:text-primary-600">{{ __('How it Works') }}</a></li>
+                        <li><a href="{{ route('pages.contact') }}" class="hover:text-primary-600">{{ __('Contact Us') }}</a></li>
+                        <li><a href="{{ route('pages.privacy') }}" class="hover:text-primary-600">{{ __('Privacy Policy') }}</a></li>
                     </ul>
                 </div>
                 <div>
