@@ -189,8 +189,25 @@ class Factory extends Model implements HasMedia
     protected static function booted()
     {
         static::saving(function ($factory) {
-            if (empty($factory->slug) && !empty($factory->official_name)) {
-                $factory->slug = \Illuminate\Support\Str::slug($factory->official_name);
+            if (empty($factory->getTranslations('official_name'))) {
+                $fallbackName = $factory->owner?->name ?: 'Factory';
+                $factory->setTranslation('official_name', 'en', $fallbackName);
+            }
+
+            if (empty($factory->slug)) {
+                $nameForSlug = (string) ($factory->official_name ?: $factory->getTranslation('official_name', 'en', false));
+                $factory->slug = \Illuminate\Support\Str::slug($nameForSlug) ?: 'factory-' . time();
+            }
+
+            // Ensure slug uniqueness
+            $baseSlug = $factory->slug;
+            $counter = 1;
+            while (
+                static::where('slug', $factory->slug)
+                    ->when($factory->id, fn ($q) => $q->where('id', '!=', $factory->id))
+                    ->exists()
+            ) {
+                $factory->slug = $baseSlug . '-' . $counter++;
             }
 
             if (empty($factory->subscription_package_id)) {

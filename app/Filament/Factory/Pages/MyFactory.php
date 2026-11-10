@@ -221,20 +221,27 @@ class MyFactory extends Page
 
         $factory = auth()->user()->factory;
 
-        $officialName = $data['official_name'] ?? '';
-        $description = $data['description'] ?? '';
+        $locale = app()->getLocale() ?: 'en';
+        $officialName = trim((string) ($data['official_name'] ?? ''));
+        $description = (string) ($data['description'] ?? '');
         unset($data['official_name'], $data['description']);
 
         if ($factory) {
-            $factory->update($data);
-            if (!empty($officialName)) {
-                $factory->setTranslation('official_name', app()->getLocale(), $officialName);
+            $factory->fill($data);
+            if ($officialName !== '') {
+                $factory->setTranslation('official_name', $locale, $officialName);
+                if (empty($factory->getTranslation('official_name', 'en', false))) {
+                    $factory->setTranslation('official_name', 'en', $officialName);
+                }
                 if (empty($factory->slug)) {
-                    $factory->slug = Str::slug($officialName);
+                    $factory->slug = Str::slug($officialName) ?: 'factory-' . $factory->id;
                 }
             }
-            if ($description !== null) {
-                $factory->setTranslation('description', app()->getLocale(), $description);
+            if ($description !== '') {
+                $factory->setTranslation('description', $locale, $description);
+                if (empty($factory->getTranslation('description', 'en', false))) {
+                    $factory->setTranslation('description', 'en', $description);
+                }
             }
             $factory->save();
         } else {
@@ -244,9 +251,14 @@ class MyFactory extends Page
             $data['subscription_plan'] = 'free';
             $data['product_limit'] = 10;
             $data['max_images_per_product'] = 10;
-            $factory = Factory::create($data);
-            $factory->setTranslation('official_name', app()->getLocale(), $officialName);
-            $factory->setTranslation('description', app()->getLocale(), $description);
+
+            $factory = new Factory($data);
+            foreach (array_unique([$locale, 'en']) as $lang) {
+                $factory->setTranslation('official_name', $lang, $officialName);
+                if ($description !== '') {
+                    $factory->setTranslation('description', $lang, $description);
+                }
+            }
             $factory->save();
         }
 
