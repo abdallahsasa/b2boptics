@@ -12,20 +12,25 @@ class MarketplaceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['factory.country', 'category'])
+        $query = Product::with(['factory.country', 'countryOfOrigin', 'category'])
             ->where('status', 'approved');
 
         // Filter by Category
-        if ($request->has('category')) {
+        if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             });
         }
 
-        // Filter by Country
-        if ($request->has('country')) {
-            $query->whereHas('factory.country', function ($q) use ($request) {
-                $q->where('code', $request->country);
+        // Filter by Country of Origin (falling back to supplier country when unset)
+        if ($request->filled('country')) {
+            $countryCode = $request->country;
+            $query->where(function ($q) use ($countryCode) {
+                $q->whereHas('countryOfOrigin', fn ($cq) => $cq->where('code', $countryCode))
+                    ->orWhere(function ($fallback) use ($countryCode) {
+                        $fallback->whereNull('country_of_origin_id')
+                            ->whereHas('factory.country', fn ($fcq) => $fcq->where('code', $countryCode));
+                    });
             });
         }
 
@@ -73,7 +78,7 @@ class MarketplaceController extends Controller
             abort(404);
         }
 
-        $product->load(['factory.country', 'category', 'subcategory']);
+        $product->load(['factory.country', 'countryOfOrigin', 'category', 'subcategory']);
         
         // Similar products
         $similarProducts = Product::where('category_id', $product->category_id)

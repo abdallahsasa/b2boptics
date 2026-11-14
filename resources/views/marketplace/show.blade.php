@@ -16,7 +16,7 @@
 @section('title', $productName)
 @section('meta_title', $productName . ' - ' . $categoryName . ' | ' . $factoryName . ' | OpticB2B')
 @section('meta_description', $seoDescription)
-@section('meta_keywords', implode(', ', array_filter([$productName, $categoryName, $factoryName, $product->factory?->country?->name, __('wholesale optical supply'), 'OpticB2B'])))
+@section('meta_keywords', implode(', ', array_filter([$productName, $categoryName, $factoryName, $product->countryOfOrigin?->name ?? $product->factory?->country?->name, __('wholesale optical supply'), 'OpticB2B'])))
 @section('og_type', 'product')
 @section('og_image', $productImage)
 
@@ -168,7 +168,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            {{ $product->factory->country->name ?? 'Global' }}
+                            {{ $product->countryOfOrigin?->name ?? $product->factory?->country?->name ?? 'Global' }}
                         </span>
                     </div>
 
@@ -224,12 +224,12 @@
                             <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">
                                 {{ __('Subcategory') }}</p>
                             <p class="font-bold text-slate-900">
-                                {{ $product->subcategory->getTranslation('name', app()->getLocale()) ?? 'N/A' }}</p>
+                                {{ $product->subcategory?->getTranslation('name', app()->getLocale()) ?? 'N/A' }}</p>
                         </div>
                         <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                             <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">
                                 {{ __('Origin') }}</p>
-                            <p class="font-bold text-slate-900">{{ $product->factory->country->name ?? 'Global' }}</p>
+                            <p class="font-bold text-slate-900">{{ $product->countryOfOrigin?->name ?? $product->factory?->country?->name ?? 'Global' }}</p>
                         </div>
                     </div>
 

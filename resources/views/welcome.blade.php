@@ -591,7 +591,7 @@
                             <!-- Country Origin Pill -->
                             <div class="absolute top-3 right-3 rtl:right-auto rtl:left-3">
                                 <span class="bg-black/60 backdrop-blur-md px-2 py-1 text-[10px] font-bold text-white rounded-lg border border-white/20 flex items-center gap-1">
-                                    <span>{{ $product->factory->country->name ?? 'Global' }}</span>
+                                    <span>{{ $product->countryOfOrigin?->name ?? $product->factory?->country?->name ?? 'Global' }}</span>
                                 </span>
                             </div>
                         </div>
