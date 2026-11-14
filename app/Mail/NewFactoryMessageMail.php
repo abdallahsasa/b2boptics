@@ -20,6 +20,7 @@ class NewFactoryMessageMail extends Mailable
     public Conversation $conversation;
     public Message $chatMessage;
     public array $details;
+    public string $mailLocale;
 
     public function __construct(Factory $factory, Conversation $conversation, Message $chatMessage, array $details = [])
     {
@@ -27,6 +28,10 @@ class NewFactoryMessageMail extends Mailable
         $this->conversation = $conversation;
         $this->chatMessage = $chatMessage;
         $this->details = $details;
+        $supported = ['en', 'ar', 'tr', 'zh', 'ru', 'de', 'es', 'fr', 'it'];
+        $lang = $factory->language ?: app()->getLocale();
+        $this->mailLocale = in_array($lang, $supported, true) ? $lang : 'en';
+        $this->locale($this->mailLocale);
     }
 
     public function envelope(): Envelope
@@ -40,7 +45,9 @@ class NewFactoryMessageMail extends Mailable
         }
 
         return new Envelope(
-            subject: '[OpticB2B] New Customer Message: ' . ($this->conversation->subject ?: 'Direct Inquiry'),
+            subject: __('[OpticB2B] New Customer Message: :subject', [
+                'subject' => $this->conversation->subject ?: __('Direct Inquiry', [], $this->mailLocale),
+            ], $this->mailLocale),
             replyTo: $replyTo,
         );
     }
