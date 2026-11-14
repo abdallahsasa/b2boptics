@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Filament\Resources\EmailLogs\EmailLogResource;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -42,6 +45,18 @@ class UsersTable
                     ->label('Role'),
             ])
             ->recordActions([
+                Action::make('send_email')
+                    ->label('Send Email')
+                    ->icon('heroicon-o-envelope')
+                    ->color('primary')
+                    ->modalHeading(fn (User $record): string => "Send Email to {$record->name}")
+                    ->modalSubmitActionLabel('Send Now')
+                    ->form(fn (User $record): array => EmailLogResource::sendEmailFormSchema('selected_users', [$record->id]))
+                    ->action(function (User $record, array $data): void {
+                        $data['audience'] = 'selected_users';
+                        $data['user_ids'] = [$record->id];
+                        EmailLogResource::handleSendEmail($data);
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

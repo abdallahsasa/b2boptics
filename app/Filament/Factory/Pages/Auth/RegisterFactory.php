@@ -71,11 +71,7 @@ class RegisterFactory extends BaseRegister
             Log::error('Failed to auto-create initial supplier profile: ' . $e->getMessage());
         }
 
-        try {
-            Mail::to($user->email)->send(new WelcomeUserMail($user, 'factory'));
-        } catch (\Throwable $e) {
-            Log::error('Failed to send factory welcome email: ' . $e->getMessage());
-        }
+        \App\Services\EmailService::sendWelcome($user, 'factory', $locale);
 
         return $user;
     }

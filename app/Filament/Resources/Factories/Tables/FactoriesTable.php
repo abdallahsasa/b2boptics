@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Factories\Tables;
 
+use App\Filament\Resources\EmailLogs\EmailLogResource;
 use App\Models\Factory;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -100,6 +101,18 @@ class FactoriesTable
                             ->body('Publication confirmation email has been sent.')
                             ->success()
                             ->send();
+                    }),
+                Action::make('send_email')
+                    ->label('Send Email')
+                    ->icon('heroicon-o-envelope')
+                    ->color('primary')
+                    ->modalHeading(fn (Factory $record): string => 'Send Email to ' . ($record->getTranslation('official_name', 'en') ?: $record->official_name))
+                    ->modalSubmitActionLabel('Send Now')
+                    ->form(fn (Factory $record): array => EmailLogResource::sendEmailFormSchema('selected_factories', null, [$record->id]))
+                    ->action(function (Factory $record, array $data): void {
+                        $data['audience'] = 'selected_factories';
+                        $data['factory_ids'] = [$record->id];
+                        EmailLogResource::handleSendEmail($data);
                     }),
                 EditAction::make(),
             ])

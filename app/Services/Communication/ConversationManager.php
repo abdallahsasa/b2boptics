@@ -79,12 +79,43 @@ class ConversationManager
             }
 
             $primaryTo = array_shift($recipients);
-            $pendingMail = Mail::to($primaryTo);
-            if (!empty($recipients)) {
-                $pendingMail->cc($recipients);
-            }
+            $locale = \App\Services\EmailService::resolveUserLocale($factory->owner, $factory);
+            $mailable = new NewFactoryMessageMail($factory, $conversation, $message, $details);
 
-            $pendingMail->send(new NewFactoryMessageMail($factory, $conversation, $message, $details));
+            try {
+                $pendingMail = Mail::to($primaryTo);
+                if (!empty($recipients)) {
+                    $pendingMail->cc($recipients);
+                }
+
+                $pendingMail->send($mailable);
+
+                \App\Models\EmailLog::record([
+                    'user_id' => $factory->user_id,
+                    'factory_id' => $factory->id,
+                    'recipient_email' => $primaryTo,
+                    'recipient_name' => $factory->owner?->name ?? $factory->getTranslation('official_name', $locale),
+                    'email_type' => 'new_message',
+                    'locale' => $locale,
+                    'subject' => $mailable->envelope()->subject ?? 'New Buyer Inquiry',
+                    'status' => 'sent',
+                    'meta' => ['conversation_id' => $conversation->id],
+                ]);
+            } catch (\Throwable $e) {
+                \App\Models\EmailLog::record([
+                    'user_id' => $factory->user_id,
+                    'factory_id' => $factory->id,
+                    'recipient_email' => $primaryTo,
+                    'recipient_name' => $factory->owner?->name ?? $factory->getTranslation('official_name', $locale),
+                    'email_type' => 'new_message',
+                    'locale' => $locale,
+                    'subject' => $mailable->envelope()->subject ?? 'New Buyer Inquiry',
+                    'status' => 'failed',
+                    'error_message' => $e->getMessage(),
+                    'meta' => ['conversation_id' => $conversation->id],
+                ]);
+                throw $e;
+            }
         } catch (\Throwable $e) {
             Log::error('Failed to send factory inquiry email: ' . $e->getMessage());
         }

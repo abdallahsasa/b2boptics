@@ -151,32 +151,7 @@ class Factory extends Model implements HasMedia
 
     public function sendApprovedEmail(): bool
     {
-        $recipientEmail = !empty($this->email) ? trim($this->email) : trim((string) $this->owner?->email);
-
-        if (empty($recipientEmail) || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
-            \Illuminate\Support\Facades\Log::warning("Factory [{$this->id}] approved, but no valid email found to send approval notification.");
-            return false;
-        }
-
-        try {
-            $mail = \Illuminate\Support\Facades\Mail::to($recipientEmail);
-
-            if (
-                $this->owner?->email &&
-                filter_var($this->owner->email, FILTER_VALIDATE_EMAIL) &&
-                strtolower(trim($this->owner->email)) !== strtolower($recipientEmail)
-            ) {
-                $mail->cc(trim($this->owner->email));
-            }
-
-            $mail->send(new \App\Mail\FactoryApprovedMail($this));
-
-            \Illuminate\Support\Facades\Log::info("Factory [{$this->id}] approval email successfully sent to {$recipientEmail}.");
-            return true;
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error("Failed to send factory approval email for factory [{$this->id}]: " . $e->getMessage());
-            return false;
-        }
+        return \App\Services\EmailService::sendFactoryApproved($this);
     }
 
     public function owner(): BelongsTo

@@ -56,19 +56,11 @@ class AuthController extends Controller
                 Log::error('Failed to auto-create supplier profile on frontend register: ' . $e->getMessage());
             }
 
-            try {
-                Mail::to($user->email)->send(new WelcomeUserMail($user, 'factory'));
-            } catch (\Throwable $e) {
-                Log::error('Failed to send factory welcome email: ' . $e->getMessage());
-            }
+            \App\Services\EmailService::sendWelcome($user, 'factory', $locale);
         } else {
             $user->assignRole('buyer');
 
-            try {
-                Mail::to($user->email)->send(new WelcomeUserMail($user, 'buyer'));
-            } catch (\Throwable $e) {
-                Log::error('Failed to send buyer welcome email: ' . $e->getMessage());
-            }
+            \App\Services\EmailService::sendWelcome($user, 'buyer', $request->input('language') ?: app()->getLocale());
         }
 
         Auth::login($user);
