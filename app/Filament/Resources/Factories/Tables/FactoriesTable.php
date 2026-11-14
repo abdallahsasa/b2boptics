@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\Factories\Tables;
 
+use App\Models\Factory;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -75,6 +78,29 @@ class FactoriesTable
                     ->label('Category'),
             ])
             ->recordActions([
+                Action::make('approve')
+                    ->label('Approve & Publish')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (Factory $record) => $record->status !== 'approved')
+                    ->requiresConfirmation()
+                    ->modalHeading('Approve & Publish Supplier')
+                    ->modalDescription(fn (Factory $record) => "Are you sure you want to approve \"{$record->official_name}\"? This will publish their showroom to the live website and immediately send a publication email to " . ($record->email ?: $record->owner?->email) . '.')
+                    ->modalSubmitActionLabel('Yes, Approve & Publish')
+                    ->action(function (Factory $record) {
+                        $record->status = 'approved';
+                        $record->approved_at = now();
+                        if (auth()->check()) {
+                            $record->approved_by = auth()->id();
+                        }
+                        $record->save();
+
+                        Notification::make()
+                            ->title('Supplier approved and published!')
+                            ->body('Publication confirmation email has been sent.')
+                            ->success()
+                            ->send();
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

@@ -147,6 +147,38 @@ class Factory extends Model implements HasMedia
 
     public $translatable = ['official_name', 'description'];
 
+    protected bool $shouldSendApprovalEmail = false;
+
+    public function sendApprovedEmail(): bool
+    {
+        $recipientEmail = !empty($this->email) ? trim($this->email) : trim((string) $this->owner?->email);
+
+        if (empty($recipientEmail) || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+            \Illuminate\Support\Facades\Log::warning("Factory [{$this->id}] approved, but no valid email found to send approval notification.");
+            return false;
+        }
+
+        try {
+            $mail = \Illuminate\Support\Facades\Mail::to($recipientEmail);
+
+            if (
+                $this->owner?->email &&
+                filter_var($this->owner->email, FILTER_VALIDATE_EMAIL) &&
+                strtolower(trim($this->owner->email)) !== strtolower($recipientEmail)
+            ) {
+                $mail->cc(trim($this->owner->email));
+            }
+
+            $mail->send(new \App\Mail\FactoryApprovedMail($this));
+
+            \Illuminate\Support\Facades\Log::info("Factory [{$this->id}] approval email successfully sent to {$recipientEmail}.");
+            return true;
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send factory approval email for factory [{$this->id}]: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -233,6 +265,16 @@ class Factory extends Model implements HasMedia
     protected static function booted()
     {
         static::saving(function ($factory) {
+            if ($factory->isDirty('status') && $factory->status === 'approved' && $factory->getOriginal('status') !== 'approved') {
+                $factory->shouldSendApprovalEmail = true;
+                if (empty($factory->approved_at)) {
+                    $factory->approved_at = now();
+                }
+                if (empty($factory->approved_by) && auth()->check()) {
+                    $factory->approved_by = auth()->id();
+                }
+            }
+
             if (empty($factory->business_type)) {
                 $factory->business_type = 'Factory';
             }
@@ -273,6 +315,13 @@ class Factory extends Model implements HasMedia
                     $factory->product_limit = $pkg->product_limit;
                     $factory->max_images_per_product = $pkg->max_images_per_product;
                 }
+            }
+        });
+
+        static::saved(function ($factory) {
+            if ($factory->shouldSendApprovalEmail) {
+                $factory->shouldSendApprovalEmail = false;
+                $factory->sendApprovedEmail();
             }
         });
     }
