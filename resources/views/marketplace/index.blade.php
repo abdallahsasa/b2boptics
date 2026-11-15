@@ -165,7 +165,7 @@
                         <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=600&auto=format&fit=crop' }}" 
                             alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-4 left-4">
-                            <span class="px-3 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-primary-900 rounded-full uppercase tracking-wider shadow-sm">{{ $product->category->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
+                            <span class="px-3 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-primary-900 rounded-full uppercase tracking-wider shadow-sm">{{ $product->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                         </div>
                     </a>
                     <div class="p-6">

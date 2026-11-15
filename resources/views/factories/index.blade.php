@@ -224,7 +224,7 @@
                                     </span>
                                     @if($factory->category)
                                         <span class="px-3 py-1 bg-primary-50 text-primary-700 text-[10px] font-bold rounded-full uppercase tracking-wider inline-block">
-                                            {{ $factory->category->getTranslation('name', app()->getLocale()) }}
+                                            {{ $factory->category?->getTranslation('name', app()->getLocale()) ?? __('Optical Solutions') }}
                                         </span>
                                     @endif
                                 </div>

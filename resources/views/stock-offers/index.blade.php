@@ -27,7 +27,7 @@
 
             <div class="p-8">
                 <div class="flex items-center gap-2 mb-4">
-                    <span class="px-3 py-1 bg-primary-50 text-primary-700 text-[10px] font-bold rounded-full uppercase tracking-wider">{{ $offer->category->getTranslation('name', app()->getLocale()) }}</span>
+                    <span class="px-3 py-1 bg-primary-50 text-primary-700 text-[10px] font-bold rounded-full uppercase tracking-wider">{{ $offer->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                     <span class="w-1.5 h-1.5 bg-slate-200 rounded-full"></span>
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $offer->factory->country->name ?? 'Global' }}</span>
                 </div>

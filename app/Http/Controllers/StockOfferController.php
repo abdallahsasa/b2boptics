@@ -14,7 +14,7 @@ class StockOfferController extends Controller
             ->where('status', 'active')
             ->where('ends_at', '>', now());
 
-        if ($request->has('category')) {
+        if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             });

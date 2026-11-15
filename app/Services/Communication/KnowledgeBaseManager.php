@@ -7,7 +7,7 @@ use Smalot\PdfParser\Parser;
 
 class KnowledgeBaseManager
 {
-    public function processPdf(string $filePath, string $title, string $category = null): void
+    public function processPdf(string $filePath, string $title, ?string $category = null): void
     {
         $parser = new Parser();
         $pdf = $parser->parseFile($filePath);

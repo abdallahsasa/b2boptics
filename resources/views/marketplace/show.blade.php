@@ -160,7 +160,7 @@
                 <div class="sticky top-24">
                     <div class="flex items-center gap-3 mb-6">
                         <span
-                            class="px-4 py-1.5 bg-primary-50 text-primary-700 text-xs font-bold rounded-full uppercase tracking-wider">{{ $product->category->getTranslation('name', app()->getLocale()) }}</span>
+                            class="px-4 py-1.5 bg-primary-50 text-primary-700 text-xs font-bold rounded-full uppercase tracking-wider">{{ $product->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                         <span class="flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -579,7 +579,7 @@
                             <!-- Category Badge -->
                             <div class="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex flex-col gap-1.5">
                                 <span class="bg-white/95 backdrop-blur-md px-2.5 py-1 text-[10px] font-extrabold text-slate-900 rounded-lg shadow-sm border border-slate-200/80 uppercase tracking-wider">
-                                    {{ $product->category->getTranslation('name', app()->getLocale()) ?? 'Optics' }}
+                                    {{ $product->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}
                                 </span>
                                 @if($product->is_featured)
                                     <span class="bg-amber-500 text-white px-2 py-0.5 text-[9px] font-extrabold rounded-md shadow-sm uppercase tracking-wider">
@@ -779,7 +779,7 @@
                             <img src="{{ collect($offer->images)->first() ?: asset('uploads/products/boris_optical_lens.jpg') }}" class="w-full h-full object-cover">
                         </div>
                         <div class="p-5 flex-1 flex flex-col text-start">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $offer->category->getTranslation('name', app()->getLocale()) }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $offer->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                             <h3 class="font-bold text-slate-900 text-sm mb-4 line-clamp-2">{{ $offer->getTranslation('title', app()->getLocale()) }}</h3>
                             
                             <div class="mt-auto">
