@@ -371,7 +371,7 @@
     "Log in to your <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">Factory Portal Inbox</a> to manage all customer messages.": "سجّل الدخول إلى <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">صندوق رسائل بوابة المورد</a> لإدارة جميع رسائل العملاء.",
     "Login to Submit Offer": "سجل الدخول لتقديم عرض",
     "Logout": "تسجيل الخروج",
-    "MOQ": "الحد الأدنى للطلب (MOQ)",
+    "MOQ": "الحد الأدنى للطلب",
     "Main Product Category": "فئة المنتجات الرئيسية",
     "Main Product Lines": "خطوط الإنتاج الرئيسية",
     "Main Products": "المنتجات الرئيسية",
@@ -830,5 +830,11 @@
     "Global optical buyers are actively browsing OpticB2B and posting new sourcing tenders (RFQs) every day.": "يتصفح مشترو البصريات العالميون منصة OpticB2B بنشاط وينشرون مناقصات وطلبات عروض أسعار جديدة كل يوم.",
     "Log in to your portal to check for unread buyer messages, respond to inquiries, and submit competitive quotes on open tenders.": "سجّل الدخول إلى بوابتك للتحقق من رسائل المشترين غير المقروءة والرد على الاستفسارات وتقديم عروض أسعار تنافسية على المناقصات المفتوحة.",
     "We noticed your OpticB2B supplier showroom profile is not yet complete. Completing your profile helps our team verify and publish your company faster.": "لاحظنا أن ملف صالة عرض المورد الخاصة بك على OpticB2B غير مكتمل بعد. يساعد إكمال ملفك فريقنا على التحقق من شركتك ونشرها بشكل أسرع.",
-    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "يرجى تخصيص دقيقتين لإضافة شعار الشركة والفئة والبلد وتفاصيل الاتصال حتى يتمكن مشترو البصريات حول العالم من التواصل معك مباشرة."
+    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "يرجى تخصيص دقيقتين لإضافة شعار الشركة والفئة والبلد وتفاصيل الاتصال حتى يتمكن مشترو البصريات حول العالم من التواصل معك مباشرة.",
+    "WhatsApp Number": "رقم الواتساب",
+    "WhatsApp": "واتساب",
+    "Chat on WhatsApp": "تواصل عبر واتساب",
+    "Contact Supplier": "تواصل مع المورد",
+    "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "اختياري. يظهر كزر واتساب عائم للتواصل في صفحتك (يستخدم رقم الهاتف إذا تُرك فارغًا).",
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "مرحبًا :name، وجدت ملفكم كمورد على OpticB2B وأود الاستفسار."
 }

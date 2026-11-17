@@ -371,7 +371,7 @@
     "Log in to your <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">Factory Portal Inbox</a> to manage all customer messages.": "Accedi alla tua <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">posta in arrivo del portale fornitori</a> per gestire tutti i messaggi dei clienti.",
     "Login to Submit Offer": "Accedi per inviare un'offerta",
     "Logout": "Esci",
-    "MOQ": "Quantità minima (MOQ)",
+    "MOQ": "Ordine min.",
     "Main Product Category": "Categoria Principale di Prodotti",
     "Main Product Lines": "Linee Principali di Prodotti",
     "Main Products": "Prodotti Principali",
@@ -830,5 +830,11 @@
     "Global optical buyers are actively browsing OpticB2B and posting new sourcing tenders (RFQs) every day.": "Gli acquirenti ottici globali navigano attivamente su OpticB2B e pubblicano ogni giorno nuove gare d'appalto (RFQ).",
     "Log in to your portal to check for unread buyer messages, respond to inquiries, and submit competitive quotes on open tenders.": "Accedi al tuo portale per controllare i messaggi non letti degli acquirenti, rispondere alle richieste e inviare preventivi competitivi sui bandi aperti.",
     "We noticed your OpticB2B supplier showroom profile is not yet complete. Completing your profile helps our team verify and publish your company faster.": "Abbiamo notato che il profilo del tuo showroom fornitore su OpticB2B non è ancora completo. Completarlo aiuta il nostro team a verificare e pubblicare la tua azienda più rapidamente.",
-    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "Dedica 2 minuti per aggiungere il logo aziendale, la categoria, il paese e i dettagli di contatto in modo che gli acquirenti ottici globali possano contattarti direttamente."
+    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "Dedica 2 minuti per aggiungere il logo aziendale, la categoria, il paese e i dettagli di contatto in modo che gli acquirenti ottici globali possano contattarti direttamente.",
+    "WhatsApp Number": "Numero WhatsApp",
+    "WhatsApp": "WhatsApp",
+    "Chat on WhatsApp": "Chatta su WhatsApp",
+    "Contact Supplier": "Contatta fornitore",
+    "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "Opzionale. Mostrato come pulsante WhatsApp flottante sulla tua pagina fornitore (usa il numero di telefono se vuoto).",
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Ciao :name, ho trovato il vostro profilo fornitore su OpticB2B e vorrei informazioni."
 }

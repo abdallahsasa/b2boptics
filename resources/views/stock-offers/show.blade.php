@@ -65,7 +65,7 @@
                     </div>
                     <div>
                         <p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">{{ __('Minimum Order (MOQ)') }}</p>
-                        <p class="text-xl font-bold text-slate-900">{{ $stockOffer->moq }} {{ __('units') }}</p>
+                        <p class="text-xl font-bold text-slate-900">{{ $stockOffer->moq ?: 1 }} {{ __('units') }}</p>
                     </div>
                 </div>
 

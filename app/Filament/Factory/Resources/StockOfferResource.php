@@ -82,7 +82,7 @@ class StockOfferResource extends Resource
                     ]),
 
                 Section::make(__('Pricing & Availability'))
-                    ->columns(3)
+                    ->columns(2)
                     ->schema([
                         TextInput::make('price')
                             ->label(__('Price'))
@@ -95,6 +95,13 @@ class StockOfferResource extends Resource
                             ->searchable()
                             ->default('USD')
                             ->required(),
+                        TextInput::make('moq')
+                            ->label(__('Minimum Order (MOQ)'))
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required()
+                            ->suffix(__('units')),
                         Select::make('status')
                             ->label(__('Status'))
                             ->options([
@@ -153,6 +160,10 @@ class StockOfferResource extends Resource
                 TextColumn::make('price')
                     ->label(__('Price'))
                     ->money(fn ($record) => $record->currency)
+                    ->sortable(),
+                TextColumn::make('moq')
+                    ->label(__('MOQ'))
+                    ->formatStateUsing(fn ($state) => ($state ?: 1) . ' ' . __('units'))
                     ->sortable(),
                 TextColumn::make('status')
                     ->label(__('Status'))

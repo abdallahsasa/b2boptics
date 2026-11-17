@@ -42,6 +42,11 @@ class FactoryForm
                         TextInput::make('phone')
                             ->tel()
                             ->maxLength(255),
+                        TextInput::make('whatsapp')
+                            ->label('WhatsApp Number')
+                            ->tel()
+                            ->placeholder('+90 555 123 4567')
+                            ->maxLength(255),
                         Select::make('country_id')
                             ->relationship('country', 'name')
                             ->searchable()

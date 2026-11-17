@@ -371,7 +371,7 @@
     "Log in to your <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">Factory Portal Inbox</a> to manage all customer messages.": "登录您的 <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">供应商门户收件箱</a> 管理所有客户消息。",
     "Login to Submit Offer": "登录以提交报价",
     "Logout": "退出登录",
-    "MOQ": "起订量(MOQ)",
+    "MOQ": "最小起订量",
     "Main Product Category": "主营产品分类",
     "Main Product Lines": "主要产品线",
     "Main Products": "主营产品",
@@ -830,5 +830,11 @@
     "Global optical buyers are actively browsing OpticB2B and posting new sourcing tenders (RFQs) every day.": "全球光学买家每天都在积极浏览 OpticB2B 并发布新的采购招标（RFQ）。",
     "Log in to your portal to check for unread buyer messages, respond to inquiries, and submit competitive quotes on open tenders.": "请登录您的门户查看未读买家消息、回复询盘，并针对公开招标提交有竞争力的报价。",
     "We noticed your OpticB2B supplier showroom profile is not yet complete. Completing your profile helps our team verify and publish your company faster.": "我们注意到您的 OpticB2B 供应商展厅资料尚未完善。完善资料有助于我们的团队更快审核并发布您的公司。",
-    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "请花 2 分钟添加您的公司标志、类目、国家/地区及联系方式，以便全球光学买家直接与您联系。"
+    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "请花 2 分钟添加您的公司标志、类目、国家/地区及联系方式，以便全球光学买家直接与您联系。",
+    "WhatsApp Number": "WhatsApp 号码",
+    "WhatsApp": "WhatsApp",
+    "Chat on WhatsApp": "通过 WhatsApp 联系",
+    "Contact Supplier": "联系供应商",
+    "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "可选。将在您的供应商页面显示为悬浮 WhatsApp 联系按钮（留空则默认使用联系电话）。",
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "您好 :name，我在 OpticB2B 上看到了您的供应商资料，想咨询合作。"
 }

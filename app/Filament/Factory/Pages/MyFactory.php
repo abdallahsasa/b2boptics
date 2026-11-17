@@ -56,6 +56,7 @@ class MyFactory extends Page
                 'contact_person_first_name' => $factory->contact_person_first_name,
                 'contact_person_last_name' => $factory->contact_person_last_name,
                 'phone' => $factory->phone,
+                'whatsapp' => $factory->whatsapp,
                 'email' => $factory->email,
                 'tax_number' => $factory->tax_number,
                 'country_id' => $factory->country_id,
@@ -180,6 +181,12 @@ class MyFactory extends Page
                             ->tel()
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('whatsapp')
+                            ->label(__('WhatsApp Number'))
+                            ->tel()
+                            ->placeholder('+90 555 123 4567')
+                            ->helperText(__('Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).'))
+                            ->maxLength(255),
                         TextInput::make('email')
                             ->label(__('Business Email'))
                             ->email()
@@ -229,7 +236,7 @@ class MyFactory extends Page
                     $factory->setTranslation('official_name', 'en', $officialName);
                 }
                 if (empty($factory->slug)) {
-                    $factory->slug = Str::slug($officialName) ?: 'factory-' . $factory->id;
+                    $factory->slug = Factory::generateUniqueSlug($officialName, $factory->id);
                 }
             }
             if ($description !== '') {
@@ -241,7 +248,7 @@ class MyFactory extends Page
             $factory->save();
         } else {
             $data['user_id'] = auth()->id();
-            $data['slug'] = Str::slug($officialName) ?: 'factory-' . time();
+            $data['slug'] = Factory::generateUniqueSlug($officialName);
             $data['status'] = 'pending';
             $data['subscription_plan'] = 'free';
             $data['product_limit'] = 10;

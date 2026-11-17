@@ -43,6 +43,12 @@ class StockOfferForm
                             ->options(['USD' => 'USD', 'EUR' => 'EUR', 'TRY' => 'TRY'])
                             ->searchable()
                             ->default('USD'),
+                        TextInput::make('moq')
+                            ->label('Minimum Order (MOQ)')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->suffix('units'),
                     ]),
 
                 Section::make('Validity & Duration')

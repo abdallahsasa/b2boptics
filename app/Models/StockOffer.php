@@ -13,9 +13,15 @@ class StockOffer extends Model implements HasMedia
     use HasTranslations, InteractsWithMedia;
 
     protected $fillable = [
-        'factory_id', 'category_id', 'title', 'description', 'price',
+        'factory_id', 'category_id', 'title', 'description', 'price', 'moq',
         'currency', 'image', 'pdf_file', 'duration_days', 'price_for_duration',
         'status', 'starts_at', 'ends_at'
+    ];
+
+    protected $casts = [
+        'moq' => 'integer',
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
     ];
 
     public $translatable = ['title', 'description'];

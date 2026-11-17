@@ -1291,10 +1291,41 @@
                             {{ __('Copy Phone') }}
                         </button>
                         @endif
+                        @if($factory->whatsapp_url)
+                        <a href="{{ $factory->whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="font-bold text-emerald-600 hover:underline">
+                            {{ __('WhatsApp') }}
+                        </a>
+                        @endif
                     </div>
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Floating Contact & WhatsApp Actions -->
+    <div class="fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-40 flex flex-col items-end rtl:items-start gap-3">
+        <button type="button"
+            @click="contactModalOpen = true"
+            class="group flex items-center gap-2.5 px-4 py-3 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm shadow-xl shadow-primary-600/30 transition-all hover:scale-105">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+            <span class="hidden sm:inline">{{ __('Contact Supplier') }}</span>
+        </button>
+
+        @if($factory->whatsapp_url)
+            <a href="{{ $factory->whatsapp_url }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="{{ __('Chat on WhatsApp') }}"
+               title="{{ __('Chat on WhatsApp') }}"
+               class="group flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-sm shadow-xl shadow-emerald-600/30 transition-all hover:scale-105">
+                <svg class="w-5 h-5 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.52 3.48A11.86 11.86 0 0012.06 0C5.47 0 .11 5.36.11 11.95c0 2.11.55 4.17 1.6 5.98L0 24l6.23-1.63a11.9 11.9 0 005.83 1.49h.01c6.59 0 11.95-5.36 11.95-11.95 0-3.19-1.24-6.19-3.5-8.43zM12.07 21.84h-.01a9.89 9.89 0 01-5.04-1.38l-.36-.21-3.7.97.99-3.6-.24-.37a9.89 9.89 0 01-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 012.91 7.01c0 5.47-4.46 9.92-9.97 9.89zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35z"/>
+                </svg>
+                <span class="hidden sm:inline">{{ __('WhatsApp') }}</span>
+            </a>
+        @endif
     </div>
 
 </div>

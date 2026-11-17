@@ -371,7 +371,7 @@
     "Log in to your <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">Factory Portal Inbox</a> to manage all customer messages.": "Tüm müşteri mesajlarını yönetmek için <a href=\":url\" style=\"color: #2254c5; text-decoration: none; font-weight: 600;\">Tedarikçi Portalı Gelen Kutunuza</a> giriş yapın.",
     "Login to Submit Offer": "Teklif Vermek İçin Giriş Yapın",
     "Logout": "Çıkış Yap",
-    "MOQ": "MOQ (Minimum Sipariş Miktarı)",
+    "MOQ": "Minimum Sipariş",
     "Main Product Category": "Ana Ürün Kategorisi",
     "Main Product Lines": "Ana Ürün Grupları",
     "Main Products": "Ana Ürünler",
@@ -830,5 +830,11 @@
     "Global optical buyers are actively browsing OpticB2B and posting new sourcing tenders (RFQs) every day.": "Küresel optik alıcıları her gün OpticB2B'yi aktif olarak inceliyor ve yeni tedarik ihaleleri (RFQ) yayınlıyor.",
     "Log in to your portal to check for unread buyer messages, respond to inquiries, and submit competitive quotes on open tenders.": "Okunmamış alıcı mesajlarını kontrol etmek, taleplere yanıt vermek ve açık ihalelere rekabetçi teklifler sunmak için portalınıza giriş yapın.",
     "We noticed your OpticB2B supplier showroom profile is not yet complete. Completing your profile helps our team verify and publish your company faster.": "OpticB2B tedarikçi showroom profilinizin henüz tamamlanmadığını fark ettik. Profilinizi tamamlamak ekibimizin firmanızı daha hızlı doğrulayıp yayınlamasına yardımcı olur.",
-    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "Küresel optik alıcıların sizinle doğrudan iletişime geçebilmesi için lütfen 2 dakikanızı ayırarak şirket logonuzu, kategorinizi, ülkenizi ve iletişim bilgilerinizi ekleyin."
+    "Please take 2 minutes to add your company logo, category, country, and contact details so global optical buyers can connect with you directly.": "Küresel optik alıcıların sizinle doğrudan iletişime geçebilmesi için lütfen 2 dakikanızı ayırarak şirket logonuzu, kategorinizi, ülkenizi ve iletişim bilgilerinizi ekleyin.",
+    "WhatsApp Number": "WhatsApp Numarası",
+    "WhatsApp": "WhatsApp",
+    "Chat on WhatsApp": "WhatsApp ile Yazış",
+    "Contact Supplier": "Tedarikçiyle İletişime Geç",
+    "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "İsteğe bağlı. Tedarikçi sayfanızda yüzen WhatsApp iletişim butonu olarak görünür (boş bırakılırsa Telefon Numarası kullanılır).",
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Merhaba :name, OpticB2B üzerinde tedarikçi profilinizi buldum ve bilgi almak istiyorum."
 }

@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Factory extends Model implements HasMedia
 {
@@ -17,7 +18,7 @@ class Factory extends Model implements HasMedia
 
     protected $fillable = [
         'user_id', 'official_name', 'slug', 'tax_number', 'contact_person_first_name',
-        'contact_person_last_name', 'phone', 'email', 'country_id', 'language',
+        'contact_person_last_name', 'phone', 'whatsapp', 'email', 'country_id', 'language',
         'address', 'business_type', 'member_since', 'rating_score', 'main_products',
         'solutions', 'video_url', 'vr_url',
         'logo', 'banner', 'description', 'category_id', 'status', 'is_verified',
@@ -146,6 +147,58 @@ class Factory extends Model implements HasMedia
     }
 
     public $translatable = ['official_name', 'description'];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function (Factory $factory) {
+            if (empty($factory->slug)) {
+                $name = $factory->getTranslation('official_name', 'en', false) ?: $factory->official_name;
+                $factory->slug = self::generateUniqueSlug($name, $factory->id);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(?string $name = null, ?int $ignoreId = null): string
+    {
+        $base = Str::slug((string) $name) ?: 'supplier';
+        $slug = $base;
+        $counter = 2;
+
+        while (static::query()
+            ->where('slug', $slug)
+            ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()
+        ) {
+            $slug = "{$base}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    public function getWhatsappUrlAttribute(): ?string
+    {
+        $raw = trim((string) ($this->whatsapp ?: $this->phone));
+        if ($raw === '') {
+            return null;
+        }
+
+        $digits = preg_replace('/\D+/', '', $raw);
+        if (str_starts_with($digits, '00')) {
+            $digits = substr($digits, 2);
+        }
+
+        if (strlen($digits) < 6) {
+            return null;
+        }
+
+        $name = $this->getTranslation('official_name', app()->getLocale()) ?: $this->official_name;
+        $text = rawurlencode(__('Hello :name, I found your supplier profile on OpticB2B and would like to inquire.', ['name' => $name]));
+
+        return "https://wa.me/{$digits}?text={$text}";
+    }
 
     protected bool $shouldSendApprovalEmail = false;
 
