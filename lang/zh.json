@@ -836,5 +836,6 @@
     "Chat on WhatsApp": "通过 WhatsApp 联系",
     "Contact Supplier": "联系供应商",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "可选。将在您的供应商页面显示为悬浮 WhatsApp 联系按钮（留空则默认使用联系电话）。",
-    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "您好 :name，我在 OpticB2B 上看到了您的供应商资料，想咨询合作。"
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "您好 :name，我在 OpticB2B 上看到了您的供应商资料，想咨询合作。",
+    "Zoom Image": "放大图片"
 }

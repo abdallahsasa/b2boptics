@@ -836,5 +836,6 @@
     "Chat on WhatsApp": "WhatsApp ile Yazış",
     "Contact Supplier": "Tedarikçiyle İletişime Geç",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "İsteğe bağlı. Tedarikçi sayfanızda yüzen WhatsApp iletişim butonu olarak görünür (boş bırakılırsa Telefon Numarası kullanılır).",
-    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Merhaba :name, OpticB2B üzerinde tedarikçi profilinizi buldum ve bilgi almak istiyorum."
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Merhaba :name, OpticB2B üzerinde tedarikçi profilinizi buldum ve bilgi almak istiyorum.",
+    "Zoom Image": "Görseli Yakınlaştır"
 }

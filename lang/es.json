@@ -836,5 +836,6 @@
     "Chat on WhatsApp": "Chatear por WhatsApp",
     "Contact Supplier": "Contactar proveedor",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "Opcional. Se muestra como botón flotante de WhatsApp en su página de proveedor (usa el teléfono si se deja vacío).",
-    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Hola :name, encontré su perfil de proveedor en OpticB2B y me gustaría consultar."
+    "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Hola :name, encontré su perfil de proveedor en OpticB2B y me gustaría consultar.",
+    "Zoom Image": "Ampliar imagen"
 }

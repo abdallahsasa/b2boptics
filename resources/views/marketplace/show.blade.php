@@ -107,47 +107,130 @@
         @endif
 
         <div class="flex flex-col lg:flex-row gap-12">
-            <!-- Image Gallery (Up to 10 Images) -->
+            <!-- Image Gallery (Pro Optical Showroom Gallery — Never Crops, Vertical Thumbnails + Fullscreen Lightbox) -->
             @php
                 $galleryUrls = $product->gallery_urls;
                 if (empty($galleryUrls)) {
                     $galleryUrls = ['https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200&auto=format&fit=crop'];
                 }
             @endphp
-            <div class="flex-1" x-data="{ activeSlide: 0, slides: @js($galleryUrls) }">
-                <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm p-4">
-                    <div class="relative aspect-square bg-slate-50 rounded-[1.5rem] overflow-hidden group">
+            <div class="lg:w-1/2"
+                x-data="{
+                    activeSlide: 0,
+                    lightboxOpen: false,
+                    touchStartX: 0,
+                    slides: @js($galleryUrls),
+                    prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length; },
+                    next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length; },
+                    onTouchStart(e) { this.touchStartX = e.changedTouches[0].screenX; },
+                    onTouchEnd(e) {
+                        const diff = e.changedTouches[0].screenX - this.touchStartX;
+                        if (Math.abs(diff) > 40) { diff > 0 ? this.prev() : this.next(); }
+                    }
+                }"
+                @keydown.window.escape="lightboxOpen = false"
+                @keydown.window.arrow-left="if (lightboxOpen) prev()"
+                @keydown.window.arrow-right="if (lightboxOpen) next()">
+
+                <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-3 sm:p-4">
+                    <div class="flex flex-col-reverse lg:flex-row gap-3 sm:gap-4">
+                        <!-- Thumbnails: Horizontal strip on mobile, Vertical rail on desktop -->
+                        @if(count($galleryUrls) > 1)
+                            <div class="flex lg:flex-col gap-2.5 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px] lg:w-20 shrink-0 pb-1 lg:pb-0 lg:pr-1">
+                                @foreach($galleryUrls as $idx => $imgUrl)
+                                    <button type="button"
+                                        @click="activeSlide = {{ $idx }}"
+                                        :class="activeSlide === {{ $idx }} ? 'ring-2 ring-primary-600 border-primary-600 bg-primary-50/40' : 'border-slate-200 opacity-75 hover:opacity-100 hover:border-slate-300'"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-2xl overflow-hidden border bg-white p-1.5 flex items-center justify-center transition-all">
+                                        <img src="{{ $imgUrl }}"
+                                            alt="{{ $product->getTranslation('name', app()->getLocale()) }} - {{ $idx + 1 }}"
+                                            class="w-full h-full object-contain">
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <!-- Main Stage (Uncropped object-contain + Click to Lightbox) -->
+                        <div class="relative flex-1 bg-slate-50/60 border border-slate-100 rounded-[1.5rem] overflow-hidden group flex items-center justify-center h-[320px] sm:h-[420px] lg:h-[500px]"
+                            @touchstart="onTouchStart($event)"
+                            @touchend="onTouchEnd($event)">
+                            <img :src="slides[activeSlide]"
+                                @click="lightboxOpen = true"
+                                alt="{{ $product->getTranslation('name', app()->getLocale()) }}"
+                                class="max-w-full max-h-full w-auto h-auto object-contain p-3 sm:p-5 cursor-zoom-in transition-transform duration-300 group-hover:scale-[1.02]">
+
+                            <!-- Fullscreen / Zoom Button -->
+                            <button type="button"
+                                @click="lightboxOpen = true"
+                                title="{{ __('Zoom Image') }}"
+                                class="absolute top-3 right-3 rtl:right-auto rtl:left-3 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-md border border-slate-200/70 flex items-center justify-center transition-all hover:scale-105">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16zm0-11v6m-3-3h6" />
+                                </svg>
+                            </button>
+
+                            @if(count($galleryUrls) > 1)
+                                <button type="button"
+                                    @click="prev()"
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-slate-200/60 flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                                </button>
+                                <button type="button"
+                                    @click="next()"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-slate-200/60 flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                                </button>
+                                <div class="absolute bottom-3 right-3 rtl:right-auto rtl:left-3 px-3 py-1 rounded-full bg-slate-900/75 text-white text-xs font-bold backdrop-blur-sm">
+                                    <span x-text="activeSlide + 1"></span> / {{ count($galleryUrls) }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fullscreen Lightbox Modal -->
+                <div x-show="lightboxOpen"
+                    x-cloak
+                    x-transition.opacity
+                    @click.self="lightboxOpen = false"
+                    class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-8">
+
+                    <button type="button"
+                        @click="lightboxOpen = false"
+                        class="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+
+                    <div class="relative w-full max-w-5xl flex items-center justify-center flex-1 min-h-0">
+                        @if(count($galleryUrls) > 1)
+                            <button type="button"
+                                @click="prev()"
+                                class="absolute left-0 sm:left-2 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                            </button>
+                        @endif
+
                         <img :src="slides[activeSlide]"
                             alt="{{ $product->getTranslation('name', app()->getLocale()) }}"
-                            class="w-full h-full object-cover transition-all duration-300">
+                            class="max-h-[78vh] max-w-[88vw] w-auto h-auto object-contain rounded-2xl shadow-2xl bg-white/5 p-2">
 
                         @if(count($galleryUrls) > 1)
                             <button type="button"
-                                @click="activeSlide = (activeSlide - 1 + slides.length) % slides.length"
-                                class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                                @click="next()"
+                                class="absolute right-0 sm:right-2 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                             </button>
-                            <button type="button"
-                                @click="activeSlide = (activeSlide + 1) % slides.length"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            </button>
-                            <div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-slate-900/75 text-white text-xs font-bold backdrop-blur-sm">
-                                <span x-text="activeSlide + 1"></span> / {{ count($galleryUrls) }}
-                            </div>
                         @endif
                     </div>
 
                     @if(count($galleryUrls) > 1)
-                        <div class="grid grid-cols-5 sm:grid-cols-6 gap-2.5 mt-4">
+                        <div class="flex items-center gap-2 mt-4 overflow-x-auto max-w-full pb-1">
                             @foreach($galleryUrls as $idx => $imgUrl)
                                 <button type="button"
                                     @click="activeSlide = {{ $idx }}"
-                                    :class="activeSlide === {{ $idx }} ? 'ring-2 ring-primary-600 border-primary-600 scale-[0.98]' : 'border-slate-200 opacity-75 hover:opacity-100'"
-                                    class="aspect-square rounded-xl overflow-hidden border bg-slate-50 transition-all">
-                                    <img src="{{ $imgUrl }}"
-                                        alt="{{ $product->getTranslation('name', app()->getLocale()) }} - {{ $idx + 1 }}"
-                                        class="w-full h-full object-cover">
+                                    :class="activeSlide === {{ $idx }} ? 'ring-2 ring-white opacity-100' : 'opacity-50 hover:opacity-85'"
+                                    class="w-14 h-14 shrink-0 rounded-xl overflow-hidden bg-white p-1 transition-all">
+                                    <img src="{{ $imgUrl }}" alt="" class="w-full h-full object-contain">
                                 </button>
                             @endforeach
                         </div>

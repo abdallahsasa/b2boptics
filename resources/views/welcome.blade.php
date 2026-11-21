@@ -570,11 +570,11 @@
                          class="group bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-primary-500 hover:shadow-xl transition-all duration-300 flex flex-col h-full">
                         
                         <!-- Image Container with Badges -->
-                        <div class="aspect-square bg-slate-50 relative overflow-hidden border-b border-slate-100">
+                        <div class="aspect-square bg-white p-3 relative overflow-hidden border-b border-slate-100">
                             @php
                                 $imgUrl = $product->image ? asset('uploads/' . $product->image) : ($product->getFirstMediaUrl('images') ?: asset('uploads/products/boris_optical_lens.jpg'));
                             @endphp
-                            <img src="{{ $imgUrl }}" alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ $imgUrl }}" alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
                             
                             <!-- Category Badge -->
                             <div class="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex flex-col gap-1.5">

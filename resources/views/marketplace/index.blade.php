@@ -161,9 +161,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($products as $product)
                 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden card-hover group">
-                    <a href="{{ route('marketplace.product.show', $product) }}" class="block aspect-square overflow-hidden relative bg-slate-100">
+                    <a href="{{ route('marketplace.product.show', $product) }}" class="block aspect-square overflow-hidden relative bg-white p-3">
                         <img src="{{ $product->getFirstMediaUrl('images') ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=600&auto=format&fit=crop' }}" 
-                            alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            alt="{{ $product->getTranslation('name', app()->getLocale()) }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute top-4 left-4">
                             <span class="px-3 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-primary-900 rounded-full uppercase tracking-wider shadow-sm">{{ $product->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>
                         </div>
