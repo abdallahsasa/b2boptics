@@ -11,7 +11,7 @@ class StockOfferController extends Controller
     public function index(Request $request)
     {
         $query = StockOffer::with(['factory.country', 'category'])
-            ->active();
+            ->visible();
 
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
@@ -19,7 +19,10 @@ class StockOfferController extends Controller
             });
         }
 
-        $offers = $query->latest()->paginate(12);
+        $offers = $query
+            ->orderByRaw("CASE WHEN status = 'active' AND (ends_at IS NULL OR ends_at > NOW()) THEN 0 ELSE 1 END")
+            ->latest()
+            ->paginate(12);
         $categories = Category::where('type', 'product')->get();
 
         return view('stock-offers.index', compact('offers', 'categories'));
@@ -28,10 +31,8 @@ class StockOfferController extends Controller
     public function show($locale, StockOffer $stockOffer)
     {
         if (
-            $stockOffer->status !== 'active' ||
-            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture()) ||
-            !$stockOffer->ends_at ||
-            $stockOffer->ends_at->isPast()
+            !in_array($stockOffer->status, ['active', 'sold_out'], true) ||
+            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture())
         ) {
             abort(404);
         }
@@ -44,12 +45,14 @@ class StockOfferController extends Controller
     public function request(Request $request, $locale, StockOffer $stockOffer)
     {
         if (
-            $stockOffer->status !== 'active' ||
-            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture()) ||
-            !$stockOffer->ends_at ||
-            $stockOffer->ends_at->isPast()
+            !in_array($stockOffer->status, ['active', 'sold_out'], true) ||
+            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture())
         ) {
             abort(404);
+        }
+
+        if ($stockOffer->isSoldOut()) {
+            return back()->withErrors(['quantity_requested' => __('This stock deal is sold out.')]);
         }
 
         $validated = $request->validate([

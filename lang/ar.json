@@ -841,5 +841,7 @@
     "Expired": "منتهي",
     "Published (Approved)": "منشور (معتمد)",
     "Your supplier account is already approved — new products are published automatically.": "حساب المورد الخاص بك معتمد بالفعل — يتم نشر المنتجات الجديدة تلقائيًا.",
-    "Your products will be approved and published together once your supplier account is approved.": "سيتم اعتماد ونشر منتجاتك معًا فور اعتماد حساب المورد الخاص بك."
+    "Your products will be approved and published together once your supplier account is approved.": "سيتم اعتماد ونشر منتجاتك معًا فور اعتماد حساب المورد الخاص بك.",
+    "This stock deal is sold out.": "نفدت كمية عرض المخزون هذا.",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "انتهت مدة هذا العرض أو لم يعد متاحًا. تصفح عروض المخزون النشطة الأخرى من الموردين المعتمدين."
 }

@@ -25,7 +25,8 @@
         ->get();
         
     $stockOffers = \App\Models\StockOffer::with(['factory', 'category'])
-        ->active()
+        ->visible()
+        ->orderByRaw("CASE WHEN status = 'active' AND (ends_at IS NULL OR ends_at > NOW()) THEN 0 ELSE 1 END")
         ->latest()
         ->take(4)
         ->get();
@@ -770,12 +771,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($stockOffers as $offer)
                     <div class="bg-white border border-red-100 rounded-3xl overflow-hidden relative shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-                        <div class="absolute top-3 right-3 rtl:right-auto rtl:left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm z-10 flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            {{ \Carbon\Carbon::parse($offer->ends_at)->diffForHumans() }}
-                        </div>
+                        @if($offer->isSoldOut())
+                            <div class="absolute top-3 right-3 rtl:right-auto rtl:left-3 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm z-10 uppercase tracking-wider">
+                                {{ __('Sold Out') }}
+                            </div>
+                        @elseif($offer->ends_at)
+                            <div class="absolute top-3 right-3 rtl:right-auto rtl:left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm z-10 flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                {{ $offer->ends_at->diffForHumans() }}
+                            </div>
+                        @endif
                         <div class="aspect-[4/3] bg-slate-100 relative">
-                            <img src="{{ collect($offer->images)->first() ?: asset('uploads/products/boris_optical_lens.jpg') }}" class="w-full h-full object-cover">
+                            <img src="{{ $offer->image_url ?: asset('uploads/products/boris_optical_lens.jpg') }}" class="w-full h-full object-cover">
                         </div>
                         <div class="p-5 flex-1 flex flex-col text-start">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $offer->category?->getTranslation('name', app()->getLocale()) ?? 'Optics' }}</span>

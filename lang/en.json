@@ -841,5 +841,7 @@
     "Expired": "Expired",
     "Published (Approved)": "Published (Approved)",
     "Your supplier account is already approved — new products are published automatically.": "Your supplier account is already approved — new products are published automatically.",
-    "Your products will be approved and published together once your supplier account is approved.": "Your products will be approved and published together once your supplier account is approved."
+    "Your products will be approved and published together once your supplier account is approved.": "Your products will be approved and published together once your supplier account is approved.",
+    "This stock deal is sold out.": "This stock deal is sold out.",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers."
 }

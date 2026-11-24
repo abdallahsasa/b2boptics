@@ -841,5 +841,7 @@
     "Expired": "Süresi Doldu",
     "Published (Approved)": "Yayında (Onaylı)",
     "Your supplier account is already approved — new products are published automatically.": "Tedarikçi hesabınız zaten onaylı — yeni ürünler otomatik olarak yayınlanır.",
-    "Your products will be approved and published together once your supplier account is approved.": "Tedarikçi hesabınız onaylandığında ürünleriniz de birlikte onaylanıp yayınlanacaktır."
+    "Your products will be approved and published together once your supplier account is approved.": "Tedarikçi hesabınız onaylandığında ürünleriniz de birlikte onaylanıp yayınlanacaktır.",
+    "This stock deal is sold out.": "Bu stok fırsatı tükendi.",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "Bu stok lotu sona erdi veya artık mevcut değil. Doğrulanmış tedarikçilerden diğer aktif stok fırsatlarına göz atın."
 }

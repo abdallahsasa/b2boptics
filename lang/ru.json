@@ -841,5 +841,7 @@
     "Expired": "Истекло",
     "Published (Approved)": "Опубликовано (Одобрено)",
     "Your supplier account is already approved — new products are published automatically.": "Ваш аккаунт поставщика уже одобрен — новые товары публикуются автоматически.",
-    "Your products will be approved and published together once your supplier account is approved.": "Ваши товары будут одобрены и опубликованы вместе с одобрением аккаунта поставщика."
+    "Your products will be approved and published together once your supplier account is approved.": "Ваши товары будут одобрены и опубликованы вместе с одобрением аккаунта поставщика.",
+    "This stock deal is sold out.": "Это стоковое предложение распродано.",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "Срок действия этого лота истек или он больше недоступен. Посмотрите другие активные предложения от проверенных поставщиков."
 }

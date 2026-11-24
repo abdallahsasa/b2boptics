@@ -36,12 +36,18 @@
         <div class="flex-1">
             <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm p-4 mb-8">
                 <div class="aspect-[4/3] bg-slate-50 rounded-[1.5rem] overflow-hidden relative">
-                    <img src="{{ collect($stockOffer->images)->first() ?: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop' }}" 
-                        alt="{{ $stockOffer->getTranslation('title', app()->getLocale()) }}" class="w-full h-full object-cover">
-                    <div class="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        {{ __('Ends') }} {{ \Carbon\Carbon::parse($stockOffer->ends_at)->diffForHumans() }}
-                    </div>
+                    <img src="{{ $stockOffer->image_url ?: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop' }}" 
+                        alt="{{ $stockOffer->getTranslation('title', app()->getLocale()) }}" class="w-full h-full object-contain p-2">
+                    @if($stockOffer->isSoldOut())
+                        <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-lg uppercase tracking-wider">
+                            {{ __('Sold Out') }}
+                        </div>
+                    @elseif($stockOffer->ends_at)
+                        <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            {{ __('Ends') }} {{ $stockOffer->ends_at->diffForHumans() }}
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -79,6 +85,18 @@
         <!-- Request Form -->
         <div class="lg:w-1/3">
             <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl p-8 sticky top-24">
+                @if($stockOffer->isSoldOut())
+                    <div class="text-center py-6">
+                        <span class="inline-block px-4 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold uppercase tracking-widest mb-4">
+                            {{ __('Sold Out') }}
+                        </span>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">{{ __('This stock deal is sold out.') }}</h3>
+                        <p class="text-sm text-slate-500 mb-6">{{ __('This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.') }}</p>
+                        <a href="{{ route('stock-offers.index') }}" class="inline-block w-full py-3.5 px-6 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-colors">
+                            {{ __('View All Deals') }}
+                        </a>
+                    </div>
+                @else
                 <h3 class="text-xl font-bold text-slate-900 mb-2">{{ __('Request This Deal') }}</h3>
                 <p class="text-sm text-slate-500 mb-6">{{ __('Submit your request and our team will connect you directly with the manufacturer to finalize the deal.') }}</p>
 
@@ -134,6 +152,7 @@
                         {{ __('Your information is secure and will only be shared with the verified manufacturer.') }}
                     </p>
                 </form>
+                @endif
             </div>
         </div>
     </div>

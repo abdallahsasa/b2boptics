@@ -35,6 +35,23 @@ class StockOffer extends Model implements HasMedia
             ->where('ends_at', '>', now());
     }
 
+    public function scopeVisible($query)
+    {
+        return $query->whereIn('status', ['active', 'sold_out'])
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            });
+    }
+
+    public function isSoldOut(): bool
+    {
+        if ($this->status === 'sold_out') {
+            return true;
+        }
+
+        return $this->ends_at !== null && $this->ends_at->isPast();
+    }
+
     public function factory(): BelongsTo
     {
         return $this->belongsTo(Factory::class);

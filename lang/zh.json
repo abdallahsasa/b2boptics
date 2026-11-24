@@ -841,5 +841,7 @@
     "Expired": "已过期",
     "Published (Approved)": "已发布（已批准）",
     "Your supplier account is already approved — new products are published automatically.": "您的供应商账户已获批准 — 新产品将自动发布。",
-    "Your products will be approved and published together once your supplier account is approved.": "您的供应商账户获批后，您的产品将一同获批并发布。"
+    "Your products will be approved and published together once your supplier account is approved.": "您的供应商账户获批后，您的产品将一同获批并发布。",
+    "This stock deal is sold out.": "该库存特惠已售罄。",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "该清仓批次已结束或不再提供。浏览来自认证供应商的其他有效库存特惠。"
 }

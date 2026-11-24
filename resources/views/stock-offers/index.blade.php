@@ -15,14 +15,14 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($offers as $offer)
         <div class="bg-white rounded-[2rem] border-2 border-primary-100 shadow-xl overflow-hidden card-hover group relative">
-            <!-- Dynamic Countdown Badge -->
-            @if($offer->ends_at)
-                <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-10 px-4 py-2 {{ $offer->ends_at->isFuture() ? 'bg-red-600 animate-pulse' : 'bg-slate-700' }} text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
-                    @if($offer->ends_at->isFuture())
-                        {{ __('Ends') }} {{ $offer->ends_at->diffForHumans() }}
-                    @else
-                        {{ __('Expired') }}
-                    @endif
+            <!-- Dynamic Status / Countdown Badge -->
+            @if($offer->isSoldOut())
+                <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-10 px-4 py-2 bg-slate-900 text-white text-[10px] font-bold rounded-full uppercase tracking-widest shadow-md">
+                    {{ __('Sold Out') }}
+                </div>
+            @elseif($offer->ends_at)
+                <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-10 px-4 py-2 bg-red-600 animate-pulse text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
+                    {{ __('Ends') }} {{ $offer->ends_at->diffForHumans() }}
                 </div>
             @endif
 
@@ -46,7 +46,11 @@
                         <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">{{ __('Deal Price') }}</p>
                         <p class="text-3xl font-bold text-primary-900">{{ $offer->currency }} {{ number_format($offer->price, 2) }} <span class="text-sm font-medium text-slate-400">/{{ __('unit') }}</span></p>
                     </div>
-                    <a href="{{ route('stock-offers.show', $offer) }}" class="inline-block px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 text-center">{{ __('Grab Deal') }}</a>
+                    @if($offer->isSoldOut())
+                        <a href="{{ route('stock-offers.show', $offer) }}" class="inline-block px-6 py-3 bg-slate-200 text-slate-600 rounded-xl font-bold text-center">{{ __('Sold Out') }}</a>
+                    @else
+                        <a href="{{ route('stock-offers.show', $offer) }}" class="inline-block px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 text-center">{{ __('Grab Deal') }}</a>
+                    @endif
                 </div>
             </div>
         </div>

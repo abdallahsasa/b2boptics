@@ -841,5 +841,7 @@
     "Expired": "Expirado",
     "Published (Approved)": "Publicado (Aprobado)",
     "Your supplier account is already approved — new products are published automatically.": "Su cuenta de proveedor ya está aprobada — los nuevos productos se publican automáticamente.",
-    "Your products will be approved and published together once your supplier account is approved.": "Sus productos se aprobarán y publicarán juntos una vez aprobada su cuenta de proveedor."
+    "Your products will be approved and published together once your supplier account is approved.": "Sus productos se aprobarán y publicarán juntos una vez aprobada su cuenta de proveedor.",
+    "This stock deal is sold out.": "Esta oferta de stock está agotada.",
+    "This clearance lot has ended or is no longer available. Browse other active stock deals from verified suppliers.": "Este lote de liquidación ha finalizado o ya no está disponible. Explore otras ofertas activas de proveedores verificados."
 }

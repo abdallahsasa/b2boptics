@@ -718,9 +718,15 @@
                             <img src="{{ $offer->image_url ?: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=600&auto=format&fit=crop' }}"
                                 alt="{{ $offer->getTranslation('title', app()->getLocale()) }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <span class="absolute top-4 left-4 px-3 py-1 bg-amber-500 text-white text-[10px] font-bold rounded-full uppercase tracking-wider shadow">
-                                {{ __('Surplus Deal') }}
-                            </span>
+                            @if($offer->isSoldOut())
+                                <span class="absolute top-4 left-4 px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-full uppercase tracking-wider shadow">
+                                    {{ __('Sold Out') }}
+                                </span>
+                            @else
+                                <span class="absolute top-4 left-4 px-3 py-1 bg-amber-500 text-white text-[10px] font-bold rounded-full uppercase tracking-wider shadow">
+                                    {{ __('Surplus Deal') }}
+                                </span>
+                            @endif
                         </div>
                         <div class="p-6 flex flex-col justify-between flex-1">
                             <div>
