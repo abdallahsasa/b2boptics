@@ -74,7 +74,15 @@ class CreateProduct extends CreateRecord
     {
         $factory = auth()->user()->factory;
         $data['factory_id'] = $factory->id;
-        $data['status'] = in_array($data['status'] ?? '', ['draft', 'pending']) ? $data['status'] : 'pending';
+
+        if (($data['status'] ?? '') === 'draft') {
+            $data['status'] = 'draft';
+        } elseif ($factory->status === 'approved') {
+            $data['status'] = 'approved';
+            $data['published_at'] = $data['published_at'] ?? now();
+        } else {
+            $data['status'] = 'pending';
+        }
 
         if (!empty($data['images']) && is_array($data['images'])) {
             $data['images'] = array_slice(array_values(array_filter($data['images'])), 0, $factory->maxImagesPerProduct());

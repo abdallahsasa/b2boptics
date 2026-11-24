@@ -837,5 +837,9 @@
     "Contact Supplier": "Lieferant kontaktieren",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "Optional. Wird als schwebender WhatsApp-Button auf Ihrer Lieferantenseite angezeigt (nutzt die Telefonnummer, falls leer).",
     "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Hallo :name, ich habe Ihr Lieferantenprofil auf OpticB2B gefunden und möchte anfragen.",
-    "Zoom Image": "Bild vergrößern"
+    "Zoom Image": "Bild vergrößern",
+    "Expired": "Abgelaufen",
+    "Published (Approved)": "Veröffentlicht (Genehmigt)",
+    "Your supplier account is already approved — new products are published automatically.": "Ihr Lieferantenkonto ist bereits genehmigt — neue Produkte werden automatisch veröffentlicht.",
+    "Your products will be approved and published together once your supplier account is approved.": "Ihre Produkte werden zusammen mit der Genehmigung Ihres Lieferantenkontos freigegeben."
 }

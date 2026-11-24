@@ -837,5 +837,9 @@
     "Contact Supplier": "تواصل مع المورد",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "اختياري. يظهر كزر واتساب عائم للتواصل في صفحتك (يستخدم رقم الهاتف إذا تُرك فارغًا).",
     "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "مرحبًا :name، وجدت ملفكم كمورد على OpticB2B وأود الاستفسار.",
-    "Zoom Image": "تكبير الصورة"
+    "Zoom Image": "تكبير الصورة",
+    "Expired": "منتهي",
+    "Published (Approved)": "منشور (معتمد)",
+    "Your supplier account is already approved — new products are published automatically.": "حساب المورد الخاص بك معتمد بالفعل — يتم نشر المنتجات الجديدة تلقائيًا.",
+    "Your products will be approved and published together once your supplier account is approved.": "سيتم اعتماد ونشر منتجاتك معًا فور اعتماد حساب المورد الخاص بك."
 }

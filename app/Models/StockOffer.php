@@ -26,6 +26,15 @@ class StockOffer extends Model implements HasMedia
 
     public $translatable = ['title', 'description'];
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where('ends_at', '>', now());
+    }
+
     public function factory(): BelongsTo
     {
         return $this->belongsTo(Factory::class);

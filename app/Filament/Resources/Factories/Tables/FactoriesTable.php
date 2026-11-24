@@ -86,7 +86,7 @@ class FactoriesTable
                     ->visible(fn (Factory $record) => $record->status !== 'approved')
                     ->requiresConfirmation()
                     ->modalHeading('Approve & Publish Supplier')
-                    ->modalDescription(fn (Factory $record) => "Are you sure you want to approve \"{$record->official_name}\"? This will publish their showroom to the live website and immediately send a publication email to " . ($record->email ?: $record->owner?->email) . '.')
+                    ->modalDescription(fn (Factory $record) => "Are you sure you want to approve \"{$record->official_name}\"? This will publish their showroom and all pending products to the live website and immediately send a publication email to " . ($record->email ?: $record->owner?->email) . '.')
                     ->modalSubmitActionLabel('Yes, Approve & Publish')
                     ->action(function (Factory $record) {
                         $record->status = 'approved';

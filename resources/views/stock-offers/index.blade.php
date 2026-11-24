@@ -15,10 +15,16 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($offers as $offer)
         <div class="bg-white rounded-[2rem] border-2 border-primary-100 shadow-xl overflow-hidden card-hover group relative">
-            <!-- Countdown Placeholder -->
-            <div class="absolute top-4 right-4 z-10 px-4 py-2 bg-red-600 text-white text-[10px] font-bold rounded-full uppercase tracking-widest animate-pulse">
-                {{ __('Ends in 2 days') }}
-            </div>
+            <!-- Dynamic Countdown Badge -->
+            @if($offer->ends_at)
+                <div class="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-10 px-4 py-2 {{ $offer->ends_at->isFuture() ? 'bg-red-600 animate-pulse' : 'bg-slate-700' }} text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
+                    @if($offer->ends_at->isFuture())
+                        {{ __('Ends') }} {{ $offer->ends_at->diffForHumans() }}
+                    @else
+                        {{ __('Expired') }}
+                    @endif
+                </div>
+            @endif
 
             <div class="aspect-video overflow-hidden bg-slate-100">
                 <img src="{{ $offer->image_url ?: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=800&auto=format&fit=crop' }}" 

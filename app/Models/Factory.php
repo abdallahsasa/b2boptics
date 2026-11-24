@@ -349,6 +349,15 @@ class Factory extends Model implements HasMedia
         static::saved(function ($factory) {
             if ($factory->shouldSendApprovalEmail) {
                 $factory->shouldSendApprovalEmail = false;
+
+                // One-time approval: approve pending products together with the supplier
+                $factory->products()
+                    ->where('status', 'pending')
+                    ->update([
+                        'status' => 'approved',
+                        'published_at' => now(),
+                    ]);
+
                 $factory->sendApprovedEmail();
             }
         });

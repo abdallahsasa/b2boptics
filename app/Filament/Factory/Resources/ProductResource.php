@@ -197,15 +197,20 @@ class ProductResource extends Resource
                     ->schema([
                         Select::make('status')
                             ->label(__('Status'))
-                            ->options([
-                                'pending' => __('Submit for Review (Pending)'),
-                                'draft' => __('Draft (Private)'),
-                            ])
-                            ->default('pending')
-                            ->disabled(fn ($record) => $record && in_array($record->status, ['approved', 'rejected']))
-                            ->helperText(fn ($record) => $record && $record->status === 'approved' 
-                                ? __('This product is approved and visible in the marketplace.') 
-                                : __('New products require admin approval before appearing publicly.')),
+                            ->options(function () {
+                                $isApproved = auth()->user()?->factory?->status === 'approved';
+                                return [
+                                    ($isApproved ? 'approved' : 'pending') => $isApproved
+                                        ? __('Published (Approved)')
+                                        : __('Submit for Review (Pending)'),
+                                    'draft' => __('Draft (Private)'),
+                                ];
+                            })
+                            ->default(fn () => auth()->user()?->factory?->status === 'approved' ? 'approved' : 'pending')
+                            ->disabled(fn ($record) => $record && $record->status === 'rejected')
+                            ->helperText(fn ($record) => auth()->user()?->factory?->status === 'approved'
+                                ? __('Your supplier account is already approved — new products are published automatically.')
+                                : __('Your products will be approved and published together once your supplier account is approved.')),
                         DateTimePicker::make('published_at')
                             ->label(__('Available / Published Date')),
                     ]),

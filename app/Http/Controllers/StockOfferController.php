@@ -11,8 +11,7 @@ class StockOfferController extends Controller
     public function index(Request $request)
     {
         $query = StockOffer::with(['factory.country', 'category'])
-            ->where('status', 'active')
-            ->where('ends_at', '>', now());
+            ->active();
 
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
@@ -28,7 +27,12 @@ class StockOfferController extends Controller
 
     public function show($locale, StockOffer $stockOffer)
     {
-        if ($stockOffer->status !== 'active' || $stockOffer->ends_at <= now()) {
+        if (
+            $stockOffer->status !== 'active' ||
+            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture()) ||
+            !$stockOffer->ends_at ||
+            $stockOffer->ends_at->isPast()
+        ) {
             abort(404);
         }
 
@@ -39,7 +43,12 @@ class StockOfferController extends Controller
 
     public function request(Request $request, $locale, StockOffer $stockOffer)
     {
-        if ($stockOffer->status !== 'active' || $stockOffer->ends_at <= now()) {
+        if (
+            $stockOffer->status !== 'active' ||
+            ($stockOffer->starts_at && $stockOffer->starts_at->isFuture()) ||
+            !$stockOffer->ends_at ||
+            $stockOffer->ends_at->isPast()
+        ) {
             abort(404);
         }
 

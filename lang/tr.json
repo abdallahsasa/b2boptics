@@ -837,5 +837,9 @@
     "Contact Supplier": "Tedarikçiyle İletişime Geç",
     "Optional. Shown as a floating WhatsApp contact button on your supplier page (uses Phone Number if left empty).": "İsteğe bağlı. Tedarikçi sayfanızda yüzen WhatsApp iletişim butonu olarak görünür (boş bırakılırsa Telefon Numarası kullanılır).",
     "Hello :name, I found your supplier profile on OpticB2B and would like to inquire.": "Merhaba :name, OpticB2B üzerinde tedarikçi profilinizi buldum ve bilgi almak istiyorum.",
-    "Zoom Image": "Görseli Yakınlaştır"
+    "Zoom Image": "Görseli Yakınlaştır",
+    "Expired": "Süresi Doldu",
+    "Published (Approved)": "Yayında (Onaylı)",
+    "Your supplier account is already approved — new products are published automatically.": "Tedarikçi hesabınız zaten onaylı — yeni ürünler otomatik olarak yayınlanır.",
+    "Your products will be approved and published together once your supplier account is approved.": "Tedarikçi hesabınız onaylandığında ürünleriniz de birlikte onaylanıp yayınlanacaktır."
 }

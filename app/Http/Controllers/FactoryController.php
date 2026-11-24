@@ -105,7 +105,7 @@ class FactoryController extends Controller
                 $q->where('status', 'approved')->with('category')->latest();
             },
             'stockOffers' => function ($q) {
-                $q->where('status', 'active')->latest();
+                $q->active()->latest();
             },
             'approvedRatings.buyer',
         ]);

@@ -25,8 +25,7 @@
         ->get();
         
     $stockOffers = \App\Models\StockOffer::with(['factory', 'category'])
-        ->where('status', 'active')
-        ->where('ends_at', '>', now())
+        ->active()
         ->latest()
         ->take(4)
         ->get();
